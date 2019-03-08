@@ -1,0 +1,15 @@
+{
+  "name": "alekaagleyts_bot",
+  "version": "2.0.0",
+  "description": "My own Discord bot",
+  "main": "bot.js",
+  "author": "AlekEagleYT",
+  "dependencies": {
+    "@sentry/node": "^4.6.4",
+    "collections": "^5.1.8",
+    "dblapi.js": "^2.3.0",
+    "eris": "^0.8.6",
+    "express": "^4.16.4",
+    "request": "^2.88.0"
+  }
+}
