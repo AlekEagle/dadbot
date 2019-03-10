@@ -1,0 +1,8 @@
+node_modules
+.auth.json
+blacklist.blk
+gblacklist.blk
+pblacklist.blk
+stats.json
+cmdstats.json
+.vscode

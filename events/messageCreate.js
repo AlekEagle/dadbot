@@ -20,6 +20,7 @@ module.exports = {
                         ind = msg.content.match(/(\n| |^)[i|I]'?’?[m|M](\n| |$)/).index + 2
                         if (msg.content.slice(ind).toLowerCase().substring(0, 1) === '\'') ind = ind + 1
                         if (msg.content.slice(ind).toLowerCase().substring(0, 1) === 'm') ind = ind + 1
+                        if (msg.content.slice(ind).toLowerCase().substring(0, 1) === '’') ind = ind + 1
                         if (msg.content.slice(ind).toLowerCase().substring(0, 1) === ' ') ind = ind + 1
                     }else if (msg.content.match(/(\n| |^)[i|I] [a|A][m|M](\n| |$)/)) {
                         ind = msg.content.match(/(\n| |^)[i|I] [a|A][m|M](\n| |$)/).index + 5
