@@ -11,7 +11,7 @@ module.exports = {
         stats.updateUses(module.exports.name);
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             msg.delete().catch(() => {})
-            if (msg.member.permission.has('administrator') || owners.isOwner(msg.author.id)) {
+            if (msg.member.permission.has('manageServer') || owners.isOwner(msg.author.id)) {
                 if (manager.pblacklist.servers.includes(msg.channel.guild.id)) {
                     manager.manageBlacklist({action: 'remove', blklist: 'pblk', id: msg.channel.guild.id}).then(list => {
                         msg.channel.createMessage('Your server will no longer be affected by pasta mode!').then((message) => {

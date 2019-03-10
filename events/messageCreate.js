@@ -1,5 +1,6 @@
 'use strict';
 
+const u_wut_m8 = require('../.auth.json');
 let manager = require('../functions/blacklistManager');
 let nums = require('../functions/numbers');
 let lists = require('../functions/lists');
@@ -10,7 +11,26 @@ module.exports = {
     exec: (client, msg) => {
         nums.msgsRead = ++nums.msgsRead
         try{var u = msg.member;if(manager.pblacklist.servers.includes(msg.channel.guild.id)) {u.edit({nick: lists.pastas[Math.floor(Math.random() * lists.pastas.length)]}).catch(() => {})}}catch (err) {}
-        if (msg.channel.type === 1) return;
+        if (msg.channel.type === 1) {
+            client.executeWebhook('547588483502440464', u_wut_m8.webhookTokenThing, {
+                embeds: [
+                    {
+                        color: '65280',
+                        title: 'New DM',
+                        thumbnail: {
+                            url: msg.author.avatar ? `https://cdn.discordapp.com/avatars/${msg.author.id}/${msg.author.avatar}.png` : msg.author.defaultAvatar
+                        },
+                        fields: [
+                            {
+                                name: 'Message',
+                                value: msg.content
+                            }
+                        ]
+                    }
+                ]
+            })
+            return;
+        }
         if (manager.blacklist.servers.includes(msg.channel.guild.id)) {
         }else {
             if (!msg.author.bot && !manager.blacklist.users.includes(msg.author.id) && !manager.gblacklist.users.includes(msg.author.id)) {
