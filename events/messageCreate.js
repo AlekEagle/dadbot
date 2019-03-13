@@ -1,6 +1,5 @@
 'use strict';
 
-const u_wut_m8 = require('../.auth.json');
 let manager = require('../functions/blacklistManager');
 let nums = require('../functions/numbers');
 let lists = require('../functions/lists');
@@ -19,22 +18,9 @@ module.exports = {
             }
         } catch (err) {}
         if (msg.channel.type === 1 && msg.author.id !== '503720029456695306') {
-            client.executeWebhook('547588483502440464', u_wut_m8.webhookTokenThing, {
-                embeds: [{
-                    color: '65280',
-                    title: 'New DM',
-                    thumbnail: {
-                        url: msg.author.avatar ? `https://cdn.discordapp.com/avatars/${msg.author.id}/${msg.author.avatar}.png` : msg.author.defaultAvatar
-                    },
-                    fields: [{
-                        name: 'user',
-                        value: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`
-                    },{
-                        name: 'Message',
-                        value: msg.content ? msg.content : `not here for some reason?`
-                    }]
-                }]
-            })
+            if (msg.content.match(/(\n| |^)[i|I]'?’?[m|M](\n| |$)/) || msg.content.match(/(\n| |^)[i|I] [a|A][m|M](\n| |$)/)) {
+                msg.channel.createMessage(`I'm responses don't work in DMs because of how the blacklists are set up!`)
+            }
             return;
         }
         if (manager.blacklist.servers.includes(msg.channel.guild.id)) {} else {
