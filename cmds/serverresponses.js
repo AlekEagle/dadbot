@@ -10,7 +10,7 @@ module.exports = {
     exec: (client, msg, args) => {
         stats.updateUses(module.exports.name);
         if (!manager.gblacklist.users.includes(msg.author.id)) {
-            if (msg.member.permission.has('administrator') || owners.isOwner(msg.author.id)) {
+            if (msg.member.permission.has('manageGuild') || owners.isOwner(msg.author.id)) {
                 msg.delete().catch(() => {})
                 if (manager.blacklist.servers.includes(msg.channel.guild.id)) {
                     manager.manageBlacklist({action: 'remove', blklist: 'blk', type: 'server', id: `${msg.channel.guild.id}`}).then(list => {
@@ -36,7 +36,7 @@ module.exports = {
                     });
                 }
             }else {
-                msg.channel.createMessage('No can do buddy, you just can\'t boss me around me like that, you gotta have permission to do that, the one you need is `ADMINISTRATOR`.')
+                msg.channel.createMessage('No can do buddy, you just can\'t boss me around me like that, you gotta have permission to do that, the one you need is `MANAGE_SERVER`.')
             }
         }else {
             msg.author.getDMChannel().then(chn => {
