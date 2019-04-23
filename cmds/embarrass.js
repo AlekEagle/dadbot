@@ -41,7 +41,7 @@ module.exports = {
     },
 
     options: {
-        description: 'Embarrass yourself (mite b offensive)',
+        description: 'Embarrass yourself or others (mite b offensive)',
         fullDescription: 'it just embarrasses you, what else do you need help with?',
         guildOnly: true,
         usage: '[user mention|userID]'
