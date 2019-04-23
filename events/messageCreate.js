@@ -39,7 +39,7 @@ module.exports = {
                     if (msg.channel.id === '467853504468353024' || msg.channel.id === '457439774446452738' || ind === -1) {} else if (msg.content.slice(ind).toLowerCase() !== `${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick.toLowerCase() : client.user.username.toLowerCase()}`) {
                         nums.responses = ++nums.responses
                         msg.channel.createMessage(`Hi ${msg.content.slice(ind)}, I'm ${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick : 'Dad'}!`).catch(() => {});
-                    } else if (msg.content.slice(ind).toLowerCase() === `${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick.toLowerCase() : client.user.username.toLowerCase()}`) {
+                    } else if (msg.content.slice(ind).toLowerCase() === `${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick.toLowerCase() : 'dad'}`) {
                         nums.responses = ++nums.responses
                         msg.channel.createMessage(`You're not ${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick : client.user.username}, I'm ${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick : client.user.username}!`).catch(() => {});
                     }

@@ -15,8 +15,9 @@ module.exports = {
                 if (lists.embarrassingThings[0] === embarrassingThing || lists.embarrassingThings[1] === embarrassingThing) {
                     msg.channel.createMessage(`<@${msg.author.id}> ${embarrassingThing}`);
                 }else {
+                    var avatarURL = msg.author.dynamicAvatarURL('png', 1024).split('?')[0]
                     msg.channel.createWebhook({name: msg.author.username}).then(thing => {
-                        client.executeWebhook(thing.id, thing.token, {content: embarrassingThing, avatarURL: msg.member.avatarURL, username: msg.member.username});
+                        client.executeWebhook(thing.id, thing.token, {content: embarrassingThing, avatarURL: avatarURL, username: msg.member.username});
                         setTimeout(() => {
                             client.deleteWebhook(thing.id);
                         }, 5000);
