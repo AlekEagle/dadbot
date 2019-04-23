@@ -8,16 +8,23 @@ module.exports = {
     name: 'embarrass',
 
     exec: (client, msg, args) => {
+        var user;
+        if (args[0]) {
+            args[0] = args[0].replace(/(<@!?|>)/g, '')
+            user = client.users.get(args[0]);
+        }else {
+            user = msg.author
+        }
+        var avatarURL = user.dynamicAvatarURL('png', 1024).split('?')[0]
         stats.updateUses(module.exports.name);
-        if (!manager.gblacklist.users.includes(msg.author.id)) {
+        if (!manager.gblacklist.users.includes(user.id)) {
             if (msg.channel.guild.members.get('503720029456695306').permission.has('manageWebhooks')) {
                 var embarrassingThing = lists.embarrassingThings[Math.floor(Math.random() * lists.embarrassingThings.length)]
                 if (lists.embarrassingThings[0] === embarrassingThing || lists.embarrassingThings[1] === embarrassingThing) {
-                    msg.channel.createMessage(`<@${msg.author.id}> ${embarrassingThing}`);
+                    msg.channel.createMessage(`<@${user.id}> ${embarrassingThing}`);
                 }else {
-                    var avatarURL = msg.author.dynamicAvatarURL('png', 1024).split('?')[0]
-                    msg.channel.createWebhook({name: msg.author.username}).then(thing => {
-                        client.executeWebhook(thing.id, thing.token, {content: embarrassingThing, avatarURL: avatarURL, username: msg.member.username});
+                    msg.channel.createWebhook({name: user.username}).then(thing => {
+                        client.executeWebhook(thing.id, thing.token, {content: embarrassingThing, avatarURL: avatarURL, username: user.username});
                         setTimeout(() => {
                             client.deleteWebhook(thing.id);
                         }, 5000);
@@ -37,8 +44,6 @@ module.exports = {
         description: 'Embarrass yourself (mite b offensive)',
         fullDescription: 'it just embarrasses you, what else do you need help with?',
         guildOnly: true,
-        aliases: [
-            "emberrass"
-        ]
+        usage: '[user mention|userID]'
     }
 }

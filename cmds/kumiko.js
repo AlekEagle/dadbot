@@ -10,7 +10,13 @@ module.exports = {
     exec: (client, msg, args) => {
         stats.updateUses(module.exports.name);
         if (!manager.gblacklist.users.includes(msg.author.id)) {
-            msg.channel.createMessage(lists.kumiko[Math.floor(Math.random() * lists.kumiko.length)]).catch(() => {});
+            msg.channel.createMessage({
+                embed: {
+                    image: {
+                        url: lists.kumiko[Math.floor(Math.random() * lists.kumiko.length)]
+                    }
+                }
+            }).catch(() => {});
         } else {
             msg.author.getDMChannel().then(chn => {
                 chn.createMessage('You have been blacklisted from dad bot! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.').catch(() => {
