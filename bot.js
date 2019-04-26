@@ -121,7 +121,46 @@ function nextShard() {
                     });
                 });
             });
-            server.listen(parseInt(`4203${i}`))
+            app.post('/eval', (req, res) => {
+                let nums = require('./functions/numbers');
+                let manager = require('./functions/blacklistManager');
+                let owners = require('./functions/getOwners');
+                let util = require('util');
+                let guildCount = require('./functions/getGuilds');
+                let eco = require('./functions/economy');
+                let prefixes = require('./functions/getPrefixes');
+                let toHHMMSS = require('./functions/toReadableTime');
+                let genRanString = require('./functions/genRanString');
+                let stats = require('./functions/commandStatistics');
+                let music = require('./functions/musicUtils');
+                let body = '';
+                req.on('data', chunk => {
+                    body += chunk.toString();
+                });
+                req.on('end', () => {
+                    try {
+                        let evaluation = eval(body);
+                        if (typeof evaluation !== "string") {
+                            evaluation = util.inspect(evaluation).replace(client.token, '(insert token here)')
+                        }else {
+                            evaluation = evaluation.replace(client.token, '(insert token here)')
+                        }
+                        if (evaluation.length > 2000) {
+                            fs.writeFile('/home/pi/node_server/root/dad_bot/eval_out/eval_output.txt', evaluation.replace(/\n/g, '<br>'), (err) => {
+                                if (err != undefined) {
+                                    res.end('An error occurred while this action was being preformed error code: `' + err.code + '`')
+                                }
+                            });
+                            res.end('Output too large, it should be on your website at https://alekeagle.tk/dad_bot/eval_out')
+                        }else {
+                            res.end(evaluation)
+                        }
+                    } catch (err) {
+                        res.end('OOF ERROR:\ninput: ```' + evalCommand + '``` output: ```' + err + '```')
+                    }
+                })
+            })
+            server.listen(parseInt(`420${i}`))
         }
         if (i < nums.shardCount) {
             request.post(`https://maker.ifttt.com/trigger/bot_restarted/with/key/${u_wut_m8.iftttToken}`,{

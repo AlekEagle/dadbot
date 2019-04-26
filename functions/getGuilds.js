@@ -9,7 +9,7 @@ module.exports = () => {
         for (let thing = 0; thing < nums.shardCount; thing ++) {
             request({
                 method: 'GET',
-                url: `http://127.0.0.1:4203${thing}/servers`
+                url: `http://127.0.0.1:420${thing}/servers`
             }, (err, res, body) => {
                 if (err) {
                     reject(err)
