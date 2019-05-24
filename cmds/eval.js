@@ -9,6 +9,9 @@ let util = require('util');
 let guildCount = require('../functions/getGuilds');
 let fs = require('fs');
 
+const Logger = require('../functions/logger');
+const console = new Logger();
+
 module.exports = {
     name: 'eval',
 
@@ -25,7 +28,7 @@ module.exports = {
                 }
                 if (evaluation.length > 2000) {
                     client.createMessage(msg.channel.id, 'Output too large, it should be on your website at https://alekeagle.tk/dad_bot/eval_out').then(() => {
-                        fs.writeFile('/home/pi/node_server/root/dad_bot/eval_out/eval_output.txt', evaluation.replace(/\n/g, '<br>'), (err) => {
+                        fs.writeFile('/home/alekeagle/node_server/root/dad_bot/eval_out/eval_output.txt', evaluation.replace(/\n/g, '<br>'), (err) => {
                             if (err != undefined) {
                                 client.createMessage(msg.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
                             }

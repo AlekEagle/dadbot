@@ -4,6 +4,7 @@ let stats = require('../functions/commandStatistics');
 let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 let guildCount = require('../functions/getGuilds');
+let time = require('../functions/toReadableTime');
 
 module.exports = {
     name: 'info',
@@ -46,10 +47,14 @@ module.exports = {
                                 name: 'Current Shard',
                                 value: msg.channel.guild.shard.id,
                                 inline: true
+                            },
+                            {
+                                name: 'Uptime',
+                                value: time(process.uptime())
                             }
                         ]
                     }
-                });
+                }).catch(err => {});
             });
         }else {
             msg.author.getDMChannel().then(chn => {

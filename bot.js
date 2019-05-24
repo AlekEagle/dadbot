@@ -3,6 +3,8 @@ const fs = require('fs');
 const u_wut_m8 = require('./.auth.json');
 const DBL = require('dblapi.js');
 const request = require('request');
+const Logger = require('./functions/logger');
+const console = new Logger();
 let nums = require('./functions/numbers');
 let manager = require('./functions/blacklistManager');
 let stats = require('./functions/commandStatistics');
@@ -166,10 +168,10 @@ function nextShard() {
             request.post(`https://maker.ifttt.com/trigger/bot_restarted/with/key/${u_wut_m8.iftttToken}`,{
                 json: {
                     value1: 'Dad Bot',
-                    value2: client.guilds.map(g => g)[0].shard.id.toString()
+                    value2: client.options.firstShardID.toString()
                 }
             }, () => {
-                console.log(`Told IFTTT that shard ${client.guilds.map(g => g)[0].shard.id} connected`);
+                console.log(`Told IFTTT that shard ${client.options.firstShardID} connected`);
                 i ++
                 if (i < nums.shardCount) nextShard()
             });
@@ -177,10 +179,10 @@ function nextShard() {
             request.post(`https://maker.ifttt.com/trigger/bot_reconnected/with/key/${u_wut_m8.iftttToken}`,{
                 json: {
                     value1: 'Dad Bot',
-                    value2: client.guilds.map(g => g)[0].shard.id.toString()
+                    value2: client.options.firstShardID.toString()
                 }
             }, () => {
-                console.log(`Told IFTTT that shard ${client.guilds.map(g => g)[0].shard.id} reconnected`);
+                console.log(`Told IFTTT that shard ${client.options.firstShardID} reconnected`);
             });
         }
         client.editStatus('online', {
@@ -188,9 +190,9 @@ function nextShard() {
             name: `try d!help`
         });
         setInterval(() => {
-            dbl.postStats(client.guilds.size, client.guilds.map(g => g)[0].shard.id, nums.shardCount);
+            dbl.postStats(client.guilds.size, client.options.firstShardID, nums.shardCount);
         }, 300000);
-        dbl.postStats(client.guilds.size, client.guilds.map(g => g)[0].shard.id, nums.shardCount);
+        dbl.postStats(client.guilds.size, client.options.firstShardID, nums.shardCount);
     });
     var events = fs.readdirSync('./events');
     console.log(`Loading ${events.length} events, please wait...`)

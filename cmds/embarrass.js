@@ -9,13 +9,13 @@ module.exports = {
 
     exec: (client, msg, args) => {
         var user;
-        if (args[0]) {
+        if (args[0] && msg.channel.guild.members.get(args[0].replace(/(<@!?|>)/g, '')) !== undefined) {
             args[0] = args[0].replace(/(<@!?|>)/g, '')
-            user = client.users.get(args[0]);
+            user = msg.channel.guild.members.get(args[0]);
         }else {
-            user = msg.author
+            user = msg.member
         }
-        var avatarURL = user.dynamicAvatarURL('png', 1024).split('?')[0]
+        var avatarURL = client.users.get(user.id).dynamicAvatarURL('png', 1024).split('?')[0]
         stats.updateUses(module.exports.name);
         if (!manager.gblacklist.users.includes(user.id)) {
             if (msg.channel.guild.members.get('503720029456695306').permission.has('manageWebhooks')) {
@@ -24,7 +24,7 @@ module.exports = {
                     msg.channel.createMessage(`<@${user.id}> ${embarrassingThing}`);
                 }else {
                     msg.channel.createWebhook({name: user.username}).then(thing => {
-                        client.executeWebhook(thing.id, thing.token, {content: embarrassingThing, avatarURL: avatarURL, username: user.username});
+                        client.executeWebhook(thing.id, thing.token, {content: embarrassingThing, avatarURL: avatarURL, username: user.nick ? user.nick : user.username});
                         setTimeout(() => {
                             client.deleteWebhook(thing.id);
                         }, 5000);

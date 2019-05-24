@@ -4,6 +4,9 @@ let stats = require('../functions/commandStatistics');
 let manager = require('../functions/blacklistManager');
 let owners = require('../functions/getOwners');
 
+const Logger = require('../functions/logger');
+const console = new Logger();
+
 module.exports = {
     name: 'pasta',
 

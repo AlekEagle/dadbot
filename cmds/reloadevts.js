@@ -5,6 +5,9 @@ const request = require('request');
 const nums = require('../functions/numbers');
 let stats = require('../functions/commandStatistics');
 
+const Logger = require('../functions/logger');
+const console = new Logger();
+
 module.exports = {
     name: 'reloadevts',
 

@@ -3,6 +3,9 @@
 let stats = require('../functions/commandStatistics');
 let manager = require('../functions/blacklistManager');
 
+const Logger = require('../functions/logger');
+const console = new Logger();
+
 module.exports = {
     name: 'responses',
 
@@ -14,7 +17,7 @@ module.exports = {
                 manager.manageBlacklist({action: 'remove', blklist: 'blk', type: 'user', id: `${msg.author.id}`}).then(list => {
                     msg.channel.createMessage('You have been unblacklisted from all auto responses!').then((message) => {
                         setTimeout(() => {
-                            message.delete()
+                            message.delete().catch(err => {})
                         }, 5000)
                     });
                 }, err => {
@@ -25,7 +28,7 @@ module.exports = {
                 manager.manageBlacklist({action: 'add', blklist: 'blk', type: 'user', id: `${msg.author.id}`}).then(list => {
                     msg.channel.createMessage('You have been blacklisted from all auto responses!').then((message) => {
                         setTimeout(() => {
-                            message.delete()
+                            message.delete().catch(err => {})
                         }, 5000)
                     });
                 }, err => {

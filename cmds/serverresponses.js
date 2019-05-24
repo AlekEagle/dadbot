@@ -4,6 +4,9 @@ let stats = require('../functions/commandStatistics');
 let manager = require('../functions/blacklistManager');
 let owners = require('../functions/getOwners');
 
+const Logger = require('../functions/logger');
+const console = new Logger();
+
 module.exports = {
     name: 'serverresponses',
 
@@ -16,7 +19,7 @@ module.exports = {
                     manager.manageBlacklist({action: 'remove', blklist: 'blk', type: 'server', id: `${msg.channel.guild.id}`}).then(list => {
                         msg.channel.createMessage('Your server has been unblacklisted from all auto responses!').then((message) => {
                         setTimeout(() => {
-                            message.delete()
+                            message.delete().catch(err => {})
                         }, 5000)
                     });
                     }, err => {
@@ -27,7 +30,7 @@ module.exports = {
                     manager.manageBlacklist({action: 'add', blklist: 'blk', type: 'server', id: `${msg.channel.guild.id}`}).then(list => {
                         msg.channel.createMessage('Your server has been blacklisted from all auto responses!').then((message) => {
                         setTimeout(() => {
-                            message.delete()
+                            message.delete().catch(err => {})
                         }, 5000)
                     });
                     }, err => {

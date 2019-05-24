@@ -5,6 +5,9 @@ let manager = require('../functions/blacklistManager');
 let owners = require('../functions/getOwners');
 let lists = require('../functions/lists');
 
+const Logger = require('../functions/logger');
+const console = new Logger();
+
 module.exports = {
     name: 'gblacklist',
 
