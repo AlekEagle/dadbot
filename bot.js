@@ -4,7 +4,7 @@ const u_wut_m8 = require('./.auth.json');
 const DBL = require('dblapi.js');
 const request = require('request');
 const Logger = require('./functions/logger');
-const console = new Logger();
+global.console = new Logger();
 let nums = require('./functions/numbers');
 let manager = require('./functions/blacklistManager');
 let stats = require('./functions/commandStatistics');
@@ -216,6 +216,7 @@ function nextShard() {
     client.registerGuildPrefix('450100127256936458', 'daddy?')
     client.registerGuildPrefix('454933217666007052', 'daddy?')
     client.registerGuildPrefix('446425626988249089', 'daddy?')
+    client.registerGuildPrefix('581542195547602950', '+')
     client.connect();
 }
 nextShard()

@@ -3,8 +3,7 @@
 let stats = require('../functions/commandStatistics');
 let manager = require('../functions/blacklistManager');
 
-const Logger = require('../functions/logger');
-const console = new Logger();
+
 
 module.exports = {
     name: 'responses',
