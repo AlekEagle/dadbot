@@ -9,8 +9,7 @@ let util = require('util');
 let guildCount = require('../functions/getGuilds');
 let fs = require('fs');
 
-const Logger = require('../functions/logger');
-const console = new Logger();
+
 
 module.exports = {
     name: 'eval',

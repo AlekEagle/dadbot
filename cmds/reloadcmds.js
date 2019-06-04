@@ -5,8 +5,7 @@ const request = require('request');
 let stats = require('../functions/commandStatistics');
 let nums = require('../functions/numbers');
 
-const Logger = require('../functions/logger');
-const console = new Logger();
+
 
 module.exports = {
     name: 'reloadcmds',
