@@ -23,7 +23,7 @@ module.exports = {
             }
             return;
         }
-        if (manager.blacklist.servers.includes(msg.channel.guild.id)) {} else {
+        if (manager.blacklist.servers.includes(msg.channel.guild.id) || manager.blacklist.channels.includes(msg.channel.id)) {} else {
             if (!msg.author.bot && !manager.blacklist.users.includes(msg.author.id) && !manager.gblacklist.users.includes(msg.author.id)) {
                 if (msg.content.match(/(\n| |^)[i|I]'?’?[m|M](\n| |$)/) || msg.content.match(/(\n| |^)[i|I] [a|A][m|M](\n| |$)/)) {
                     var ind = -1;

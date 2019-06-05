@@ -2,6 +2,7 @@
 
 let guildCount = require('../functions/getGuilds');
 let u_wut_m8 = require('../.auth.json');
+let manager = require('../functions/blacklistManager');
 
 module.exports = {
     name: 'guildDelete',
@@ -122,8 +123,10 @@ module.exports = {
                         }
                     }
                 ]
-                })
+                });
             });
         });
+        if (manager.pblacklist.servers.includes(guild.id)) manager.manageBlacklist({action: 'remove', blklist: 'pblk', type: 'server', id: guild.id})
+        if (manager.blacklist.servers.includes(guild.id)) manager.manageBlacklist({action: 'remove', blklist: 'blk', type: 'server', id: guild.id})
     }
 }
