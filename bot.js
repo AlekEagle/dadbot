@@ -35,7 +35,7 @@ owners.initializeOwners().then(list => {
 });
 function nextShard() {
     console.log(`Connecting to shard ${i}`);
-    const client = new Eris.CommandClient(u_wut_m8.token, {
+    const client = new Eris.CommandClient(u_wut_m8.otherToken, {
         firstShardID: i,
         lastShardID: i,
         maxShards: nums.shardCount,
