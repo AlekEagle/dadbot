@@ -63,7 +63,9 @@ function nextShard() {
             console.log(`Told IFTTT that shard ${i} started`);
     });
     client.on('ready', () => {
-        prefixes.managePrefixes({action: 'refresh', client});
+        prefixes.managePrefixes({action: 'refresh', client}).then(prefixes => {
+            console.log(`Loaded ${prefixes.length} guild prefix(es).`)
+        });
         prefixes.on('newPrefix', (id, prefix) => client.registerGuildPrefix(id, prefix));
         prefixes.on('removePrefix', (id) => {
             delete client.guildPrefixes[id];
