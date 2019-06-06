@@ -108,7 +108,18 @@ function nextShard() {
                     delete require.cache[require.resolve(`./cmds/${c}`)]
                     var cmdFile = require(`./cmds/${c}`);
                     stats.initializeCommand(cmdFile.name);
-                    client.registerCommand(cmdFile.name, (msg, args) => cmdFile.exec(client, msg, args, nums.shardCount), cmdFile.options)
+                    client.registerCommand(cmdFile.name, (msg, args) => {
+                        stats.updateUses(cmdFile.name);
+                        if (!manager.gblacklist.users.includes(msg.author.id)) {
+                            cmdFile.exec(client, msg, args);
+                        }else {
+                            msg.author.getDMChannel().then(chn => {
+                                chn.createMessage('You have been blacklisted from dad bot! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.').catch(() => {
+                                    msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from dad bot! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.`)
+                                })
+                            })
+                        }
+                    }, cmdFile.options)
                 });
                 res.end('{ "success": true }')
             });
@@ -222,7 +233,7 @@ function nextShard() {
         var cmdFile = require(`./cmds/${c}`);
         stats.initializeCommand(cmdFile.name);
         client.registerCommand(cmdFile.name, (msg, args) => {
-            stats.updateUses(module.exports.name);
+            stats.updateUses(cmdFile.name);
             if (!manager.gblacklist.users.includes(msg.author.id)) {
                 cmdFile.exec(client, msg, args);
             }else {
