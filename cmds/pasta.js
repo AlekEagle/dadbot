@@ -1,6 +1,7 @@
 'use strict';
 
 let owners = require('../functions/getOwners');
+let manager = require('../functions/blacklistManager');
 
 const Logger = require('../functions/logger');
 const console = new Logger();
