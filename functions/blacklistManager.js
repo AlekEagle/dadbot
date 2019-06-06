@@ -106,6 +106,9 @@ module.exports = {
                                         console.error(err);
                                     });
                                 break;
+                                default: 
+                                    reject(`${value.type} does not exist.`);
+                                break;
                             }
                         break;
                         case 'pblk':
@@ -129,6 +132,9 @@ module.exports = {
                                 reject(err);
                                 console.error(err);
                             });
+                        break;
+                        default: 
+                            reject(`${value.blklist} does not exist.`);
                         break;
                     }
                     break;
@@ -168,6 +174,9 @@ module.exports = {
                                 reject(err);
                                 console.log(err);
                             });
+                        break;
+                        default: 
+                            reject(`${value.blklist} does not exist.`);
                         break;
                     }
                     break;
@@ -223,6 +232,9 @@ module.exports = {
                                         console.log(err);
                                     });
                                 break;
+                                default: 
+                                    reject(`${value.type} does not exist.`);
+                                break;
                             }
                         break;
                         case 'pblk':
@@ -255,7 +267,13 @@ module.exports = {
                                 console.log(err);
                             });
                         break;
+                        default: 
+                            reject(`${value.blklist} does not exist.`);
+                        break;
                     }
+                break;
+                default: 
+                    reject(`${value.action} does not exist.`);
                 break;
             }
         });

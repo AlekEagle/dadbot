@@ -1,12 +1,14 @@
 'use strict';
 
-let stats = require('../functions/commandStatistics');
 let nums = require('../functions/numbers');
 let manager = require('../functions/blacklistManager');
 let owners = require('../functions/getOwners');
-let lists = require('../functions/lists');
 let util = require('util');
 let guildCount = require('../functions/getGuilds');
+let prefixes = require('../functions/managePrefixes');
+let toHHMMSS = require('../functions/toReadableTime');
+let genRanString = require('../functions/genRanString');
+let stats = require('../functions/commandStatistics');
 let fs = require('fs');
 
 const Logger = require('../functions/logger');

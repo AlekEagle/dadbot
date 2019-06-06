@@ -1,4 +1,5 @@
 const Eris = require('eris');
+const env = process.env;
 const fs = require('fs');
 const u_wut_m8 = require('./.auth.json');
 const DBL = require('dblapi.js');
@@ -9,12 +10,13 @@ let nums = require('./functions/numbers');
 let manager = require('./functions/blacklistManager');
 let stats = require('./functions/commandStatistics');
 let owners = require('./functions/getOwners');
+let prefixes = require('./functions/managePrefixes');
 let i = 0;
 const Sentry = require('@sentry/node');
 Sentry.init({ dsn: 'https://81fb39c6a5904886ba26a90e2a6ea8aa@sentry.io/1407724' });
 const dbl = new DBL(u_wut_m8.dblToken, {});
 manager.manageBlacklist({action: 'refresh', blklist: 'blk'}).then(list => {
-    console.log(`Loaded blacklist. There are currently ${list.users.length} user entry(s) and ${list.servers.length} server entry(s).`);
+    console.log(`Loaded blacklist. There are currently ${list.users.length} user entry(s), ${list.servers.length} server entry(s), and ${list.channels.length} channel entry(s).`);
 }, (err) => {
     console.error(err)
 });
@@ -35,15 +37,15 @@ owners.initializeOwners().then(list => {
 });
 function nextShard() {
     console.log(`Connecting to shard ${i}`);
-    const client = new Eris.CommandClient(u_wut_m8.token, {
+    const client = new Eris.CommandClient(env.DEBUG ? u_wut_m8.otherToken : u_wut_m8.token, {
         firstShardID: i,
         lastShardID: i,
         maxShards: nums.shardCount,
         getAllUsers: true
     }, {
-        description: 'We need suggestions for `d!embarrass` and `d!dadjoke`! come suggest things at the server in: `d!invite`',
+        description: 'Been hard at work making Dad Bot better and better, you can now toggle auto responses on a per channel basis, and you can also change the prefix, *we still need suggestions for the embarrass and dadjoke commands so use command invite to drop by the server and suggest away!*',
         owner: 'AlekEagle#0001',
-        prefix: 'd!'
+        prefix: env.DEBUG ? 'test!' : 'd!'
     });
     function onDBLVote(data) {
         client.getDMChannel(data.user).then(msg => {
@@ -52,7 +54,7 @@ function nextShard() {
             console.error('Unable to DM user')
         });
     }
-    if (i < nums.shardCount) request.post(`https://maker.ifttt.com/trigger/process_started/with/key/${u_wut_m8.iftttToken}`,{
+    if (i < nums.shardCount && !env.DEBUG) request.post(`https://maker.ifttt.com/trigger/process_started/with/key/${u_wut_m8.iftttToken}`,{
             json: {
                 value1: 'Dad Bot',
                 value2: i.toString()
@@ -61,6 +63,14 @@ function nextShard() {
             console.log(`Told IFTTT that shard ${i} started`);
     });
     client.on('ready', () => {
+        prefixes.managePrefixes({action: 'refresh', client});
+        prefixes.on('newPrefix', (id, prefix) => client.registerGuildPrefix(id, prefix));
+        prefixes.on('removePrefix', (id) => {
+            delete client.guildPrefixes[id];
+        });
+        prefixes.on('updatePrefix', (id, prefix) => {
+            client.guildPrefixes[id] = prefix;
+        });
         console.log(`Connected to shard ${i}`);
         if (i < nums.shardCount) {
             let http = require('http'),
@@ -129,12 +139,10 @@ function nextShard() {
                 let owners = require('./functions/getOwners');
                 let util = require('util');
                 let guildCount = require('./functions/getGuilds');
-                let eco = require('./functions/economy');
-                let prefixes = require('./functions/getPrefixes');
+                let prefixes = require('./functions/managePrefixes');
                 let toHHMMSS = require('./functions/toReadableTime');
                 let genRanString = require('./functions/genRanString');
                 let stats = require('./functions/commandStatistics');
-                let music = require('./functions/musicUtils');
                 let body = '';
                 req.on('data', chunk => {
                     body += chunk.toString();
@@ -164,7 +172,7 @@ function nextShard() {
             })
             server.listen(parseInt(`420${i}`))
         }
-        if (i < nums.shardCount) {
+        if (i < nums.shardCount && !env.DEBUG) {
             request.post(`https://maker.ifttt.com/trigger/bot_restarted/with/key/${u_wut_m8.iftttToken}`,{
                 json: {
                     value1: 'Dad Bot',
@@ -172,10 +180,8 @@ function nextShard() {
                 }
             }, () => {
                 console.log(`Told IFTTT that shard ${client.options.firstShardID} connected`);
-                i ++
-                if (i < nums.shardCount) nextShard()
             });
-        }else {
+        }else if (!env.DEBUG) {
             request.post(`https://maker.ifttt.com/trigger/bot_reconnected/with/key/${u_wut_m8.iftttToken}`,{
                 json: {
                     value1: 'Dad Bot',
@@ -187,12 +193,18 @@ function nextShard() {
         }
         client.editStatus('online', {
             type: 0,
-            name: `try d!help`
+            name: `try ${client.commandOptions.prefix}help`
         });
-        setInterval(() => {
+        if (!env.DEBUG) {
+            setInterval(() => {
+                dbl.postStats(client.guilds.size, client.options.firstShardID, nums.shardCount);
+            }, 300000);
             dbl.postStats(client.guilds.size, client.options.firstShardID, nums.shardCount);
-        }, 300000);
-        dbl.postStats(client.guilds.size, client.options.firstShardID, nums.shardCount);
+        }
+        if (i < nums.shardCount) {
+            i ++
+            if (i < nums.shardCount) nextShard()
+        }
     });
     var events = fs.readdirSync('./events');
     console.log(`Loading ${events.length} events, please wait...`)
@@ -219,4 +231,4 @@ function nextShard() {
     client.registerGuildPrefix('581542195547602950', '+')
     client.connect();
 }
-nextShard()
+nextShard();
