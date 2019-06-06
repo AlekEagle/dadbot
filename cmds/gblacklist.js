@@ -1,6 +1,5 @@
 'use strict';
 
-let stats = require('../functions/commandStatistics');
 let manager = require('../functions/blacklistManager');
 let owners = require('../functions/getOwners');
 let lists = require('../functions/lists');
@@ -12,7 +11,6 @@ module.exports = {
     name: 'gblacklist',
 
     exec: (client, msg, args) => {
-        stats.updateUses(module.exports.name);
         args[0] = args[0].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')
         if (owners.isOwner(msg.author.id)) {
             msg.delete().catch(() => {})
@@ -39,15 +37,8 @@ module.exports = {
                     msg.channel.createMessage('Whoops! I just shidded and farded and everything broke!')
                 });
             }
-        }else if (!manager.gblacklist.users.includes(msg.author.id)) {
-            client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
-        }else {
-            msg.author.getDMChannel().then(chn => {
-                chn.createMessage('You have been blacklisted from dad bot! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.').catch(() => {
-                    msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from dad bot! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.`)
-                })
-            })
-        }
+        }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
+        
     },
 
     options: {

@@ -17,7 +17,8 @@ module.exports = {
                 }).catch(() => {})
             }
         } catch (err) {}
-        if (msg.channel.type === 1 && msg.author.id !== '503720029456695306') {
+        if (!msg.channel.guild) {
+            if (msg.author.id === client.user.id) return;
             if (msg.content.match(/(\n| |^)[i|I]'?’?[m|M](\n| |$)/) || msg.content.match(/(\n| |^)[i|I] [a|A][m|M](\n| |$)/)) {
                 msg.channel.createMessage(`I'm responses don't work in DMs because of how the blacklists are set up!`)
             }

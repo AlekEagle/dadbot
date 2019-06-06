@@ -3,7 +3,6 @@
 const owners = require('../functions/getOwners');
 const request = require('request');
 const nums = require('../functions/numbers');
-let stats = require('../functions/commandStatistics');
 
 const Logger = require('../functions/logger');
 const console = new Logger();
@@ -12,7 +11,6 @@ module.exports = {
     name: 'reloadevts',
 
     exec: (client, msg, args) => {
-        stats.updateUses(module.exports.name);
         if (owners.isOwner(msg.author.id)) {
             msg.channel.createMessage(`Unloading all events not important to the CommandClient and loading \`${require('fs').readdirSync('./events').length}\` events.`)
             setTimeout(() => {

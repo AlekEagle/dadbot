@@ -2,7 +2,6 @@
 
 const owners = require('../functions/getOwners');
 const request = require('request');
-let stats = require('../functions/commandStatistics');
 let nums = require('../functions/numbers');
 
 const Logger = require('../functions/logger');
@@ -12,7 +11,6 @@ module.exports = {
     name: 'reloadcmds',
 
     exec: (client, msg, args) => {
-        stats.updateUses(module.exports.name);
         if (owners.isOwner(msg.author.id)) {
             msg.channel.createMessage(`Unloading \`${Object.values(client.commands).filter(c => c.label !== 'help').map(c => c.label).length}\` commands and reloading \`${require('fs').readdirSync('./cmds').length}\` commands.`)
             setTimeout(() => {

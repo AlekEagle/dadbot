@@ -221,16 +221,19 @@ function nextShard() {
     commands.forEach(c => {
         var cmdFile = require(`./cmds/${c}`);
         stats.initializeCommand(cmdFile.name);
-        client.registerCommand(cmdFile.name, (msg, args) => cmdFile.exec(client, msg, args), cmdFile.options)
+        client.registerCommand(cmdFile.name, (msg, args) => {
+            stats.updateUses(module.exports.name);
+            if (!manager.gblacklist.users.includes(msg.author.id)) {
+                cmdFile.exec(client, msg, args);
+            }else {
+                msg.author.getDMChannel().then(chn => {
+                    chn.createMessage('You have been blacklisted from dad bot! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.').catch(() => {
+                        msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from dad bot! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.`)
+                    })
+                })
+            }
+        }, cmdFile.options)
     })
-    client.registerGuildPrefix('264445053596991498', 'daddy?')
-    client.registerGuildPrefix('110373943822540800', 'daddy?')
-    client.registerGuildPrefix('374071874222686211', 'daddy?')
-    client.registerGuildPrefix('396440418507816960', 'daddy?')
-    client.registerGuildPrefix('450100127256936458', 'daddy?')
-    client.registerGuildPrefix('454933217666007052', 'daddy?')
-    client.registerGuildPrefix('446425626988249089', 'daddy?')
-    client.registerGuildPrefix('581542195547602950', '+')
     client.connect();
 }
 nextShard();

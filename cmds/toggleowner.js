@@ -1,14 +1,11 @@
 'use strict';
 
-let manager = require('../functions/blacklistManager');
 let owners = require('../functions/getOwners');
-let stats = require('../functions/commandStatistics');
 
 module.exports = {
     name: 'toggleowner',
 
     exec: (client, msg, args) => {
-        stats.updateUses(module.exports.name);
         var ownerID = args[0].replace(/(<@|!|>)/g, '')
         if (!manager.gblacklist.users.includes(msg.author.id)) {
             if (owners.isOwner(msg.author.id)) {
