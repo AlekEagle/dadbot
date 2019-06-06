@@ -14,7 +14,7 @@ Prefixes.init({
     prefix: Sequelize.STRING
 }, { sequelize });
 Prefixes.sync({
-    force: true
+    force: false
 }).then(() => {
     console.log('Prefixes synced to database successfully!');
 }).catch(err => {
