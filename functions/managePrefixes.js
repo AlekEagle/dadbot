@@ -10,11 +10,11 @@ const sequelize = new Sequelize(`postgres://alekeagle:${u_wut_m8.serverPass}@127
 });
 class Prefixes extends Sequelize.Model {};
 Prefixes.init({
-    serverID: {type: Sequelize.STRING, unique: true},
+    serverID: Sequelize.STRING,
     prefix: Sequelize.STRING
 }, { sequelize });
 Prefixes.sync({
-    force: false
+    force: true
 }).then(() => {
     console.log('Prefixes synced to database successfully!');
 }).catch(err => {
