@@ -73,13 +73,17 @@ class thisModule extends EventEmitter {
                             serverID: value.serverID
                         }
                     }).then(prefix => {
-                        prefix.destroy().then(() => {
-                            this.emit('removePrefix', value.serverID);
+                        if (prefix) {
+                            prefix.destroy().then(() => {
+                                this.emit('removePrefix', value.serverID);
+                                resolve();
+                            }, err => {
+                                console.error(err);
+                                reject(err);
+                            });
+                        }else {
                             resolve();
-                        }, err => {
-                            console.error(err);
-                            reject(err);
-                        });
+                        }
                     }, err => {
                         console.error(err);
                         reject(err);

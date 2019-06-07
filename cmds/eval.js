@@ -9,6 +9,7 @@ let prefixes = require('../functions/managePrefixes');
 let toHHMMSS = require('../functions/toReadableTime');
 let genRanString = require('../functions/genRanString');
 let stats = require('../functions/commandStatistics');
+let shards = require('../functions/shardManager');
 let fs = require('fs');
 
 const Logger = require('../functions/logger');

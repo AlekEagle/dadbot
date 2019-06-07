@@ -1,6 +1,7 @@
 'use strict';
 
 let owners = require('../functions/getOwners');
+let shards = require('../functions/shardManager');
 
 module.exports = {
     name: 'setplaying',
@@ -20,18 +21,13 @@ module.exports = {
             }else if (parseInt(args[1]) === 3) {
                 playing = '**Watching**';
             }
-            client.shards.forEach(s => {
+            shards.map(s => s).forEach(s => {
                 s.editStatus(args[0], {
                     name: text,
                     type: parseInt(args[1]),
                     url: n
                 });
             });
-            /* client.editStatus(args[0], {
-                name: text,
-                type: parseInt(args[1]),
-                url: msg.content.split(' | ').splice(1).join('')
-            }) */
             msg.channel.createMessage('I am now ' + playing + ' ' + text);
 
         }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')

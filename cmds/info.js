@@ -3,6 +3,7 @@
 let nums = require('../functions/numbers');
 let guildCount = require('../functions/getGuilds');
 let time = require('../functions/toReadableTime');
+let shards = require('../functions/shardManager');
 
 module.exports = {
     name: 'info',
@@ -32,6 +33,11 @@ module.exports = {
                         {
                             name: 'Server count',
                             value: guilds,
+                            inline: true
+                        },
+                        {
+                            name: 'User count',
+                            value: shards.map(s => s.users.size).reduce((a, b) => a + b, 0),
                             inline: true
                         },
                         {

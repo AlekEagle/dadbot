@@ -11,6 +11,7 @@ let manager = require('./functions/blacklistManager');
 let stats = require('./functions/commandStatistics');
 let owners = require('./functions/getOwners');
 let prefixes = require('./functions/managePrefixes');
+let shards = require('./functions/shardManager');
 let i = 0;
 const Sentry = require('@sentry/node');
 Sentry.init({ dsn: 'https://81fb39c6a5904886ba26a90e2a6ea8aa@sentry.io/1407724' });
@@ -63,25 +64,22 @@ function nextShard() {
             console.log(`Told IFTTT that shard ${i} started`);
     });
     client.on('ready', () => {
-        prefixes.managePrefixes({action: 'refresh', client}).then(prefixes => {
-            console.log(`Loaded ${prefixes.length} guild prefix(es).`)
-        });
-        prefixes.on('newPrefix', (id, prefix) => client.registerGuildPrefix(id, prefix));
-        prefixes.on('removePrefix', (id) => {
-            delete client.guildPrefixes[id];
-        });
-        prefixes.on('updatePrefix', (id, prefix) => {
-            client.guildPrefixes[id] = prefix;
-        });
-        console.log(`Connected to shard ${i}`);
         if (i < nums.shardCount) {
+            prefixes.managePrefixes({action: 'refresh', client}).then(prefixes => {
+                console.log(`Loaded ${prefixes.length} guild prefix(es).`)
+            });
+            prefixes.on('newPrefix', (id, prefix) => client.registerGuildPrefix(id, prefix));
+            prefixes.on('removePrefix', (id) => {
+                delete client.guildPrefixes[id];
+            });
+            prefixes.on('updatePrefix', (id, prefix) => {
+                client.guildPrefixes[id] = prefix;
+            });
+            shards.connectShard(client.options.firstShardID, client);
+            console.log(`Connected to shard ${i}`);
             let http = require('http'),
                 app = require('express')(),
                 server = http.createServer(app);
-            app.get('/servers', (req, res) => {
-                res.statusCode = 200;
-                res.end(client.guilds.size.toString())
-            })
             app.post('/vote', (req, res) => {
                 let body = '';
                 req.on('data', chunk => {
@@ -156,6 +154,7 @@ function nextShard() {
                 let toHHMMSS = require('./functions/toReadableTime');
                 let genRanString = require('./functions/genRanString');
                 let stats = require('./functions/commandStatistics');
+                let shards = require('./functions/shardManager');
                 let body = '';
                 req.on('data', chunk => {
                     body += chunk.toString();
@@ -179,7 +178,7 @@ function nextShard() {
                             res.end(evaluation)
                         }
                     } catch (err) {
-                        res.end('OOF ERROR:\ninput: ```' + evalCommand + '``` output: ```' + err + '```')
+                        res.end('OOF ERROR:\ninput: ```' + body + '``` output: ```' + err + '```')
                     }
                 })
             })
