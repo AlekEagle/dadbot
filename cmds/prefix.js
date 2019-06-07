@@ -8,7 +8,7 @@ module.exports = {
 
     exec: (client, msg, args) => {
         if (owners.isOwner(msg.author.id) || msg.member.permission.has('manageGuild')) {
-            if (args[0]) {
+            if (args[0] && args[0] !== 'd!') {
                 prefixes.managePrefixes({action: 'add', serverID: msg.channel.guild.id, prefix: args[0]}).then(() => {
                     msg.channel.createMessage(`The server prefix is now \`${client.guildPrefixes[msg.channel.guild.id]}\``);
                 }, () => {
