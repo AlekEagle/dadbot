@@ -193,6 +193,10 @@ function nextShard() {
             }, () => {
                 console.log(`Told IFTTT that shard ${client.options.firstShardID} connected`);
             });
+            client.editStatus('online', {
+                type: 0,
+                name: `try ${client.commandOptions.prefix}help`
+            });
         }else if (!env.DEBUG) {
             request.post(`https://maker.ifttt.com/trigger/bot_reconnected/with/key/${u_wut_m8.iftttToken}`,{
                 json: {
@@ -203,10 +207,6 @@ function nextShard() {
                 console.log(`Told IFTTT that shard ${client.options.firstShardID} reconnected`);
             });
         }
-        client.editStatus('online', {
-            type: 0,
-            name: `try ${client.commandOptions.prefix}help`
-        });
         if (!env.DEBUG) {
             setInterval(() => {
                 dbl.postStats(client.guilds.size, client.options.firstShardID, nums.shardCount);
