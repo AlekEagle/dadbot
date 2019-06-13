@@ -50,7 +50,7 @@ function nextShard() {
     });
     function onDBLVote(data) {
         client.getDMChannel(data.user).then(msg => {
-            msg.createMessage("Oh hecc you voted! Thanks! This helps me a lot!").catch(() => {});
+            msg.createMessage("Thanks for voting! This helps me a lot!").catch(() => {});
         }, () => {
             console.error('Unable to DM user')
         });
