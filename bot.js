@@ -44,7 +44,7 @@ function nextShard() {
         maxShards: nums.shardCount,
         getAllUsers: true
     }, {
-        description: 'Been hard at work making Dad Bot better and better, you can now toggle auto responses on a per channel basis, and you can also change the prefix, *we still need suggestions for the embarrass and dadjoke commands so use command invite to drop by the server and suggest away!*',
+        description: 'We are now partnered with the discord bot DJ Putin! go check him out at http://putin.ml:4276/ *come suggest more embarrass suggestions in the server using the invite command*',
         owner: 'AlekEagle#0001',
         prefix: env.DEBUG ? 'test!' : 'd!'
     });
