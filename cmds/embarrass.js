@@ -20,10 +20,12 @@ module.exports = {
                 msg.channel.createMessage(`<@${user.id}> ${embarrassingThing}`);
             }else {
                 msg.channel.createWebhook({name: user.username}).then(thing => {
-                    client.executeWebhook(thing.id, thing.token, {content: embarrassingThing, avatarURL: avatarURL, username: user.nick ? user.nick : user.username});
                     setTimeout(() => {
-                        client.deleteWebhook(thing.id);
-                    }, 5000);
+                        client.executeWebhook(thing.id, thing.token, {content: embarrassingThing, avatarURL: avatarURL, username: user.nick ? user.nick : user.username});
+                        setTimeout(() => {
+                            client.deleteWebhook(thing.id);
+                        }, 5000);
+                    }, 100);
                 }, () => {});
             }
         }else msg.channel.createMessage('No can do bub, in order for me to embarrass people I need the permission `MANAGE_WEBHOOKS`.')
