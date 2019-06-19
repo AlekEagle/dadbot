@@ -22,7 +22,7 @@ module.exports = {
         if (owners.isOwner(msg.author.id)) {
             try {
                 var evalCommand = args.join(' ');
-                let evaluation = eval(evalCommand);
+                let evaluation = eval(`function bruh() {${evalCommand}};bruh()`);
                 if (typeof evaluation !== "string") {
                     evaluation = util.inspect(evaluation).replace(client.token, '(insert token here)')
                 }else {
