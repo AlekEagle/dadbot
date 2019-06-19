@@ -22,7 +22,7 @@ module.exports = {
         if (owners.isOwner(msg.author.id)) {
             try {
                 var evalCommand = args.join(' ');
-                let evaluation = eval(`try {${evalCommand}}catch (err) {client.createMessage(msg.channel.id, 'OOF ERROR:\ninput: \`\`\`' + evalCommand + '\`\`\` output: \`\`\`' + err + '\`\`\`')}`)
+                let evaluation = eval(evalCommand)
                 if (typeof evaluation !== "string") {
                     evaluation = util.inspect(evaluation).replace(client.token, '(insert token here)')
                 }else {
