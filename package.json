@@ -10,6 +10,7 @@
     "collections": "^5.1.9",
     "dblapi.js": "^2.3.0",
     "eris": "^0.10.0",
+    "eris-command-handler": "^1.0.1",
     "express": "^4.17.1",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.3",

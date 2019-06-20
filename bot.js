@@ -1,4 +1,4 @@
-const Eris = require('eris');
+const CommandClient = require('../eris-command-handler');
 const env = process.env;
 const fs = require('fs');
 const u_wut_m8 = require('./.auth.json');
@@ -38,7 +38,7 @@ owners.initializeOwners().then(list => {
 });
 function nextShard() {
     console.log(`Connecting to shard ${i}`);
-    const client = new Eris.CommandClient(env.DEBUG ? u_wut_m8.otherToken : u_wut_m8.token, {
+    const client = new CommandClient(env.DEBUG ? u_wut_m8.otherToken : u_wut_m8.token, {
         firstShardID: i,
         lastShardID: i,
         maxShards: nums.shardCount,
