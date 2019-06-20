@@ -1,4 +1,4 @@
-const CommandClient = require('../eris-command-handler');
+const CommandClient = require('eris-command-handler');
 const env = process.env;
 const fs = require('fs');
 const u_wut_m8 = require('./.auth.json');
