@@ -27,7 +27,7 @@ module.exports = {
     },
 
     options: {
-        description: 'sets the prefix!',
+        description: 'sets the prefix! (if the prefix is too long the help command will break)',
         usage: '[prefix (for a prefix with a space at the end, wrap the prefix in "")|leave blank for default prefix]'
     }
 }
