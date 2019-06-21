@@ -10,11 +10,11 @@
     "collections": "^5.1.9",
     "dblapi.js": "^2.3.0",
     "eris": "^0.10.0",
-    "eris-command-handler": "^1.0.1",
+    "eris-command-handler": "^1.0.2",
     "express": "^4.17.1",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.3",
     "request": "^2.88.0",
-    "sequelize": "^5.8.10"
+    "sequelize": "^5.8.11"
   }
 }

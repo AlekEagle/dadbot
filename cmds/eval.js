@@ -52,6 +52,7 @@ module.exports = {
         aliases: [
             'evaluate',
             'ev'
-        ]
+        ],
+        removeWhitespace: false
     }
 }
