@@ -44,8 +44,8 @@ class TeraBytes {
     }
 }
 
-module.exports = () => {
-    let mem = process.memoryUsage().rss;
+module.exports = (omem) => {
+    let mem = omem || process.memoryUsage().rss;
     if((mem / 1024 / 1024 / 1024) > 1024) return `${(mem / 1024 / 1024 / 1024 / 1024).toString().slice(0, (mem / 1024 / 1024 / 1024 / 1024).toString().indexOf('.') + 3)}TB`;
     else if ((mem / 1024 / 1024) > 1024) return `${(mem / 1024 / 1024 / 1024).toString().slice(0, (mem / 1024 / 1024 / 1024).toString().indexOf('.') + 3)}GB`;
     else if ((mem / 1024) > 1024) return `${(mem / 1024 / 1024).toString().slice(0, (mem / 1024 / 1024).toString().indexOf('.') + 3)}MB`;

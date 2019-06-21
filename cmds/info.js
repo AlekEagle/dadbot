@@ -61,7 +61,7 @@ module.exports = {
                             },
                             {
                                 name: 'Memory Usage',
-                                value: `${memory()}`,
+                                value: `${memory()} / ${memory(require('os').totalmem())}`,
                                 inline: true
                             },
                             {
