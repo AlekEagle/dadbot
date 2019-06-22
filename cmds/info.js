@@ -55,7 +55,7 @@ module.exports = {
                                 inline: true
                             },
                             {
-                                name: 'RAM Usage',
+                                name: 'CPU Usage',
                                 value: `${data['%cpu']}%`,
                                 inline: true
                             },
