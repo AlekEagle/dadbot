@@ -40,7 +40,7 @@ class TeraBytes {
     
     stringify() {
         let mem = process.memoryUsage().rss / 1024 / 1024 / 1024 / 1024;
-        return `${mem.toString().slice(0,mem.toString().indexOf('.') !== -1 ? mem.toString().indexOf('.') + 3 : mem.toString().length)}GB`;
+        return `${mem.toString().slice(0,mem.toString().indexOf('.') !== -1 ? mem.toString().indexOf('.') + 3 : mem.toString().length)}TB`;
     }
 }
 
