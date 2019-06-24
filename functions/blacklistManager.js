@@ -167,7 +167,7 @@ module.exports = {
                         case 'gblk':
                             GBlacklist.findAll().then(gBlacklistContents => {
                                 gBlacklistContents.forEach(e => {
-                                    module.exports.pblacklist.servers.push(e.userId);
+                                    module.exports.gblacklist.users.push(e.userId);
                                 });
                                 resolve(module.exports.gblacklist);
                             }, err => {
