@@ -13,5 +13,9 @@ module.exports = {
         output.push(`${'-'.repeat(ownerNames.map(e => `${e.username}#${e.discriminator}`.length).sort((a, b) => a - b).reverse()[0])}+${'-'.repeat(ownerNames.map(e => e.id.length).sort((a, b) => a - b).reverse()[0])}+-----`)
         ownerNames.forEach(e => output.push(`${e.username}#${e.discriminator}${' '.repeat(ownerNames.map(e => `${e.username}#${e.discriminator}`.length).sort((a, b) => a - b).reverse()[0] - `${e.username}#${e.discriminator}`.length)}|${e.id}${' '.repeat(ownerNames.map(e => e.id.length).sort((a, b) => a - b).reverse()[0] - e.id.length)}|${owners.owners.users.filter(o => o.id === e.id)[0].adminOwner}${' '.repeat(owners.owners.users.filter(o => o.id === e.id)[0].adminOwner ? 1 : 0)}`));
         msg.channel.createMessage(`\`\`\`${output.join('\n')}\`\`\``);
+    },
+
+    options: {
+        description: 'Lists the owners of Dad Bot!'
     }
 }
