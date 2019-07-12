@@ -73,7 +73,7 @@ module.exports = {
                 }else {
                     client.createMessage('599257779563397123', {
                         embed: {
-                            title: `${module.exports.suggestion[suggestionIndex]} Suggestion`,
+                            title: `${module.exports.suggestion[suggestionIndex].type} Suggestion`,
                             fields: [
                                 {
                                     name: 'Suggestion',
