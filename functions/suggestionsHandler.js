@@ -3,6 +3,7 @@
 const fs = require('fs');
 const owners = require('../functions/getOwners');
 const lists = require('../functions/lists');
+const getUser = require('../functions/userAcrossShards');
 
 module.exports = {
     suggestions: [],
@@ -46,7 +47,7 @@ module.exports = {
                                 },
                                 {
                                     name: 'Suggested By',
-                                    value: `${client.users.get(msg.author.id).username}#${client.users.get(msg.author.id).discriminator} (${msg.author.id})`
+                                    value: `${getUser(msg.author.id).username}#${getUser(msg.author.id).discriminator} (${msg.author.id})`
                                 }
                             ]
                         }
@@ -82,7 +83,7 @@ module.exports = {
                                 },
                                 {
                                     name: 'Suggested By',
-                                    value: `${client.users.get(module.exports.suggestions[suggestionIndex].person).username}#${client.users.get(module.exports.suggestions[suggestionIndex].person).discriminator} (${module.exports.suggestions[suggestionIndex].person})`
+                                    value: `${getUser(module.exports.suggestions[suggestionIndex].person).username}#${getUser(module.exports.suggestions[suggestionIndex].person).discriminator} (${module.exports.suggestions[suggestionIndex].person})`
                                 }
                             ]
                         }
@@ -104,6 +105,7 @@ module.exports = {
                     fs.writeFileSync('./suggestions.json', JSON.stringify(module.exports.suggestions));
                     return false;
                 }else {
+                    if (module.exports.suggestions[suggestionIndex].downVotes.includes(msg.author.id)) module.exports.suggestions[suggestionIndex].downVotes = module.exports.suggestions[suggestionIndex].downVotes.filter(e => e !== msg.author.id);
                     module.exports.suggestions[suggestionIndex].upVotes.push(msg.author.id);
                     fs.writeFileSync('./suggestions.json', JSON.stringify(module.exports.suggestions));
                     return true;
@@ -120,6 +122,7 @@ module.exports = {
                         fs.writeFileSync('./suggestions.json', JSON.stringify(module.exports.suggestions));
                         return 'deleted';
                     }else {
+                        if (module.exports.suggestions[suggestionIndex].upVotes.includes(msg.author.id)) module.exports.suggestions[suggestionIndex].upVotes = module.exports.suggestions[suggestionIndex].upVotes.filter(e => e !== msg.author.id);
                         module.exports.suggestions[suggestionIndex].downVotes.push(msg.author.id);
                         fs.writeFileSync('./suggestions.json', JSON.stringify(module.exports.suggestions));
                         return true;

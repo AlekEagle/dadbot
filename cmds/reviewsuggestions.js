@@ -2,6 +2,7 @@
 
 const suggestions = require('../functions/suggestionsHandler');
 const owners = require('../functions/getOwners');
+const getUser = require('../functions/userAcrossShards');
 
 module.exports = {
     name: 'reviewsuggestions',
@@ -23,7 +24,7 @@ module.exports = {
                             },
                             {
                                 name: 'Person who had the idea',
-                                value: `${client.users.get(suggestions.suggestions[currentSelected].person) ? client.users.get(suggestions.suggestions[currentSelected].person).username : 'NotFound'}#${client.users.get(suggestions.suggestions[currentSelected].person) ? client.users.get(suggestions.suggestions[currentSelected].person).discriminator : 'NotFound'} (${suggestions.suggestions[currentSelected].person})`,
+                                value: `${getUser(suggestions.suggestions[currentSelected].person) ? getUser(suggestions.suggestions[currentSelected].person).username : 'NotFound'}#${getUser(suggestions.suggestions[currentSelected].person) ? getUser(suggestions.suggestions[currentSelected].person).discriminator : 'NotFound'} (${suggestions.suggestions[currentSelected].person})`,
                                 inline: false
                             },
                             {
@@ -61,7 +62,7 @@ module.exports = {
                                     },
                                     {
                                         name: 'Person who had the idea',
-                                        value: `${client.users.get(suggestions.suggestions[currentSelected].person) ? client.users.get(suggestions.suggestions[currentSelected].person).username : 'NotFound'}#${client.users.get(suggestions.suggestions[currentSelected].person) ? client.users.get(suggestions.suggestions[currentSelected].person).discriminator : 'NotFound'} (${suggestions.suggestions[currentSelected].person})`,
+                                        value: `${getUser(suggestions.suggestions[currentSelected].person) ? getUser(suggestions.suggestions[currentSelected].person).username : 'NotFound'}#${getUser(suggestions.suggestions[currentSelected].person) ? getUser(suggestions.suggestions[currentSelected].person).discriminator : 'NotFound'} (${suggestions.suggestions[currentSelected].person})`,
                                         inline: false
                                     },
                                     {

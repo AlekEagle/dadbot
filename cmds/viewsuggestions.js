@@ -2,6 +2,7 @@
 
 const suggestions = require('../functions/suggestionsHandler');
 const ms = require('ms');
+const getUser = require('../functions/userAcrossShards');
 
 module.exports = {
     name: 'suggestions',
@@ -16,7 +17,7 @@ module.exports = {
                     fields: [
                         {
                             name: 'Current Selection',
-                            value: `${suggestions.suggestions[currentSelection].suggestion}\n${suggestions.suggestions[currentSelection].type}\n${suggestions.suggestions[currentSelection].upVotes.length} Upvotes\n${suggestions.suggestions[currentSelection].downVotes.length} Downvotes\nBy ${client.users.get(suggestions.suggestions[currentSelection].person) ? client.users.get(suggestions.suggestions[currentSelection].person).username : 'NotFound'}#${client.users.get(suggestions.suggestions[currentSelection].person) ? client.users.get(suggestions.suggestions[currentSelection].person).discriminator : 'NotFound'} (${suggestions.suggestions[currentSelection].person})`
+                            value: `${suggestions.suggestions[currentSelection].suggestion}\n${suggestions.suggestions[currentSelection].type}\n${suggestions.suggestions[currentSelection].upVotes.length} Upvotes\n${suggestions.suggestions[currentSelection].downVotes.length} Downvotes\nBy ${getUser(suggestions.suggestions[currentSelection].person) ? getUser(suggestions.suggestions[currentSelection].person).username : 'NotFound'}#${getUser(suggestions.suggestions[currentSelection].person) ? getUser(suggestions.suggestions[currentSelection].person).discriminator : 'NotFound'} (${suggestions.suggestions[currentSelection].person})`
                         },
                         {
                             name: 'Suggestions',
@@ -33,7 +34,7 @@ module.exports = {
                             fields: [
                                 {
                                     name: 'Current Selection',
-                                    value: `${suggestions.suggestions[currentSelection].suggestion}\n${suggestions.suggestions[currentSelection].type}\n${suggestions.suggestions[currentSelection].upVotes.length} Upvotes\n${suggestions.suggestions[currentSelection].downVotes.length} Downvotes\nBy ${client.users.get(suggestions.suggestions[currentSelection].person) ? client.users.get(suggestions.suggestions[currentSelection].person).username : 'NotFound'}#${client.users.get(suggestions.suggestions[currentSelection].person) ? client.users.get(suggestions.suggestions[currentSelection].person).discriminator : 'NotFound'} (${suggestions.suggestions[currentSelection].person})`
+                                    value: `${suggestions.suggestions[currentSelection].suggestion}\n${suggestions.suggestions[currentSelection].type}\n${suggestions.suggestions[currentSelection].upVotes.length} Upvotes\n${suggestions.suggestions[currentSelection].downVotes.length} Downvotes\nBy ${getUser(suggestions.suggestions[currentSelection].person) ? getUser(suggestions.suggestions[currentSelection].person).username : 'NotFound'}#${getUser(suggestions.suggestions[currentSelection].person) ? getUser(suggestions.suggestions[currentSelection].person).discriminator : 'NotFound'} (${suggestions.suggestions[currentSelection].person})`
                                 },
                                 {
                                     name: 'Suggestions',
