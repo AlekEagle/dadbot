@@ -16,7 +16,7 @@ module.exports = {
                     fields: [
                         {
                             name: 'Current Selection',
-                            value: `${suggestions.suggestions[currentSelection].suggestion}\n${suggestions.suggestions[currentSelection].type}\n${suggestions.suggestions[currentSelection].upVotes.length} Upvotes\n${suggestions.suggestions[currentSelection].downVotes.length} Downvotes\nBy ${client.users.get(suggestions.suggestions[currentSelected].person) ? client.users.get(suggestions.suggestions[currentSelected].person).username : 'NotFound'}#${client.users.get(suggestions.suggestions[currentSelected].person) ? client.users.get(suggestions.suggestions[currentSelected].person).discriminator : 'NotFound'} (${suggestions.suggestions[currentSelected].person})`
+                            value: `${suggestions.suggestions[currentSelection].suggestion}\n${suggestions.suggestions[currentSelection].type}\n${suggestions.suggestions[currentSelection].upVotes.length} Upvotes\n${suggestions.suggestions[currentSelection].downVotes.length} Downvotes\nBy ${client.users.get(suggestions.suggestions[currentSelection].person) ? client.users.get(suggestions.suggestions[currentSelection].person).username : 'NotFound'}#${client.users.get(suggestions.suggestions[currentSelection].person) ? client.users.get(suggestions.suggestions[currentSelection].person).discriminator : 'NotFound'} (${suggestions.suggestions[currentSelection].person})`
                         },
                         {
                             name: 'Suggestions',
@@ -33,7 +33,7 @@ module.exports = {
                             fields: [
                                 {
                                     name: 'Current Selection',
-                                    value: `${suggestions.suggestions[currentSelection].suggestion}\n${suggestions.suggestions[currentSelection].type}\n${suggestions.suggestions[currentSelection].upVotes.length} Upvotes\n${suggestions.suggestions[currentSelection].downVotes.length} Downvotes\nBy ${client.users.get(suggestions.suggestions[currentSelected].person) ? client.users.get(suggestions.suggestions[currentSelected].person).username : 'NotFound'}#${client.users.get(suggestions.suggestions[currentSelected].person) ? client.users.get(suggestions.suggestions[currentSelected].person).discriminator : 'NotFound'} (${suggestions.suggestions[currentSelected].person})`
+                                    value: `${suggestions.suggestions[currentSelection].suggestion}\n${suggestions.suggestions[currentSelection].type}\n${suggestions.suggestions[currentSelection].upVotes.length} Upvotes\n${suggestions.suggestions[currentSelection].downVotes.length} Downvotes\nBy ${client.users.get(suggestions.suggestions[currentSelection].person) ? client.users.get(suggestions.suggestions[currentSelection].person).username : 'NotFound'}#${client.users.get(suggestions.suggestions[currentSelection].person) ? client.users.get(suggestions.suggestions[currentSelection].person).discriminator : 'NotFound'} (${suggestions.suggestions[currentSelection].person})`
                                 },
                                 {
                                     name: 'Suggestions',
