@@ -115,9 +115,15 @@ module.exports = {
                     fs.writeFileSync('./suggestions.json', JSON.stringify(module.exports.suggestions));
                     return false;
                 }else {
-                    module.exports.suggestions[suggestionIndex].downVotes.push(msg.author.id);
-                    fs.writeFileSync('./suggestions.json', JSON.stringify(module.exports.suggestions));
-                    return true;
+                    if (module.exports.suggestions[suggestionIndex].person === msg.author.id) {
+                        module.exports.suggestions = module.exports.suggestions.filter(e => e.person !== msg.author.id);
+                        fs.writeFileSync('./suggestions.json', JSON.stringify(module.exports.suggestions));
+                        return 'deleted';
+                    }else {
+                        module.exports.suggestions[suggestionIndex].downVotes.push(msg.author.id);
+                        fs.writeFileSync('./suggestions.json', JSON.stringify(module.exports.suggestions));
+                        return true;
+                    }
                 }
             break;
             default:

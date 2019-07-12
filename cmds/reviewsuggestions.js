@@ -144,7 +144,7 @@ module.exports = {
                                     });
                                 break;
                             }
-                            message.removeReaction(emoji.name, reactor.id);
+                            message.removeReaction(emoji.name, reactor.id).catch(() => {});
                         }
                     }
                     client.on('messageReactionAdd', handleReactions);

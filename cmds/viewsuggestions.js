@@ -68,13 +68,17 @@ module.exports = {
                                 editMessage();
                             break;
                             case '🔽':
-                                    if (suggestions.moderateSuggestion(client, currentSelection, 'downvote', null, msg)) {
-                                        editMessage();
-                                        message.edit('Successfully downvoted suggestion!');
-                                    }else {
-                                        editMessage();
-                                        message.edit('Successfully removed downvote on the suggestion!');
-                                    }
+                                var response = suggestions.moderateSuggestion(client, currentSelection, 'downvote', null, msg);
+                                if (response === 'deleted') {
+                                    editMessage();
+                                    message.edit('Successfully deleted your suggestion!');
+                                }else if (response) {
+                                    editMessage();
+                                    message.edit('Successfully downvoted suggestion!');
+                                }else {
+                                    editMessage();
+                                    message.edit('Successfully removed downvote on the suggestion!');
+                                }
                                 currentSelection = 0;
                                 editMessage();
                             break;
@@ -85,7 +89,7 @@ module.exports = {
                                 });
                             break;
                         }
-                        message.removeReaction(emoji.name, reactor.id);
+                        message.removeReaction(emoji.name, reactor.id).catch(() => {});
                     }
                 }
                 client.on('messageReactionAdd', handleReactions);
