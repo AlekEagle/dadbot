@@ -33,8 +33,9 @@ module.exports = {
                     content: `a}${args.slice(1).join(' ')}`
                 }
             }
-            if (client.resolveCommand(command).execute(thing) !== undefined) {
-                msg.channel.createMessage(client.resolveCommand(command).execute(thing))
+            var execedCmd = client.resolveCommand(command).executeCommand(thing, args.slice(2))
+            if (typeof execedCmd === 'object' || typeof execedCmd === 'string') {
+                msg.channel.createMessage(execedCmd);
             }
         }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
         
