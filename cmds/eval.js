@@ -12,6 +12,7 @@ let stats = require('../functions/commandStatistics');
 let shards = require('../functions/shardManager');
 let lists = require('../functions/lists');
 let memory = require('../functions/memoryUsage');
+let suggestions = require('../functions/suggestionsHandler');
 let fs = require('fs');
 
 const Logger = require('../functions/logger');
