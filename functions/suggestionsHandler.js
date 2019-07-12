@@ -19,7 +19,7 @@ module.exports = {
         })
     },
 
-    addSuggestion: (msg, args) => {
+    addSuggestion: (msg, args, client) => {
         if (args[0] === 'embarrass' || args[0] === 'joke' || args[0] === 'cmd' || args[0] === 'feedback') {
             let type = args[0];
             args.shift();

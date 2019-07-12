@@ -7,7 +7,7 @@ module.exports = {
     name: 'suggest',
 
     exec: (client, msg, args) => {
-        suggestions.addSuggestion(msg, args);
+        suggestions.addSuggestion(msg, args, client);
     },
 
     options: {
