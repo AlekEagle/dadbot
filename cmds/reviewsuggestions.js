@@ -150,7 +150,7 @@ module.exports = {
                     client.on('messageReactionAdd', handleReactions);
                 })
             }
-        }
+        }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
     },
 
     options: {

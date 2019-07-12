@@ -16,7 +16,7 @@ module.exports = {
                     fields: [
                         {
                             name: 'Current Selection',
-                            value: `${suggestions.suggestions[currentSelection].suggestion}\n${suggestions.suggestions[currentSelection].type}\n${suggestions.suggestions[currentSelection].upVotes.length} Upvotes\n${suggestions.suggestions[currentSelection].downVotes.length} Downvotes\nBy ${client.users.get(suggestions.suggestions[currentSelected].person).username}#${client.users.get(suggestions.suggestions[currentSelected].person).discriminator} (${suggestions.suggestions[currentSelected].person})`
+                            value: `${suggestions.suggestions[currentSelection].suggestion}\n${suggestions.suggestions[currentSelection].type}\n${suggestions.suggestions[currentSelection].upVotes.length} Upvotes\n${suggestions.suggestions[currentSelection].downVotes.length} Downvotes\nBy ${client.users.get(suggestions.suggestions[currentSelection].person).username}#${client.users.get(suggestions.suggestions[currentSelection].person).discriminator} (${suggestions.suggestions[currentSelection].person})`
                         },
                         {
                             name: 'Suggestions',
@@ -33,7 +33,7 @@ module.exports = {
                             fields: [
                                 {
                                     name: 'Current Selection',
-                                    value: `${suggestions.suggestions[currentSelection].suggestion}\n${suggestions.suggestions[currentSelection].type}\n${suggestions.suggestions[currentSelection].upVotes.length} Upvotes\n${suggestions.suggestions[currentSelection].downVotes.length} Downvotes\nBy ${client.users.get(suggestions.suggestions[currentSelected].person).username}#${client.users.get(suggestions.suggestions[currentSelected].person).discriminator} (${suggestions.suggestions[currentSelected].person})`
+                                    value: `${suggestions.suggestions[currentSelection].suggestion}\n${suggestions.suggestions[currentSelection].type}\n${suggestions.suggestions[currentSelection].upVotes.length} Upvotes\n${suggestions.suggestions[currentSelection].downVotes.length} Downvotes\nBy ${client.users.get(suggestions.suggestions[currentSelection].person).username}#${client.users.get(suggestions.suggestions[currentSelection].person).discriminator} (${suggestions.suggestions[currentSelection].person})`
                                 },
                                 {
                                     name: 'Suggestions',
@@ -49,33 +49,33 @@ module.exports = {
                         let reactor = message.channel.guild.members.get(user);
                         switch (emoji.name) {
                             case '⬇':
-                                if (++currentSelected === suggestions.suggestions.length) currentSelected = 0;
+                                if (++currentSelection === suggestions.suggestions.length) currentSelection = 0;
                                 editMessage();
                             break;
                             case '⬆':
-                                if (--currentSelected === -1) currentSelected = suggestions.suggestions.length - 1;
+                                if (--currentSelection === -1) currentSelection = suggestions.suggestions.length - 1;
                                 editMessage();
                             break;
                             case '🔼':
-                                if (suggestions.moderateSuggestion(client, currentSelected, 'upvote', null, msg)) {
+                                if (suggestions.moderateSuggestion(client, currentSelection, 'upvote', null, msg)) {
                                     editMessage();
                                     message.edit('Successfully upvoted suggestion!');
                                 }else {
                                     editMessage();
                                     message.edit('Successfully removed upvote on the suggestion!');
                                 }
-                                currentSelected = 0;
+                                currentSelection = 0;
                                 editMessage();
                             break;
                             case '🔽':
-                                    if (suggestions.moderateSuggestion(client, currentSelected, 'downvote', null, msg)) {
+                                    if (suggestions.moderateSuggestion(client, currentSelection, 'downvote', null, msg)) {
                                         editMessage();
                                         message.edit('Successfully downvoted suggestion!');
                                     }else {
                                         editMessage();
                                         message.edit('Successfully removed downvote on the suggestion!');
                                     }
-                                currentSelected = 0;
+                                currentSelection = 0;
                                 editMessage();
                             break;
                             case '🔚':
@@ -99,6 +99,7 @@ module.exports = {
         description: 'View and vote on suggestions',
         guildOnly: true,
         fullDescription: 'This command is one of three for a new suggestion system, Using the `suggest` command, you can suggest new ideas for various things.\nUsing the `suggestions` command you can view and vote on other suggestions, via the `suggestions` command, if you downvote your own suggestion it will automatically removed from the suggestions. All suggestions will be reviewed manually.',
-        cooldown: ms('5 minutes')
+        cooldown: ms('5 minutes'),
+        cooldownMessage: 'Hang on there buddy, you have a cooldown for this command, please wait at least an hour before trying again.'
     }
 }
