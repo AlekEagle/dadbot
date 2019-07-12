@@ -23,7 +23,7 @@ module.exports = {
                             },
                             {
                                 name: 'Person who had the idea',
-                                value: `${client.users.get(suggestions.suggestions[currentSelected].person).username}#${client.users.get(suggestions.suggestions[currentSelected].person).discriminator} (${suggestions.suggestions[currentSelected].person})`,
+                                value: `${client.users.get(suggestions.suggestions[currentSelected].person) ? client.users.get(suggestions.suggestions[currentSelected].person).username : 'NotFound'}#${client.users.get(suggestions.suggestions[currentSelected].person) ? client.users.get(suggestions.suggestions[currentSelected].person).discriminator : 'NotFound'} (${suggestions.suggestions[currentSelected].person})`,
                                 inline: false
                             },
                             {
@@ -61,7 +61,7 @@ module.exports = {
                                     },
                                     {
                                         name: 'Person who had the idea',
-                                        value: `${client.users.get(suggestions.suggestions[currentSelected].person).username}#${client.users.get(suggestions.suggestions[currentSelected].person).discriminator} (${suggestions.suggestions[currentSelected].person})`,
+                                        value: `${client.users.get(suggestions.suggestions[currentSelected].person) ? client.users.get(suggestions.suggestions[currentSelected].person).username : 'NotFound'}#${client.users.get(suggestions.suggestions[currentSelected].person) ? client.users.get(suggestions.suggestions[currentSelected].person).discriminator : 'NotFound'} (${suggestions.suggestions[currentSelected].person})`,
                                         inline: false
                                     },
                                     {
