@@ -7,7 +7,7 @@ module.exports = {
     mio: require('../lists.json').mio,
     kumiko: require('../lists.json').kumiko,
 
-    reloadlists: () => {
+    reloadLists: () => {
         delete require.cache[require.resolve(`../lists.json`)]
         module.exports.pastas = require('../lists.json').pastas;
         module.exports.jokes = require('../lists.json').jokes;

@@ -12,6 +12,7 @@
     "eris": "^0.10.0",
     "eris-command-handler": "^1.0.2",
     "express": "^4.17.1",
+    "ms": "^2.1.2",
     "pg": "^7.11.0",
     "pg-hstore": "^2.3.3",
     "process-cpu-utilization": "^1.0.2",

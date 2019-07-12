@@ -12,6 +12,7 @@ let stats = require('./functions/commandStatistics');
 let owners = require('./functions/getOwners');
 let prefixes = require('./functions/managePrefixes');
 let shards = require('./functions/shardManager');
+let suggestions = require('./functions/suggestionsHandler');
 let i = 0;
 const Sentry = require('@sentry/node');
 Sentry.init({ dsn: 'https://81fb39c6a5904886ba26a90e2a6ea8aa@sentry.io/1407724' });
@@ -36,6 +37,11 @@ owners.initializeOwners().then(list => {
 }, (err) => {
     console.error(err)
 });
+suggestions.initializeSuggestions().then(suggestions => {
+    console.log(`Loaded suggestions. There are currently ${suggestions.length} suggestions, get crackin!`);
+}, (err) => {
+    console.error(err)
+});
 function nextShard() {
     console.log(`Connecting to shard ${i}`);
     const client = new CommandClient(env.DEBUG ? u_wut_m8.otherToken : u_wut_m8.token, {
@@ -44,7 +50,7 @@ function nextShard() {
         maxShards: nums.shardCount,
         getAllUsers: true
     }, {
-        description: 'We are now partnered with the discord bot DJ Putin! go check him out at http://putin.ml:4276/ *come suggest more embarrass suggestions in the server using the invite command*',
+        description: 'We are now partnered with the discord bot DJ Putin! go check him out at <http://putin.ml:4276/> *use the suggestions command to suggest ideas! run "d!help suggest" for more help.*',
         owner: 'AlekEagle#0001',
         prefix: env.DEBUG ? 'test!' : 'd!'
     });
