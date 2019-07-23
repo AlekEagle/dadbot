@@ -32,8 +32,8 @@ module.exports = {
                     evaluation = evaluation.replace(client.token, '(insert token here)')
                 }
                 if (evaluation.length > 2000) {
-                    client.createMessage(msg.channel.id, 'Output too large, it should be on your website at https://alekeagle.tk/dad_bot/eval_out').then(() => {
-                        fs.writeFile('/home/alekeagle/node_server/root/dad_bot/eval_out/eval_output.txt', evaluation.replace(/\n/g, '<br>'), (err) => {
+                    client.createMessage(msg.channel.id, 'Output too large, it should be on your website at https://alekeagle.tk/Mom_bot/eval_out').then(() => {
+                        fs.writeFile('/home/alekeagle/node_server/root/Mom_bot/eval_out/eval_output.txt', evaluation.replace(/\n/g, '<br>'), (err) => {
                             if (err != undefined) {
                                 client.createMessage(msg.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
                             }

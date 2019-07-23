@@ -39,8 +39,8 @@ module.exports = {
                     }
                     if (msg.content.slice(ind).toLowerCase() !== `${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick.toLowerCase() : client.user.username.toLowerCase()}`) {
                         nums.responses = ++nums.responses
-                        msg.channel.createMessage(`Hi ${msg.content.slice(ind)}, I'm ${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick : 'Dad'}!`).catch(() => {});
-                    } else if (msg.content.slice(ind).toLowerCase() === `${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick.toLowerCase() : 'dad'}`) {
+                        msg.channel.createMessage(`Hi ${msg.content.slice(ind)}, I'm ${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick : 'Mom'}!`).catch(() => {});
+                    } else if (msg.content.slice(ind).toLowerCase() === `${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick.toLowerCase() : 'Mom'}`) {
                         nums.responses = ++nums.responses
                         msg.channel.createMessage(`You're not ${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick : client.user.username}, I'm ${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick : client.user.username}!`).catch(() => {});
                     }

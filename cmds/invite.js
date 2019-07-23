@@ -5,7 +5,7 @@ module.exports = {
     name: 'invite',
 
     exec: (client, msg, args) => {
-            msg.channel.createMessage('go here https://alekeagle.tk/dad_bot/invite\nand https://alekeagle.tk/discord for the support server');
+            msg.channel.createMessage('go here https://alekeagle.tk/Mom_bot/invite\nand https://alekeagle.tk/discord for the support server');
         
     },
 
