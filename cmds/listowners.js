@@ -16,6 +16,6 @@ module.exports = {
     },
 
     options: {
-        description: 'Lists the owners of Mom Bot!'
+        description: 'Lists the owners of Dad Bot!'
     }
 }

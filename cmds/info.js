@@ -77,7 +77,7 @@ module.exports = {
     },
 
     options: {
-        description: 'shows basic info about Mom bot!',
+        description: 'shows basic info about Dad bot!',
         fullDescription: 'There is absloutely nothing else about info.',
         guildOnly: true
     }

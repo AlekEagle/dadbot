@@ -11,6 +11,6 @@ module.exports = {
 
     options: {
         description: `One of our partners!`,
-        fullDescription: `GamesROB is one of Mom Bots partners!`
+        fullDescription: `GamesROB is one of Dad Bots partners!`
     }
 }

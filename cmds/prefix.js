@@ -29,6 +29,6 @@ module.exports = {
     options: {
         description: 'sets the prefix! (put "--" at the end of the prefix to indicate a space, if you don\'t want a space at the end, but you want two dashes at the end, use "-/-")',
         usage: '`[prefix[-- for space at end of prefix, -/- to escape the space at the end of the prefix and have a space]|leave blank for default prefix]`',
-        fullDescription: 'Examples: \'bruh--moment\' = \'bruh--moment\'\n\'bruh moment--\' = \'bruh moment \'\n\'bruh moment-/-\' = \'bruh moment--\''
+        fullDescription: 'Examples: \'bruh--Dadent\' = \'bruh--Dadent\'\n\'bruh Dadent--\' = \'bruh Dadent \'\n\'bruh Dadent-/-\' = \'bruh Dadent--\''
     }
 }

@@ -5,7 +5,7 @@ module.exports = {
     name: 'vote',
 
     exec: (client, msg, args) => {
-        msg.channel.createMessage(`Thanks for voting for me! It will help me get noticed so more people know that Mom Bot is here! https://discordbots.org/bot/503720029456695306/vote`)
+        msg.channel.createMessage(`Thanks for voting for me! It will help me get noticed so more people know that Dad Bot is here! https://discordbots.org/bot/503720029456695306/vote`)
     },
     
     options: {

@@ -3,7 +3,7 @@
 let lists = require('../functions/lists');
 
 module.exports = {
-    name: 'Momjoke',
+    name: 'Dadjoke',
 
     exec: (client, msg, args) => {
             msg.channel.createMessage(lists.jokes[Math.floor(Math.random() * lists.jokes.length)]).catch(() => {});
@@ -11,6 +11,6 @@ module.exports = {
     },
 
     options: {
-        description: 'Have Mom Bot tell you a "great" joke!'
+        description: 'Have Dad Bot tell you a "great" joke!'
     }
 }
