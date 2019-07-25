@@ -6,7 +6,7 @@ module.exports = {
     name: 'Dadjoke',
 
     exec: (client, msg, args) => {
-            msg.channel.createMessage(lists.jokes[Math.floor(Math.random() * lists.jokes.length)]).catch(() => {});
+            msg.channel.createMessage(lists.jokes[Math.floor(Math.random() * lists.jokes.length)]).catch(err => console.error(err));
         
     },
 
