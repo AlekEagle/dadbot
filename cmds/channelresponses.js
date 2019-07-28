@@ -20,7 +20,7 @@ module.exports = {
                     });
                     }, err => {
                         console.error(err);
-                        msg.channel.createMessage('Whoops! I just shidded and farded and everything broke! If the problem continues, go here https://alekeagle.tk/discord and complain to the guy named AlekEagle#0001.')
+                        msg.channel.createMessage('Whoops! I just shidded and farded and everything broke! If the problem continues, go here https://alekeagle.com/discord and complain to the guy named AlekEagle#0001.')
                     });
                 }else {
                     manager.manageBlacklist({action: 'add', blklist: 'blk', type: 'channel', id: `${args[0] ? msg.channel.guild.channels.get(args[0].replace(/(<#!?|>)/g, '')) ? args[0].replace(/(<#!?|>)/g, '') : msg.channel.id : msg.channel.id}`}).then(list => {
@@ -31,7 +31,7 @@ module.exports = {
                     });
                     }, err => {
                         console.error(err);
-                        msg.channel.createMessage('Whoops! I just shidded and farded and everything broke! If the problem continues, go here https://alekeagle.tk/discord and complain to the guy named AlekEagle#0001.')
+                        msg.channel.createMessage('Whoops! I just shidded and farded and everything broke! If the problem continues, go here https://alekeagle.com/discord and complain to the guy named AlekEagle#0001.')
                     });
                 }
             }else {

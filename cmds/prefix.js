@@ -12,13 +12,13 @@ module.exports = {
                 prefixes.managePrefixes({action: 'add', serverID: msg.channel.guild.id, prefix: args.join(' ').replace(/((?!^)-(?!\/)-$)/, ' ').replace(/-\/-/, '--')}).then(() => {
                     msg.channel.createMessage(`The server prefix is now \`${client.guildPrefixes[msg.channel.guild.id]}\``);
                 }, () => {
-                    msg.channel.createMessage('Whoops! I just shidded and farded and everything broke! If the problem continues, go here https://alekeagle.tk/discord and complain to the guy named AlekEagle#0001.');
+                    msg.channel.createMessage('Whoops! I just shidded and farded and everything broke! If the problem continues, go here https://alekeagle.com/discord and complain to the guy named AlekEagle#0001.');
                 });
             }else {
                 prefixes.managePrefixes({action: 'remove', serverID: msg.channel.guild.id}).then(() => {
                     msg.channel.createMessage(`The server prefix is now \`${client.commandOptions.prefix}\``);
                 }, () => {
-                    msg.channel.createMessage('Whoops! I just shidded and farded and everything broke! If the problem continues, go here https://alekeagle.tk/discord and complain to the guy named AlekEagle#0001.');
+                    msg.channel.createMessage('Whoops! I just shidded and farded and everything broke! If the problem continues, go here https://alekeagle.com/discord and complain to the guy named AlekEagle#0001.');
                 });
             }
         }else {

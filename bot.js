@@ -118,8 +118,8 @@ function nextShard() {
                             cmdFile.exec(client, msg, args);
                         }else {
                             msg.author.getDMChannel().then(chn => {
-                                chn.createMessage('You have been blacklisted from Dad bot! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.').catch(() => {
-                                    msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from Dad bot! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.`)
+                                chn.createMessage('You have been blacklisted from Dad bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.').catch(() => {
+                                    msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from Dad bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.`)
                                 })
                             })
                         }
@@ -179,7 +179,7 @@ function nextShard() {
                                     res.end('An error occurred while this action was being preformed error code: `' + err.code + '`')
                                 }
                             });
-                            res.end('Output too large, it should be on your website at https://alekeagle.tk/Dad_bot/eval_out')
+                            res.end('Output too large, it should be on your website at https://alekeagle.com/Dad_bot/eval_out')
                         }else {
                             res.end(evaluation)
                         }
@@ -243,8 +243,8 @@ function nextShard() {
                 cmdFile.exec(client, msg, args);
             }else {
                 msg.author.getDMChannel().then(chn => {
-                    chn.createMessage('You have been blacklisted from Dad bot! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.').catch(() => {
-                        msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from Dad bot! If you think this is a mistake, please go here https://alekeagle.tk/discord and ask AlekEagle#0001 about this issue.`)
+                    chn.createMessage('You have been blacklisted from Dad bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.').catch(() => {
+                        msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from Dad bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.`)
                     })
                 })
             }
