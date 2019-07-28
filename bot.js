@@ -174,7 +174,7 @@ function nextShard() {
                             evaluation = evaluation.replace(client.token, '(insert token here)')
                         }
                         if (evaluation.length > 2000) {
-                            fs.writeFile('/home/pi/node_server/root/Dad_bot/eval_out/eval_output.txt', evaluation.replace(/\n/g, '<br>'), (err) => {
+                            fs.writeFile('/home/pi/node_server/root/dad_bot/eval_out/eval_output.txt', evaluation.replace(/\n/g, '<br>'), (err) => {
                                 if (err != undefined) {
                                     res.end('An error occurred while this action was being preformed error code: `' + err.code + '`')
                                 }

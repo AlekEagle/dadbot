@@ -33,7 +33,7 @@ module.exports = {
                 }
                 if (evaluation.length > 2000) {
                     client.createMessage(msg.channel.id, 'Output too large, it should be on your website at https://alekeagle.com/Dad_bot/eval_out').then(() => {
-                        fs.writeFile('/home/alekeagle/node_server/root/Dad_bot/eval_out/eval_output.txt', evaluation.replace(/\n/g, '<br>'), (err) => {
+                        fs.writeFile('/home/alekeagle/node_server/root/dad_bot/eval_out/eval_output.txt', evaluation.replace(/\n/g, '<br>'), (err) => {
                             if (err != undefined) {
                                 client.createMessage(msg.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
                             }
