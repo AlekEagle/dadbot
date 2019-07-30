@@ -50,7 +50,7 @@ function nextShard() {
         maxShards: nums.shardCount,
         getAllUsers: true
     }, {
-        description: 'We are now partnered with the discord bot DJ Putin! go check him out at <http://putin.ml:4276/> *use the suggestions command to suggest ideas! run "d!help suggest" for more help.*',
+        description: 'My wife is here! Please invite her here: https://alekeagle.com/mom_bot/invite',
         owner: 'AlekEagle#0001',
         prefix: env.DEBUG ? 'test!' : 'd!'
     });
