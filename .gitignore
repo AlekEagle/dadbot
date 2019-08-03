@@ -8,3 +8,4 @@ cmdstats.json
 .vscode
 suggestions.json
 owners.json
+deploy.sh
