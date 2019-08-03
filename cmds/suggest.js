@@ -15,7 +15,7 @@ module.exports = {
         usage: '<embarrass|joke|cmd|feedback> <suggestion>',
         fullDescription: 'This command is one of three for a new suggestion system, Using the `suggest` command, you can suggest new ideas for various things.\nUsing the `suggestions` command you can view and vote on other suggestions, via the `suggestions` command, if you downvote your own suggestion it will automatically removed from the suggestions. All suggestions will be reviewed manually.',
         guildOnly: true,
-        cooldown: ms('1 hour'),
-        cooldownMessage: 'Hang on there buddy, you have a cooldown for this command, please wait at least an hour before trying again.'
+        cooldown: ms('10 minutes'),
+        cooldownMessage: 'Hang on there buddy, you have a cooldown for this command, please wait at least 10 minutes before trying again.'
     }
 }
