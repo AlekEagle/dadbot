@@ -19,7 +19,7 @@ module.exports = {
                         fields: [
                             {
                                 name: 'Current Suggestion',
-                                value: suggestions.suggestions[currentSelected].suggestion,
+                                value: suggestions.suggestions[currentSelected].suggestion ? suggestions.suggestions[currentSelected].suggestion : 'nothing here???',
                                 inline: false
                             },
                             {
@@ -57,7 +57,7 @@ module.exports = {
                                 fields: [
                                     {
                                         name: 'Current Suggestion',
-                                        value: suggestions.suggestions[currentSelected].suggestion,
+                                        value: suggestions.suggestions[currentSelected].suggestion ? suggestions.suggestions[currentSelected].suggestion : 'nothing here???',
                                         inline: false
                                     },
                                     {
