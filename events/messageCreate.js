@@ -19,23 +19,23 @@ module.exports = {
         } catch (err) {}
         if (!msg.channel.guild) {
             if (msg.author.id === client.user.id) return;
-            if (msg.content.match(/(\n| |^)[i|l|\|]'?’?m(\n| |$)/i) || msg.content.match(/(\n| |^)[i|l|\|] am(\n| |$)/i)) {
+            if (msg.content.match(/\b[i|l|\|]'?’?m\b/i) || msg.content.match(/\b[i|l|\|] am\b/i)) {
                 msg.channel.createMessage(`I'm responses don't work in DMs because of how the blacklists are set up!`)
             }
             return;
         }
         if (manager.blacklist.servers.includes(msg.channel.guild.id) || manager.blacklist.channels.includes(msg.channel.id)) {} else {
             if (!msg.author.bot && !manager.blacklist.users.includes(msg.author.id) && !manager.gblacklist.users.includes(msg.author.id)) {
-                if (msg.content.match(/(\n| |^)[i|l|\|]'?’?m(\n| |$)/i) || msg.content.match(/(\n| |^)[i|l|\|] am(\n| |$)/i)) {
+                if (msg.content.match(/\b[i|l|\|]'?’?m\b/i) || msg.content.match(/\b[i|l|\|] am\b/i)) {
                     var ind = -1;
-                    if (msg.content.match(/(\n| |^)[i|l|\|]'?’?m(\n| |$)/i)) {
-                        ind = msg.content.match(/(\n| |^)[i|l|\|]'?’?m(\n| |$)/i).index + 2
+                    if (msg.content.match(/\b[i|l|\|]'?’?m\b/i)) {
+                        ind = msg.content.match(/\b[i|l|\|]'?’?m\b/i).index + 2
                         if (msg.content.slice(ind).toLowerCase().substring(0, 1) === '\'') ind = ind + 1
                         if (msg.content.slice(ind).toLowerCase().substring(0, 1) === 'm') ind = ind + 1
                         if (msg.content.slice(ind).toLowerCase().substring(0, 1) === '’') ind = ind + 1
                         if (msg.content.slice(ind).toLowerCase().substring(0, 1) === ' ') ind = ind + 1
-                    } else if (msg.content.match(/(\n| |^)[i|l|\|] am(\n| |$)/i)) {
-                        ind = msg.content.match(/(\n| |^)[i|l|\|] am(\n| |$)/i).index + 5
+                    } else if (msg.content.match(/\b[i|l|\|] am\b/i)) {
+                        ind = msg.content.match(/\b[i|l|\|] am\b/i).index + 5
                     }
                     if (msg.content.slice(ind).toLowerCase() !== `${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick.toLowerCase() : 'dad'}`) {
                         nums.responses = ++nums.responses
