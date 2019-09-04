@@ -50,7 +50,7 @@ function nextShard() {
         maxShards: nums.shardCount,
         getAllUsers: true
     }, {
-        description: 'My wife is here! Please invite her here: https://alekeagle.com/mom_bot/invite',
+        description: 'WE HAVE A MINECRAFT SERVER: mc.alekeagle.com',
         owner: 'AlekEagle#0001',
         prefix: env.DEBUG ? 'test!' : 'd!'
     });
