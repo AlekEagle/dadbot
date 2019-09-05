@@ -15,7 +15,7 @@ module.exports = {
                     if (err.message === 'functionCaller doesn\'t have permissions to affect other owner') msg.channel.createMessage('You do not have permission to edit this owner!'); else msg.channel.createMessage('An unknown error occurred while proforming this action.');console.error(err);
                 });
             }else if (!owners.isOwner(ownerID)) {
-                owners.addOwner(ownerID, JSON.parse(args[1]), msg.author.id).then((newOwner) => {
+                owners.addOwner(ownerID, JSON.parse(args[1] || "false"), msg.author.id).then((newOwner) => {
                     msg.channel.createMessage(`They are now an owner! And there admin is set to ${newOwner.adminOwner}`)
                 });
             }

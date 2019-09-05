@@ -6,6 +6,7 @@ module.exports = {
     embarrassingThings: require('../lists.json').embarrassingThings,
     mio: require('../lists.json').mio,
     kumiko: require('../lists.json').kumiko,
+    dadsDabbing: require('../lists.json').dadsDabbing,
 
     reloadLists: () => {
         delete require.cache[require.resolve(`../lists.json`)]
@@ -14,5 +15,6 @@ module.exports = {
         module.exports.embarrassingThings = require('../lists.json').embarrassingThings;
         module.exports.mio = require('../lists.json').mio;
         module.exports.kumiko = require('../lists.json').kumiko;
+        module.exports.dadsDabbing = require('../lists.json').dadsDabbing;
     }
 }
