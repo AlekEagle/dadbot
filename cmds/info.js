@@ -21,27 +21,27 @@ module.exports = {
                         fields: [
                             {
                                 name: 'Commands ran',
-                                value: nums.cmdsRan,
+                                value: nums.cmdsRan.toLocaleString(),
                                 inline: true
                             },
                             {
                                 name: 'Messages Read',
-                                value: nums.msgsRead,
+                                value: nums.msgsRead.toLocaleString(),
                                 inline: true
                             },
                             {
                                 name: 'Auto responses answered',
-                                value: nums.responses,
+                                value: nums.responses.toLocaleString(),
                                 inline: true
                             },
                             {
                                 name: 'Server count',
-                                value: guilds,
+                                value: guilds.toLocaleString(),
                                 inline: true
                             },
                             {
                                 name: 'User count',
-                                value: shards.map(s => s.users.size).reduce((a, b) => a + b, 0),
+                                value: shards.map(s => s.users.size).reduce((a, b) => a + b, 0).toLocaleString(),
                                 inline: true
                             },
                             {
