@@ -62,9 +62,6 @@ module.exports = {
     moderateSuggestion: (client, suggestionIndex, action, reason, msg) => {
         switch (action) {
             case 'approve':
-                client.getDMChannel(module.exports.suggestions[suggestionIndex].person).then(channel => {
-                    channel.createMessage(`Your suggestion \`\`\`${module.exports.suggestions[suggestionIndex].suggestion}\`\`\` got approved!`);
-                });
                 if (module.exports.suggestions[suggestionIndex].type === 'embarrass' || module.exports.suggestions[suggestionIndex].type === 'joke') {
                     delete require.cache[require.resolve(`../lists.json`)];
                     var theLists = require('../lists.json');
@@ -93,9 +90,6 @@ module.exports = {
                 fs.writeFileSync('./suggestions.json', JSON.stringify(module.exports.suggestions));
             break;
             case 'deny':
-                client.getDMChannel(module.exports.suggestions[suggestionIndex].person).then(channel => {
-                    channel.createMessage(`Your suggestion \`\`\`${module.exports.suggestions[suggestionIndex].suggestion}\`\`\` has been declined for the following reason: \`\`\`${reason}\`\`\``);
-                });
                 module.exports.suggestions = module.exports.suggestions.filter((value, index, self) => index !== suggestionIndex);
                 fs.writeFileSync('./suggestions.json', JSON.stringify(module.exports.suggestions));
             break;
