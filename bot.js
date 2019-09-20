@@ -50,7 +50,7 @@ function nextShard() {
         maxShards: nums.shardCount,
         getAllUsers: true
     }, {
-        description: 'WE HAVE A MINECRAFT SERVER: mc.alekeagle.com',
+        description: 'WE HAVE A MINECRAFT SERVER: https://alekeagle.com/minecraft/',
         owner: 'AlekEagle#0001',
         prefix: env.DEBUG ? 'test!' : 'd!'
     });

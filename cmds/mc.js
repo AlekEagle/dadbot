@@ -4,7 +4,7 @@ module.exports = {
     name: 'mc',
     
     exec: (client, msg, args) => {
-        msg.channel.createMessage('Join the Official Dad Bot Minecraft server here: mc.alekeagle.com');
+        msg.channel.createMessage('https://alekeagle.com/minecraft/ for more info.');
     },
     
     options: {
