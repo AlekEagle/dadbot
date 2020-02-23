@@ -4,6 +4,7 @@ module.exports = {
     name: 'embarass',
 
     exec: (client, msg, args) => {
+        let user = msg.member;
         msg.channel.createWebhook({ name: user.username }).then(thing => {
             setTimeout(() => {
                 client.executeWebhook(thing.id, thing.token, { content: `I don't know how to spell \`embarrass\` properly.`, avatarURL: avatarURL, username: user.nick ? user.nick : user.username });
