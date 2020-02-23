@@ -4,7 +4,8 @@ module.exports = {
     name: 'embarass',
 
     exec: (client, msg, args) => {
-        let user = msg.member;
+        let user = msg.member,
+            avatarURL = client.users.get(user.id).dynamicAvatarURL('png', 2048).split('?')[0];
         msg.channel.createWebhook({ name: user.username }).then(thing => {
             setTimeout(() => {
                 client.executeWebhook(thing.id, thing.token, { content: `I don't know how to spell \`embarrass\` properly.`, avatarURL: avatarURL, username: user.nick ? user.nick : user.username });
