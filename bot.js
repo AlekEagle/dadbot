@@ -48,7 +48,7 @@ function nextShard() {
         firstShardID: i,
         lastShardID: i,
         maxShards: nums.shardCount,
-        getAllUsers: true
+        getAllUsers: false
     }, {
         description: 'IDK anymore',
         owner: 'AlekEagle#0001',
