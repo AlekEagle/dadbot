@@ -13,7 +13,7 @@ module.exports = {
         }else {
             user = msg.member
         }
-        var avatarURL = client.users.get(user.id).dynamicAvatarURL('png', 1024).split('?')[0]
+        var avatarURL = client.users.get(user.id).dynamicAvatarURL('png', 2048).split('?')[0]
         if (msg.channel.guild.members.get('503720029456695306').permission.has('manageWebhooks')) {
             var embarrassingThing = lists.embarrassingThings[Math.floor(Math.random() * lists.embarrassingThings.length)]
             if (lists.embarrassingThings[0] === embarrassingThing || lists.embarrassingThings[1] === embarrassingThing) {
