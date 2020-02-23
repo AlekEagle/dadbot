@@ -51,7 +51,7 @@ function nextShard() {
         getAllUsers: true,
         messageLimit: 10,
         defaultImageFormat: 'png',
-        defaultImageSize: 4096
+        defaultImageSize: 2048
     }, {
         description: 'IDK anymore',
         owner: 'AlekEagle#0001',
