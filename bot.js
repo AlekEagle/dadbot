@@ -48,7 +48,10 @@ function nextShard() {
         firstShardID: i,
         lastShardID: i,
         maxShards: nums.shardCount,
-        getAllUsers: true
+        getAllUsers: true,
+        messageLimit: 10,
+        defaultImageFormat: 'png',
+        defaultImageSize: 4096
     }, {
         description: 'IDK anymore',
         owner: 'AlekEagle#0001',
