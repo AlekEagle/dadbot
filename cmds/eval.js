@@ -22,7 +22,7 @@ module.exports = {
     name: 'eval',
 
     exec: (client, msg, args) => {
-        if (owners.isOwner(msg.author.id)) {
+        if (owners.isAdminOwner(msg.author.id)) {
             try {
                 var evalCommand = args.join(' ');
                 let evaluation = eval(evalCommand);

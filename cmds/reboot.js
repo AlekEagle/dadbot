@@ -11,16 +11,19 @@ module.exports = {
             setTimeout(() => {
                 process.exit(0);
             }, 100)
-        }else client.createMessage(msg.channel.id, 'You need the permission `BOT_ADMIN_OWNER` to use this command!')
-        
+        } else client.createMessage(msg.channel.id, 'You need the permission `BOT_ADMIN_OWNER` to use this command!')
+
     },
-    
+
     options: {
         hidden: true,
         fullDescription: 'Reboots the bot (owner only command)',
         aliases: [
             'restart',
-            'reboit'
+            'reboit',
+            'die',
+            'fuckoff',
+            'kys'
         ]
     }
 }
