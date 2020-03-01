@@ -153,44 +153,6 @@ function nextShard() {
                     });
                 });
             });
-            app.post('/eval', (req, res) => {
-                let nums = require('./functions/numbers');
-                let manager = require('./functions/blacklistManager');
-                let owners = require('./functions/getOwners');
-                let util = require('util');
-                let guildCount = require('./functions/getGuilds');
-                let prefixes = require('./functions/managePrefixes');
-                let toHHMMSS = require('./functions/toReadableTime');
-                let genRanString = require('./functions/genRanString');
-                let stats = require('./functions/commandStatistics');
-                let shards = require('./functions/shardManager');
-                let body = '';
-                req.on('data', chunk => {
-                    body += chunk.toString();
-                });
-                req.on('end', () => {
-                    try {
-                        let evaluation = eval(body);
-                        if (typeof evaluation !== "string") {
-                            evaluation = util.inspect(evaluation).replace(client.token, '(insert token here)')
-                        }else {
-                            evaluation = evaluation.replace(client.token, '(insert token here)')
-                        }
-                        if (evaluation.length > 2000) {
-                            fs.writeFile('/home/pi/node_server/root/dad_bot/eval_out/eval_output.txt', evaluation.replace(/\n/g, '<br>'), (err) => {
-                                if (err != undefined) {
-                                    res.end('An error occurred while this action was being preformed error code: `' + err.code + '`')
-                                }
-                            });
-                            res.end('Output too large, it should be on your website at https://alekeagle.com/Dad_bot/eval_out')
-                        }else {
-                            res.end(evaluation)
-                        }
-                    } catch (err) {
-                        res.end('OOF ERROR:\ninput: ```' + body + '``` output: ```' + err + '```')
-                    }
-                })
-            })
             server.listen(parseInt(`420${i}`))
         }
         if (i < nums.shardCount && !env.DEBUG) {
