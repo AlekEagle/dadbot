@@ -45,7 +45,7 @@ module.exports = {
             } catch (err) {
                 client.createMessage(msg.channel.id, 'OOF ERROR:\ninput: ```' + evalCommand + '``` output: ```' + err + '```')
             }
-        }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
+        }else client.createMessage(msg.channel.id, 'You need the permission `BOT_ADMIN_OWNER` to use this command!')
         
     },
 
