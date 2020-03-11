@@ -14,6 +14,7 @@ let lists = require('../functions/lists');
 let memory = require('../functions/memoryUsage');
 let suggestions = require('../functions/suggestionsHandler');
 let fs = require('fs');
+let userAcrossShards = require('../functions/userAcrossShards');
 
 const Logger = require('../functions/logger');
 const console = new Logger();
