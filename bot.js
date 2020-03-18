@@ -49,7 +49,7 @@ function nextShard() {
         lastShardID: i,
         maxShards: nums.shardCount,
         getAllUsers: true,
-        messageLimit: 1,
+        messageLimit: 0,
         defaultImageFormat: 'png',
         defaultImageSize: 2048
     }, {
