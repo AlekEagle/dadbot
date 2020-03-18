@@ -14,6 +14,7 @@ let lists = require('../functions/lists');
 let memory = require('../functions/memoryUsage');
 let suggestions = require('../functions/suggestionsHandler');
 let fs = require('fs');
+let userAcrossShards = require('../functions/userAcrossShards');
 
 const Logger = require('../functions/logger');
 const console = new Logger();
@@ -45,7 +46,7 @@ module.exports = {
             } catch (err) {
                 client.createMessage(msg.channel.id, 'OOF ERROR:\ninput: ```' + evalCommand + '``` output: ```' + err + '```')
             }
-        }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
+        }else client.createMessage(msg.channel.id, 'You need the permission `BOT_ADMIN_OWNER` to use this command!')
         
     },
 
