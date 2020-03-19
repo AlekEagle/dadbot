@@ -52,7 +52,7 @@ module.exports = {
     options: {
         description: 'complement the creator about things',
         fullDescription: 'Complement the creator about things in dad bot! Gets sent to the discord server!',
-        cooldown: ms('5 minutes'),
-        cooldownMessage: 'Hang on there buddy, you have a cooldown for this command, please wait at least 5 minutes before trying again.'
+        cooldown: ms('1 minute'),
+        cooldownMessage: 'Hang on there buddy, you have a cooldown for this command, please wait at least 1 minutes before trying again.'
     }
 }

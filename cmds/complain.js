@@ -52,7 +52,7 @@ module.exports = {
     options: {
         description: 'complain about things',
         fullDescription: 'Complain about things in dad bot! Gets sent to the discord server!',
-        cooldown: ms('5 minutes'),
-        cooldownMessage: 'Hang on there buddy, you have a cooldown for this command, please wait at least 5 minutes before trying again.'
+        cooldown: ms('1 minutes'),
+        cooldownMessage: 'Hang on there buddy, you have a cooldown for this command, please wait at least 1 minutes before trying again.'
     }
 }
