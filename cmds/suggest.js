@@ -41,7 +41,11 @@ module.exports = {
                         }
                     ]
                 }
-            })
+            }).then(() => {
+                msg.channel.createMessage('The Dad Bot crew has been notified.');
+            }, () => {
+                msg.channel.createMessage('That didn\'t work for some reason, try again later.');
+            });
         }
     },
 
