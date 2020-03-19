@@ -28,7 +28,7 @@ module.exports = {
                             inline: true
                         }, {
                             name: 'Guild',
-                            value: msg.channel.guild ? `\`${msg.channel.guild.name} <${msg.channel.guild.id}>\`` : '`Private Message <N/A>',
+                            value: msg.channel.guild ? `\`${msg.channel.guild.name} <${msg.channel.guild.id}>\`` : '`Private Message <N/A>\`',
                             inline: true
                         }, {
                             name: 'Channel',
