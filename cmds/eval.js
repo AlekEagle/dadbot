@@ -12,7 +12,6 @@ let stats = require('../functions/commandStatistics');
 let shards = require('../functions/shardManager');
 let lists = require('../functions/lists');
 let memory = require('../functions/memoryUsage');
-let suggestions = require('../functions/suggestionsHandler');
 let fs = require('fs');
 let userAcrossShards = require('../functions/userAcrossShards');
 
@@ -29,7 +28,7 @@ module.exports = {
                 let evaluation = eval(evalCommand);
                 if (typeof evaluation !== "string") {
                     evaluation = util.inspect(evaluation).replace(client.token, '(insert token here)')
-                }else {
+                } else {
                     evaluation = evaluation.replace(client.token, '(insert token here)')
                 }
                 if (evaluation.length > 2000) {
@@ -40,14 +39,14 @@ module.exports = {
                             }
                         });
                     });
-                }else {
+                } else {
                     client.createMessage(msg.channel.id, evaluation)
                 }
             } catch (err) {
                 client.createMessage(msg.channel.id, 'OOF ERROR:\ninput: ```' + evalCommand + '``` output: ```' + err + '```')
             }
-        }else client.createMessage(msg.channel.id, 'You need the permission `BOT_ADMIN_OWNER` to use this command!')
-        
+        } else client.createMessage(msg.channel.id, 'You need the permission `BOT_ADMIN_OWNER` to use this command!')
+
     },
 
     options: {

@@ -3,15 +3,15 @@
 const ms = require('ms');
 
 module.exports = {
-    name: 'suggest',
+    name: 'complain',
 
     exec: (client, msg, args) => {
         if (args.length <= 3) {
-            msg.channel.createMessage(`a suggestion ${args.length} word${args.length === 1 ? '' : 's'} long isn't very helpful.`);
+            msg.channel.createMessage(`a complaint ${args.length} word${args.length === 1 ? '' : 's'} long isn't very helpful.`);
         } else {
-            client.createMessage('690299278702149712', {
+            client.createMessage('690286309461196912', {
                 embed: {
-                    title: 'New Suggestion',
+                    title: 'New Complaint',
                     author: {
                         name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
                         icon_url: msg.author.dynamicAvatarURL('png', 512).split('?')[0]
@@ -46,8 +46,8 @@ module.exports = {
     },
 
     options: {
-        description: 'Suggest something new for dad bot!',
-        fullDescription: 'Suggest something new for dad bot! Gets sent to the discord server!',
+        description: 'complain about things',
+        fullDescription: 'Complain about things in dad bot! Gets sent to the discord server!',
         cooldown: ms('5 minutes'),
         cooldownMessage: 'Hang on there buddy, you have a cooldown for this command, please wait at least 5 minutes before trying again.'
     }

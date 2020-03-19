@@ -50,21 +50,6 @@ module.exports = {
                                 inline: true
                             },
                             {
-                                name: 'Categories',
-                                value: guild.channels.filter(c => c.type === 4).length,
-                                inline: true
-                            },
-                            {
-                                name: 'Text Channels',
-                                value: guild.channels.filter(c => c.type === 0).length,
-                                inline: true
-                            },
-                            {
-                                name: 'Voice Channels',
-                                value: guild.channels.filter(c => c.type === 2).length,
-                                inline: true
-                            },
-                            {
                                 name: 'Shard',
                                 value: guild.shard.id,
                                 inline: true

@@ -12,7 +12,6 @@ let stats = require('./functions/commandStatistics');
 let owners = require('./functions/getOwners');
 let prefixes = require('./functions/managePrefixes');
 let shards = require('./functions/shardManager');
-let suggestions = require('./functions/suggestionsHandler');
 let i = 0;
 const Sentry = require('@sentry/node');
 Sentry.init({ dsn: 'https://81fb39c6a5904886ba26a90e2a6ea8aa@sentry.io/1407724' });
@@ -34,11 +33,6 @@ manager.manageBlacklist({action: 'refresh', blklist: 'gblk'}).then(list => {
 });
 owners.initializeOwners().then(list => {
     console.log(`Loaded owners. There are currently ${list.users.length} owners.`);
-}, (err) => {
-    console.error(err)
-});
-suggestions.initializeSuggestions().then(suggestions => {
-    console.log(`Loaded suggestions. There are currently ${suggestions.length} suggestions, get crackin!`);
 }, (err) => {
     console.error(err)
 });
