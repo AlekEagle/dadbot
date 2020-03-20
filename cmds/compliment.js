@@ -6,7 +6,7 @@ module.exports = {
     name: 'compliment',
 
     exec: (client, msg, args) => {
-        if (args.length <= 3) {
+        if (args.length <= 2) {
             msg.channel.createMessage(`a compliment ${args.length} word${args.length === 1 ? '' : 's'} long isn't very helpful.`);
         } else {
             client.createMessage('690286380122767481', {
@@ -51,8 +51,6 @@ module.exports = {
 
     options: {
         description: 'compliment the creator about things',
-        fullDescription: 'compliment the creator about things in dad bot! Gets sent to the discord server!',
-        cooldown: ms('1 minute'),
-        cooldownMessage: 'Hang on there buddy, you have a cooldown for this command, please wait at least 1 minutes before trying again.'
+        fullDescription: 'compliment the creator about things in dad bot! Gets sent to the discord server!'
     }
 }

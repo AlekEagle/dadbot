@@ -6,7 +6,7 @@ module.exports = {
     name: 'suggest',
 
     exec: (client, msg, args) => {
-        if (args.length <= 3) {
+        if (args.length <= 2) {
             msg.channel.createMessage(`a suggestion ${args.length} word${args.length === 1 ? '' : 's'} long isn't very helpful.`);
         } else {
             client.createMessage('690299278702149712', {
@@ -51,8 +51,6 @@ module.exports = {
 
     options: {
         description: 'Suggest something new for dad bot!',
-        fullDescription: 'Suggest something new for dad bot! Gets sent to the discord server!',
-        cooldown: ms('1 minute'),
-        cooldownMessage: 'Hang on there buddy, you have a cooldown for this command, please wait at least 1 minutes before trying again.'
+        fullDescription: 'Suggest something new for dad bot! Gets sent to the discord server!'
     }
 }
