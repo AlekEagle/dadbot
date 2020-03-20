@@ -11,7 +11,7 @@ module.exports = {
         } else {
             client.createMessage('690286380122767481', {
                 embed: {
-                    title: 'New compliment',
+                    title: 'New Compliment',
                     author: {
                         name: `${msg.author.username}#${msg.author.discriminator} (${msg.author.id})`,
                         icon_url: msg.author.dynamicAvatarURL('png', 512).split('?')[0]
@@ -41,7 +41,7 @@ module.exports = {
                         }
                     ]
                 }
-            }).then(() => {
+            }).then(message => {
                 msg.channel.createMessage('The Dad Bot crew has been notified.');
             }, () => {
                 msg.channel.createMessage('That didn\'t work for some reason, try again later.');
