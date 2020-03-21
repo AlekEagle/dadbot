@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-    shardCount: 1,
+    shardCount: 27,
     cmdsRan: 0,
     msgsRead: 0,
     responses: 0
