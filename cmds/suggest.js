@@ -13,7 +13,6 @@ module.exports = {
             msg.channel.createMessage(`a suggestion ${args.length} word${args.length === 1 ? '' : 's'} long isn't very helpful.`);
         } else {
             perspective.analyze(args.join(' '), { attributes: ['spam'] }).then(output => {
-                console.log(output);
                 if (output.attributeScores.SPAM.summaryScore.value > .625) {
                     msg.channel.createMessage('This doesn\'t look like an actual suggestion.');
                 } else {
