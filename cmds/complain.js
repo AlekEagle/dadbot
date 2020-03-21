@@ -6,7 +6,7 @@ module.exports = {
     name: 'complain',
 
     exec: (client, msg, args) => {
-        if (args.length <= 3) {
+        if (args.length <= 2) {
             msg.channel.createMessage(`a complaint ${args.length} word${args.length === 1 ? '' : 's'} long isn't very helpful.`);
         } else {
             client.createMessage('690286309461196912', {
@@ -51,8 +51,6 @@ module.exports = {
 
     options: {
         description: 'complain about things',
-        fullDescription: 'Complain about things in dad bot! Gets sent to the discord server!',
-        cooldown: ms('1 minutes'),
-        cooldownMessage: 'Hang on there buddy, you have a cooldown for this command, please wait at least 1 minutes before trying again.'
+        fullDescription: 'Complain about things in dad bot! Gets sent to the discord server!'
     }
 }
