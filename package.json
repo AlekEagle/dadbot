@@ -5,7 +5,7 @@
   "main": "bot.js",
   "author": "AlekEagleYT",
   "dependencies": {
-    "@sentry/node": "^4.6.6",
+    "@sentry/node": "^5.15.0",
     "chalk": "^2.4.2",
     "collections": "^5.1.9",
     "dblapi.js": "^2.3.0",
@@ -14,10 +14,11 @@
     "express": "^4.17.1",
     "ms": "^2.1.2",
     "node-fetch": "^2.6.0",
+    "perspective-api-client": "^3.1.0",
     "pg": "^7.12.0",
     "pg-hstore": "^2.3.3",
     "process-cpu-utilization": "^1.0.2",
     "request": "^2.88.0",
-    "sequelize": "^5.12.2"
+    "sequelize": "^5.21.5"
   }
 }
