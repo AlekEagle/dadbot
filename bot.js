@@ -160,7 +160,7 @@ function nextShard() {
             });
             client.editStatus('online', {
                 type: 0,
-                name: `try ${client.commandOptions.prefix}help`
+                name: `how do I use this smartphone thingy`
             });
         }else if (!env.DEBUG) {
             request.post(`https://maker.ifttt.com/trigger/bot_reconnected/with/key/${u_wut_m8.iftttToken}`,{
