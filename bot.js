@@ -47,7 +47,7 @@ function nextShard() {
         defaultImageFormat: 'png',
         defaultImageSize: 2048
     }, {
-        description: 'IDK anymore',
+        description: 'complain and compliment aren\'t meant to be super serious.',
         owner: 'AlekEagle#0001',
         prefix: env.DEBUG ? 'test!' : 'd!'
     });
