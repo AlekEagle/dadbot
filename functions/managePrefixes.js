@@ -10,7 +10,7 @@ const sequelize = new Sequelize(`postgres://alekeagle:${u_wut_m8.serverPass}@127
 });
 class Prefixes extends Sequelize.Model {};
 Prefixes.init({
-    serverID: Sequelize.STRING,
+    serverID: {type: Sequelize.STRING, primaryKey:true},
     prefix: Sequelize.STRING
 }, { sequelize });
 Prefixes.sync({
