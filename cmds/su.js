@@ -3,7 +3,7 @@
 let owners = require('../functions/getOwners');
 
 module.exports = {
-    name: 'sudo',
+    name: 'su',
 
     exec: (client, msg, args) => {
         var thing;
@@ -42,7 +42,7 @@ module.exports = {
     },
 
     options: {
-        fullDescription: 'executes commands as other users (owner only)',
+        fullDescription: 'short for substitute user (owner only)',
         usage: '(userID) (command) [command args]',
         hidden: true
     }
