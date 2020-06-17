@@ -23,14 +23,14 @@ module.exports = {
                     thing = {
                         ...msg,
                         author: client.users.get(userID),
-                        content: `${client.guildPrefixes[msg.channel.guild.id]}${args.slice(1).join(' ')}`
+                        content: `${client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : 'd!'}${args.slice(1).join(' ')}`
                     }
                 }
             }else {
                 thing = {
                     ...msg,
                     author: client.users.get(userID),
-                    content: `${client.guildPrefixes[msg.channel.guild.id]}${args.slice(1).join(' ')}`
+                    content: `${client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : 'd!'}${args.slice(1).join(' ')}`
                 }
             }
             var execedCmd = client.resolveCommand(command).executeCommand(thing, args.slice(2))
