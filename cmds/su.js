@@ -16,7 +16,7 @@ module.exports = {
                     thing = {
                         ...msg,
                         author: client.users.get(userID),
-                        content: `${client.guildPrefixes[msg.channel.guild.id]}${args.slice(1).join(' ')}`,
+                        content: `${client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : 'd!'}${args.slice(1).join(' ')}`,
                         member: msg.channel.guild.members.get(userID)
                     }
                 }else {
