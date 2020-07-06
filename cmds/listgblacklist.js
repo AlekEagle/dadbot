@@ -27,7 +27,7 @@ module.exports = {
                 }
             });
             output.forEach(a => msg.channel.createMessage(`\`\`\`${a}\`\`\``));
-            if (blacklistedUsers.length <= manager.gblacklist.users.length) {
+            if (blacklistedUsers.length !== manager.gblacklist.users.length) {
                 msg.channel.createMessage(`There are ${manager.gblacklist.users.length - blacklistedUsers.length} id(s) that can't be linked back to a user however, those are: \`\`\`${manager.gblacklist.users.filter(i => !shards.map(s => s.users.get(i)).reduce((a, b) => a.concat(b))).join('\n')}\`\`\``)
             }
         } else msg.channel.createMessage('You need the permission `BOT_OWNER` to use this command!');
