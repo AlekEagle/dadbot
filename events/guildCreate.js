@@ -2,6 +2,9 @@
 
 let guildCount = require('../functions/getGuilds');
 let u_wut_m8 = require('../.auth.json');
+let nums = require('../functions/numbers');
+let DBL = require('dblapi.js');
+const dbl = new DBL(u_wut_m8.dblToken, {});
 
 module.exports = {
     name: 'guildCreate',
@@ -68,5 +71,6 @@ module.exports = {
                 ]
             });
         });
+        dbl.postStats(client.guilds.size, client.options.firstShardID, nums.shardCount);
     }
 }

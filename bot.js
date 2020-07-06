@@ -172,12 +172,6 @@ function nextShard() {
                 console.log(`Told IFTTT that shard ${client.options.firstShardID} reconnected`);
             });
         }
-        if (!env.DEBUG) {
-            setInterval(() => {
-                dbl.postStats(client.guilds.size, client.options.firstShardID, nums.shardCount);
-            }, 300000);
-            dbl.postStats(client.guilds.size, client.options.firstShardID, nums.shardCount);
-        }
         if (i < nums.shardCount) {
             i ++
             if (i < nums.shardCount) nextShard()
