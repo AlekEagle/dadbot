@@ -15,7 +15,7 @@ module.exports = {
             }
             let curInd = 0,
                 output = [], 
-                blacklistedUsers = manager.gblacklist.users.map(u => shards.map(s => s.users.get(u))).reduce((a, b) => a.concat(b)).filter(a => a !== undefined);
+                blacklistedUsers = manager.gblacklist.users.map(u => shards.map(s => s.users.get(u))).reduce((a, b) => a.concat(b)).filter(a => a !== undefined).filter((i, o, s) => s.map(e => e.id).indexOf(i.id) == o);
             output[curInd] = `NAME${' '.repeat(blacklistedUsers.map(e => `${e.username}#${e.discriminator}`.length).sort((a, b) => a - b).reverse()[0] - 4)}|USERID${' '.repeat(blacklistedUsers.map(e => e.id.length).sort((a, b) => a - b).reverse()[0] - 6)}`;
             output[curInd] += `\n${'-'.repeat(blacklistedUsers.map(e => `${e.username}#${e.discriminator}`.length).sort((a, b) => a - b).reverse()[0])}+${'-'.repeat(blacklistedUsers.map(e => e.id.length).sort((a, b) => a - b).reverse()[0])}`;
             blacklistedUsers.forEach(e => {
