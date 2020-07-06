@@ -15,7 +15,7 @@ module.exports = {
             }
             let curInd = 0,
                 output = [], 
-                blacklistedUsers = manager.gblacklist.users.map(u => shards.map(s => s.users.get(u))).reduce((a, b) => a.concat(b));
+                blacklistedUsers = manager.gblacklist.users.map(u => shards.map(s => s.users.get(u))).reduce((a, b) => a.concat(b)).filter(a => a !== undefined);
             output[curInd] = `NAME${' '.repeat(blacklistedUsers.map(e => `${e.username}#${e.discriminator}`.length).sort((a, b) => a - b).reverse()[0] - 4)}|USERID${' '.repeat(blacklistedUsers.map(e => e.id.length).sort((a, b) => a - b).reverse()[0] - 6)}`;
             output[curInd] += `\n${'-'.repeat(blacklistedUsers.map(e => `${e.username}#${e.discriminator}`.length).sort((a, b) => a - b).reverse()[0])}+${'-'.repeat(blacklistedUsers.map(e => e.id.length).sort((a, b) => a - b).reverse()[0])}`;
             blacklistedUsers.forEach(e => {
@@ -27,6 +27,9 @@ module.exports = {
                 }
             });
             output.forEach(a => msg.channel.createMessage(`\`\`\`${a}\`\`\``));
+            if (blacklistedUsers.length <= manager.gblacklist.users.length) {
+                msg.channel.createMessage(`There are ${manager.gblacklist.users.length - blacklistedUsers.length} id(s) that can't be linked back to a user however, those are: \`\`\`${manager.gblacklist.users.filter(i => !shards.map(s => s.users.get(i)).reduce((a, b) => a.concat(b))).join('\n')}\`\`\``)
+            }
         } else msg.channel.createMessage('You need the permission `BOT_OWNER` to use this command!');
     },
     
