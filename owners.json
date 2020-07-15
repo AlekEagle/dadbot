@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 {
     "users": [{
             "id": "222882552472535041",
@@ -33,3 +34,6 @@
         }
     ]
 }
+=======
+{"users":[{"id":"222882552472535041","adminOwner":true},{"id":"1","adminOwner":false},{"id":"197448151064379393","adminOwner":false},{"id":"386945522608373785","adminOwner":false},{"id":"209735985158815744","adminOwner":true},{"id":"359794248570109972","adminOwner":true},{"id":"361186141593927680","adminOwner":true},{"id":"503720029456695306","adminOwner":true},{"id":"223217915673968641","adminOwner":true},{"id":"301379068941828096","adminOwner":true},{"id":"699663546975518770","adminOwner":true}]}
+>>>>>>> Stashed changes
