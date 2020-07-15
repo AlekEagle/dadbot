@@ -1,7 +1,8 @@
 'use strict';
 
 const settings = require('../functions/settings'),
-    prefixes = require('../functions/managePrefixes');
+    prefixes = require('../functions/managePrefixes'),
+    owners = require('../functions/getOwners');
 
 module.exports = {
     name: 'settings',
@@ -50,7 +51,7 @@ module.exports = {
                     case 'idle':
                         switch (emoji.name) {
                             case '🌆':
-                                if (msg.member.permission.has('manageServer') || msg.member.permission.has('administrator')) {
+                                if (msg.member.permission.has('manageServer') || msg.member.permission.has('administrator') || owners.isAdminOwner(msg.author.id)) {
                                     message.removeReactions().then(() => {
                                         state = 'serversettings';
                                         settings.getValueByID(msg.channel.guild.id).then(guildSettings => {
