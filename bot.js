@@ -96,25 +96,25 @@ function nextShard() {
                     stats.initializeCommand(cmdFile.name);
                     client.registerCommand(cmdFile.name, (msg, args) => {
                         stats.updateUses(cmdFile.name);
-                        globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
+                        globalBlacklist.getValueByID(msg.channel.id).then(stat => {
                             if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
-                                msg.channel.createMessage('This server has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis server may no longer use these commands: `' + stat.cmds.join(', ') + '`');
+                                msg.channel.createMessage('This channel has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis channel may no longer use these commands: `' + stat.cmds.join(', ') + '`');
                                 return;
                             }else {
-                                globalBlacklist.getValueByID(msg.channel.id).then(stat => {
+                                globalBlacklist.getValueByID(msg.author.id).then(stat => {
                                     if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
-                                        msg.channel.createMessage('This channel has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis channel may no longer use these commands: `' + stat.cmds.join(', ') + '`');
-                                        return;
+                                        msg.author.getDMChannel().then(chn => {
+                                            chn.createMessage('You have been blacklisted from Dad Bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nYou may no longer use these commands: `' + stat.cmds.join(', ') + '`').catch(() => {
+                                                msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from Dad Bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nYou may no longer use these commands: \`${stat.cmds.join(', ')}\``);
+                                            });
+                                        });
                                     }else {
-                                        globalBlacklist.getValueByID(msg.author.id).then(stat => {
-                                            if (stat === null ? true : !(stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
-                                                cmdFile.exec(client, msg, args);
+                                        globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
+                                            if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
+                                                msg.channel.createMessage('This server has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis server may no longer use these commands: `' + stat.cmds.join(', ') + '`');
+                                                return;
                                             }else {
-                                                msg.author.getDMChannel().then(chn => {
-                                                    chn.createMessage('You have been blacklisted from Dad Bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nYou may no longer use these commands: `' + stat.cmds.join(', ') + '`').catch(() => {
-                                                        msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from Dad Bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nYou may no longer use these commands: \`${stat.cmds.join(', ')}\``);
-                                                    });
-                                                });
+                                                cmdFile.exec(client, msg, args);
                                             }
                                         });
                                     }
@@ -193,25 +193,25 @@ function nextShard() {
         stats.initializeCommand(cmdFile.name);
         client.registerCommand(cmdFile.name, (msg, args) => {
             stats.updateUses(cmdFile.name);
-            globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
+            globalBlacklist.getValueByID(msg.channel.id).then(stat => {
                 if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
-                    msg.channel.createMessage('This server has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis server may no longer use these commands: `' + stat.cmds.join(', ') + '`');
+                    msg.channel.createMessage('This channel has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis channel may no longer use these commands: `' + stat.cmds.join(', ') + '`');
                     return;
                 }else {
-                    globalBlacklist.getValueByID(msg.channel.id).then(stat => {
+                    globalBlacklist.getValueByID(msg.author.id).then(stat => {
                         if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
-                            msg.channel.createMessage('This channel has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis channel may no longer use these commands: `' + stat.cmds.join(', ') + '`');
-                            return;
+                            msg.author.getDMChannel().then(chn => {
+                                chn.createMessage('You have been blacklisted from Dad Bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nYou may no longer use these commands: `' + stat.cmds.join(', ') + '`').catch(() => {
+                                    msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from Dad Bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nYou may no longer use these commands: \`${stat.cmds.join(', ')}\``);
+                                });
+                            });
                         }else {
-                            globalBlacklist.getValueByID(msg.author.id).then(stat => {
-                                if (stat === null ? true : !(stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
-                                    cmdFile.exec(client, msg, args);
+                            globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
+                                if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
+                                    msg.channel.createMessage('This server has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis server may no longer use these commands: `' + stat.cmds.join(', ') + '`');
+                                    return;
                                 }else {
-                                    msg.author.getDMChannel().then(chn => {
-                                        chn.createMessage('You have been blacklisted from Dad Bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nYou may no longer use these commands: `' + stat.cmds.join(', ') + '`').catch(() => {
-                                            msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from Dad Bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nYou may no longer use these commands: \`${stat.cmds.join(', ')}\``);
-                                        });
-                                    });
+                                    cmdFile.exec(client, msg, args);
                                 }
                             });
                         }

@@ -42,7 +42,7 @@ module.exports = {
                 channelSelection = msg.channel.id;
 
             function handleReactions(mesg, emoji, userID) {
-                if (!msg.channel.guild.members.get(userID).user.bot) {
+                if (!client.users.get(userID).bot) {
                     message.removeReaction(emoji.name, userID);
                 }
                 if (userID !== msg.author.id || mesg.id !== message.id) return;

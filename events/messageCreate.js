@@ -12,10 +12,9 @@ module.exports = {
         ++nums.msgsRead
         try {
             var u = msg.member;
-            settings.getValueByID(msg.channel.guild.id).then(stat => {
-                if (!settings.getFlags(stat.flags).includes('PASTA_MODE')) return;
+            settings.getValueByID(msg.channel.guild.id).then(chanStat => {
                 settings.getValueByID(msg.channel.id).then(stat => {
-                    if (!settings.getFlags(stat.flags).includes('PASTA_MODE')) return;
+                    if (!settings.getFlags(stat.flags).includes('PASTA_MODE') && !settings.getFlags(chanStat.flags).includes('PASTA_MODE')) return;
                     settings.getValueByID(msg.author.id).then(stat => {
                         if (settings.getFlags(stat.flags).includes('PASTA_MODE')) return;
                         globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
