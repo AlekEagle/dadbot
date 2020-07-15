@@ -1,7 +1,8 @@
 'use strict';
 
 let nums = require('../functions/numbers');
-let manager = require('../functions/blacklistManager');
+let settings = require('../functions/settings');
+let globalBlacklist = require('../functions/globalBlacklist');
 let owners = require('../functions/getOwners');
 let util = require('util');
 let guildCount = require('../functions/getGuilds');

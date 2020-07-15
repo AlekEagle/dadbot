@@ -2,7 +2,6 @@
 
 let guildCount = require('../functions/getGuilds');
 let u_wut_m8 = require('../.auth.json');
-let manager = require('../functions/blacklistManager');
 let nums = require('../functions/numbers');
 let DBL = require('dblapi.js');
 const dbl = new DBL(u_wut_m8.dblToken, {});
@@ -129,8 +128,6 @@ module.exports = {
                 });
             });
         });
-        if (manager.pblacklist.servers.includes(guild.id)) manager.manageBlacklist({action: 'remove', blklist: 'pblk', type: 'server', id: guild.id});
-        if (manager.blacklist.servers.includes(guild.id)) manager.manageBlacklist({action: 'remove', blklist: 'blk', type: 'server', id: guild.id});
         dbl.postStats(client.guilds.size, client.options.firstShardID, nums.shardCount);
     }
 }
