@@ -274,7 +274,7 @@ module.exports = {
                                         newFlags.push(settings.flags[selection]);
                                     }
                                     newSettings.flags = settings.toFlags(newFlags);
-                                    settings.updateValue(newSettings);
+                                    settings.updateValue({id: newSettings.id, flags: newSettings.flags, RNG: newSettings.RNG});
                                     settings.getValueByID(msg.channel.guild.id).then(guildSettings => {
                                         message.edit({
                                             embed: {
@@ -493,7 +493,7 @@ module.exports = {
                                         newFlags.push(settings.flags[selection]);
                                     }
                                     newSettings.flags = settings.toFlags(newFlags);
-                                    settings.updateValue(newSettings);
+                                    settings.updateValue({id: newSettings.id, flags: newSettings.flags, RNG: newSettings.RNG});
                                     settings.getValueByID(channelSelection).then(channelSettings => {
                                         message.edit({
                                             embed: {
@@ -779,7 +779,7 @@ module.exports = {
                                         newFlags.push(settings.flags[selection]);
                                     }
                                     newSettings.flags = settings.toFlags(newFlags);
-                                    settings.updateValue(newSettings);
+                                    settings.updateValue({id: newSettings.id, flags: newSettings.flags, RNG: newSettings.RNG});
                                     settings.getValueByID(msg.author.id).then(userSettings => {
                                         message.edit({
                                             embed: {
