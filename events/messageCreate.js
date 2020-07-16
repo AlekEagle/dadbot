@@ -49,13 +49,13 @@ module.exports = {
                             if (stat) return;
                             globalBlacklist.getValueByID(msg.author.id).then(stat => {
                                 if (stat) return;
-                                if (msg.content.match(/[\s\S]*\b([i|l|\|]'?’?m|[i|l|\|] am)\b\s?/i)) {
+                                if (msg.content.match(/[\s\S]*?\b([i|l|\|]'?’?m|[i|l|\|] am)\b\s?/i)) {
                                     ++nums.responses;
-                                    if (msg.content.replace(/[\s\S]*\b([i|l|\|]'?’?m|[i|l|\|] am)\b\s?/i, '').toLowerCase() === (msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick.toLowerCase() : 'dad')) {
+                                    if (msg.content.replace(/[\s\S]*?\b([i|l|\|]'?’?m|[i|l|\|] am)\b\s?/i, '').toLowerCase() === (msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick.toLowerCase() : 'dad')) {
                                         msg.channel.createMessage(`You're not ${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick : 'Dad'}, I'm ${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick : 'Dad'}!`).catch(() => {})
                                         return;
                                     }
-                                    msg.channel.createMessage(`Hi ${msg.content.replace(/[\s\S]*\b([i|l|\|]'?’?m|[i|l|\|] am)\b\s?/i, '')}, I'm ${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick : 'Dad'}!`).catch(() => {});
+                                    msg.channel.createMessage(`Hi ${msg.content.replace(/[\s\S]*?\b([i|l|\|]'?’?m|[i|l|\|] am)\b\s?/i, '')}, I'm ${msg.channel.guild.members.get(client.user.id).nick ? msg.channel.guild.members.get(client.user.id).nick : 'Dad'}!`).catch(() => {});
                                 }
                             });
                         });
