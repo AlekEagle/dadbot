@@ -12,22 +12,23 @@ module.exports = {
             var text = args.slice(2).join(' ');
             var n = text.split(' | ')[1];
             text = text.split(' | ')[0];
-            if (parseInt(args[1]) === 0) {
-                playing = '**Playing**';
-            }else if (parseInt(args[1]) === 1) {
-                playing = '**Streaming**';
-            }else if (parseInt(args[1]) === 2) {
-                playing = '**Listening to**';
-            }else if (parseInt(args[1]) === 3) {
-                playing = '**Watching**';
+            switch(parseInt(args[1])) {
+
             }
             shards.map(s => s).forEach(s => {
                 s.editStatus(args[0], {
                     name: text,
-                    type: parseInt(args[1]),
+                    type: playing,
                     url: n
                 });
             });
+
+            let types = {
+                playing: '**Playing**',
+                streaming: '**Streaming**',
+                
+            }
+
             msg.channel.createMessage('I am now ' + playing + ' ' + text);
 
         }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')

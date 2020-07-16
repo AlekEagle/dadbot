@@ -3,6 +3,7 @@
 const owners = require('../functions/getOwners');
 const request = require('request');
 let nums = require('../functions/numbers');
+const ms = require('ms');
 const exec = require('child_process').exec;
 
 const Logger = require('../functions/logger');
@@ -38,7 +39,7 @@ module.exports = {
                                 }
                             })
                         }
-                    }, 5000);
+                    }, ms('15secs'));
                     message.edit('Update complete.');
                 });
             });

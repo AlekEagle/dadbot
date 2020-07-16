@@ -2,7 +2,8 @@
 
 const settings = require('../functions/settings'),
     prefixes = require('../functions/managePrefixes'),
-    owners = require('../functions/getOwners');
+    owners = require('../functions/getOwners'),
+    ms = require('ms');
 
 module.exports = {
     name: 'settings',
@@ -40,13 +41,25 @@ module.exports = {
             }
             let state = 'idle',
                 selection = 0,
-                channelSelection = msg.channel.id;
+                channelSelection = msg.channel.id,
+                timeout = null;
 
             function handleReactions(mesg, emoji, userID) {
                 if (!client.users.get(userID).bot) {
                     message.removeReaction(emoji.name, userID).catch(() => {});
                 }
                 if (userID !== msg.author.id || mesg.id !== message.id) return;
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    message.channel.createMessage(`${msg.member.mention} the menu was cancelled due to inactivity!`).then(mesg => {
+                        client.off('messageReactionAdd', handleReactions);
+                        msg.delete();
+                        message.delete();
+                        setTimeout(() => {
+                            mesg.delete();
+                        }, ms('5sec'));
+                    });
+                }, ms('1min'));
                 switch (state) {
                     case 'idle':
                         switch (emoji.name) {
