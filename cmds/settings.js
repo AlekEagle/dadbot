@@ -526,7 +526,7 @@ module.exports = {
                                 break;
                             case '⬆️':
                                 if (--selection < 0) selection = settings.flags.length - 1;
-                                settings.getValueByID(msg.channel.guild.id).then(channelSettings => {
+                                settings.getValueByID(channelSelection).then(channelSettings => {
                                     message.edit({
                                         embed: {
                                             title: `Channel Settings for #${msg.channel.guild.channels.get(channelSelection).name}`,
@@ -557,7 +557,7 @@ module.exports = {
                                 break;
                             case '⬇️':
                                 if (++selection > settings.flags.length - 1) selection = 0;
-                                settings.getValueByID(msg.channel.guild.id).then(channelSettings => {
+                                settings.getValueByID(channelSelection).then(channelSettings => {
                                     message.edit({
                                         embed: {
                                             title: `Channel Settings for #${msg.channel.guild.channels.get(channelSelection).name}`,
