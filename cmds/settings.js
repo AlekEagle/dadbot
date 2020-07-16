@@ -605,7 +605,7 @@ module.exports = {
                                                 messag.channel.createMessage(`The channel: <#${chanID}> has been selected!`).then(mesag => {
                                                     channelSelection = chanID;
                                                     state = 'channelsettings';
-                                                    settings.getValueByID(msg.channel.guild.id).then(channelSettings => {
+                                                    settings.getValueByID(channelSelection).then(channelSettings => {
                                                         message.edit({
                                                             embed: {
                                                                 title: `Channel Settings for #${msg.channel.guild.channels.get(channelSelection).name}`,
