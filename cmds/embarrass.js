@@ -21,7 +21,7 @@ module.exports = {
             }else {
                 msg.channel.createWebhook({name: user.username}).then(thing => {
                     setTimeout(() => {
-                        client.executeWebhook(thing.id, thing.token, {content: embarrassingThing, avatarURL: avatarURL, username: user.nick ? user.nick : user.username});
+                        client.executeWebhook(thing.id, thing.token, {content: embarrassingThing, avatarURL: avatarURL, username: user.nick ? user.nick : user.username}).catch(() => {});
                         setTimeout(() => {
                             client.deleteWebhook(thing.id);
                         }, 5000);

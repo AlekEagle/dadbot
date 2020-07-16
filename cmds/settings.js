@@ -44,7 +44,7 @@ module.exports = {
 
             function handleReactions(mesg, emoji, userID) {
                 if (!client.users.get(userID).bot) {
-                    message.removeReaction(emoji.name, userID);
+                    message.removeReaction(emoji.name, userID).catch(() => {});
                 }
                 if (userID !== msg.author.id || mesg.id !== message.id) return;
                 switch (state) {
