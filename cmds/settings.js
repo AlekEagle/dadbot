@@ -174,6 +174,7 @@ module.exports = {
                             case '⏹':
                                 message.delete();
                                 msg.delete();
+                                clearTimeout(timeout);
                                 client.off('messageReactionAdd', handleReactions);
                                 break;
                         }
