@@ -20,7 +20,8 @@ const flagNames = [
     "IM_RESPONSES",
     "KYS_RESPONSES",
     "SHUT_UP_RESPONSES",
-    "PASTA_MODE"
+    "PASTA_MODE",
+    "WINNING_RESPONSES"
 ], cache = {};
 
 module.exports = {
@@ -43,7 +44,7 @@ module.exports = {
         let value = (await Options.findOrCreate({
             where: {
                 id
-            }, defaults: {id, flags: module.exports.toFlags(["IM_RESPONSES", "KYS_RESPONSES", "SHUT_UP_RESPONSES"]), RNG: 1}
+            }, defaults: {id, flags: module.exports.toFlags(["IM_RESPONSES", "KYS_RESPONSES", "SHUT_UP_RESPONSES", "WINNING_RESPONSES"])}
         }));
         cache[id] = value[0];
         return value[0];

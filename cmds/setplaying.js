@@ -8,7 +8,6 @@ module.exports = {
 
     exec: (client, msg, args) => {
         if (owners.isOwner(msg.author.id)) {
-            var playing = '';
             var text = args.slice(args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ');
             var n = text.split(' | ')[1];
             text = text.split(' | ')[0];

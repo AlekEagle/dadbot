@@ -4,6 +4,7 @@ const settings = require('../functions/settings'),
     prefixes = require('../functions/managePrefixes'),
     owners = require('../functions/getOwners'),
     ms = require('ms');
+const { flags } = require('../functions/settings');
 
 module.exports = {
     name: 'settings',
@@ -67,7 +68,8 @@ module.exports = {
                                 if (msg.member.permission.has('manageServer') || msg.member.permission.has('administrator') || owners.isAdminOwner(msg.author.id)) {
                                     message.removeReactions().then(() => {
                                         state = 'serversettings';
-                                        settings.getValueByID(msg.channel.guild.id).then(guildSettings => {
+                                        settings.getValueByID(msg.channel.guild.id).then(setngs => {
+                                            
                                             message.edit({
                                                 embed: {
                                                     title: 'Server Settings',
@@ -75,22 +77,12 @@ module.exports = {
                                                     thumbnail: {
                                                         url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
                                                     },
-                                                    fields: [{
-                                                            name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                            value: `are currently \`${settings.getFlags(guildSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                        },
-                                                        {
-                                                            name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                            value: `are currently \`${settings.getFlags(guildSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                        },
-                                                        {
-                                                            name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                            value: `are currently \`${settings.getFlags(guildSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                        },
-                                                        {
-                                                            name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode`,
-                                                            value: `is currently \`${settings.getFlags(guildSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
-                                                        },
+                                                    fields: [...settings.flags.map((i, o, s) => {
+                                                        return {
+                                                            name: `${selection === o ? '> ' : ''}${i}`,
+                                                            value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                        }
+                                                    }),
                                                         {
                                                             name: 'Prefix',
                                                             value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
@@ -139,30 +131,20 @@ module.exports = {
                             case '👤':
                                 message.removeReactions().then(() => {
                                     state = 'usersettings';
-                                    settings.getValueByID(msg.author.id).then(userSettings => {
+                                    settings.getValueByID(msg.author.id).then(setngs => {
                                         message.edit({
                                             embed: {
                                                 title: 'User Settings',
-                                                description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use ⏹ to go back to the main menu.',
+                                                description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use ⏹ to go back to the main menu. PASTA_MODE in this menu means pasta mode Immunity.',
                                                 thumbnail: {
                                                     url: msg.author.dynamicAvatarURL(msg.author.avatar.startsWith('a_') ? 'gif' : 'png', 256)
                                                 },
-                                                fields: [{
-                                                        name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                        value: `are currently \`${settings.getFlags(userSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                    },
-                                                    {
-                                                        name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                        value: `are currently \`${settings.getFlags(userSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                    },
-                                                    {
-                                                        name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                        value: `are currently \`${settings.getFlags(userSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                    },
-                                                    {
-                                                        name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode Immunity`,
-                                                        value: `is currently \`${settings.getFlags(userSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
+                                                fields: [...settings.flags.map((i, o, s) => {
+                                                    return {
+                                                        name: `${selection === o ? '> ' : ''}${i}`,
+                                                        value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
                                                     }
+                                                })
                                                 ]
                                             }
                                         }).then(() => {
@@ -211,7 +193,7 @@ module.exports = {
                                 break;
                             case '⬆️':
                                 if (--selection < 0) selection = settings.flags.length - 1;
-                                settings.getValueByID(msg.channel.guild.id).then(guildSettings => {
+                                settings.getValueByID(msg.channel.guild.id).then(setngs => {
                                     message.edit({
                                         embed: {
                                             title: 'Server Settings',
@@ -219,22 +201,12 @@ module.exports = {
                                             thumbnail: {
                                                 url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
                                             },
-                                            fields: [{
-                                                    name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                    value: `are currently \`${settings.getFlags(guildSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                    value: `are currently \`${settings.getFlags(guildSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                    value: `are currently \`${settings.getFlags(guildSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode`,
-                                                    value: `is currently \`${settings.getFlags(guildSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
+                                            fields: [...settings.flags.map((i, o, s) => {
+                                                return {
+                                                    name: `${selection === o ? '> ' : ''}${i}`,
+                                                    value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                }
+                                            }),
                                                 {
                                                     name: 'Prefix',
                                                     value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
@@ -246,7 +218,7 @@ module.exports = {
                                 break;
                             case '⬇️':
                                 if (++selection > settings.flags.length - 1) selection = 0;
-                                settings.getValueByID(msg.channel.guild.id).then(guildSettings => {
+                                settings.getValueByID(msg.channel.guild.id).then(setngs => {
                                     message.edit({
                                         embed: {
                                             title: 'Server Settings',
@@ -254,22 +226,12 @@ module.exports = {
                                             thumbnail: {
                                                 url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
                                             },
-                                            fields: [{
-                                                    name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                    value: `are currently \`${settings.getFlags(guildSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                    value: `are currently \`${settings.getFlags(guildSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                    value: `are currently \`${settings.getFlags(guildSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode`,
-                                                    value: `is currently \`${settings.getFlags(guildSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
+                                            fields: [...settings.flags.map((i, o, s) => {
+                                                return {
+                                                    name: `${selection === o ? '> ' : ''}${i}`,
+                                                    value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                }
+                                            }),
                                                 {
                                                     name: 'Prefix',
                                                     value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
@@ -289,7 +251,7 @@ module.exports = {
                                     }
                                     newSettings.flags = settings.toFlags(newFlags);
                                     settings.updateValue({id: newSettings.id, flags: newSettings.flags, RNG: newSettings.RNG});
-                                    settings.getValueByID(msg.channel.guild.id).then(guildSettings => {
+                                    settings.getValueByID(msg.channel.guild.id).then(setngs => {
                                         message.edit({
                                             embed: {
                                                 title: 'Server Settings',
@@ -297,22 +259,12 @@ module.exports = {
                                                 thumbnail: {
                                                     url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
                                                 },
-                                                fields: [{
-                                                        name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                        value: `are currently \`${settings.getFlags(guildSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                    },
-                                                    {
-                                                        name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                        value: `are currently \`${settings.getFlags(guildSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                    },
-                                                    {
-                                                        name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                        value: `are currently \`${settings.getFlags(guildSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                    },
-                                                    {
-                                                        name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode`,
-                                                        value: `is currently \`${settings.getFlags(guildSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
-                                                    },
+                                                fields: [...settings.flags.map((i, o, s) => {
+                                                    return {
+                                                        name: `${selection === o ? '> ' : ''}${i}`,
+                                                        value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                    }
+                                                }),
                                                     {
                                                         name: 'Prefix',
                                                         value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
@@ -328,7 +280,7 @@ module.exports = {
                                 message.addReaction('🔃');
                                 message.removeReaction('❗');
                                 selection = 0;
-                                settings.getValueByID(channelSelection).then(channelSettings => {
+                                settings.getValueByID(channelSelection).then(setngs => {
                                     message.edit({
                                         embed: {
                                             title: `Channel Settings for #${msg.channel.guild.channels.get(channelSelection).name}`,
@@ -336,22 +288,12 @@ module.exports = {
                                             thumbnail: {
                                                 url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
                                             },
-                                            fields: [{
-                                                    name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                    value: `are currently \`${settings.getFlags(channelSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                    value: `are currently \`${settings.getFlags(channelSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                    value: `are currently \`${settings.getFlags(channelSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode`,
-                                                    value: `is currently \`${settings.getFlags(channelSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
+                                            fields: [...settings.flags.map((i, o, s) => {
+                                                return {
+                                                    name: `${selection === o ? '> ' : ''}${i}`,
+                                                    value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
                                                 }
+                                            })
                                             ]
                                         }
                                     });
@@ -369,7 +311,7 @@ module.exports = {
                                                         messg.delete();
                                                         messag.delete();
                                                         state = 'serversettings';
-                                                        settings.getValueByID(msg.channel.guild.id).then(guildSettings => {
+                                                        settings.getValueByID(msg.channel.guild.id).then(setngs => {
                                                             message.edit({
                                                                 embed: {
                                                                     title: `Server Settings`,
@@ -377,22 +319,12 @@ module.exports = {
                                                                     thumbnail: {
                                                                         url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
                                                                     },
-                                                                    fields: [{
-                                                                            name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                                            value: `are currently \`${settings.getFlags(guildSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                                        },
-                                                                        {
-                                                                            name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                                            value: `are currently \`${settings.getFlags(guildSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                                        },
-                                                                        {
-                                                                            name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                                            value: `are currently \`${settings.getFlags(guildSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                                        },
-                                                                        {
-                                                                            name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode`,
-                                                                            value: `is currently \`${settings.getFlags(guildSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
-                                                                        },
+                                                                    fields: [...settings.flags.map((i, o, s) => {
+                                                                        return {
+                                                                            name: `${selection === o ? '> ' : ''}${i}`,
+                                                                            value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                                        }
+                                                                    }),
                                                                         {
                                                                             name: 'Prefix',
                                                                             value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
@@ -413,7 +345,7 @@ module.exports = {
                                                         messg.delete();
                                                         messag.delete();
                                                         state = 'serversettings';
-                                                        settings.getValueByID(msg.channel.guild.id).then(guildSettings => {
+                                                        settings.getValueByID(msg.channel.guild.id).then(setngs => {
                                                             message.edit({
                                                                 embed: {
                                                                     title: `Server Settings`,
@@ -421,22 +353,12 @@ module.exports = {
                                                                     thumbnail: {
                                                                         url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
                                                                     },
-                                                                    fields: [{
-                                                                            name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                                            value: `are currently \`${settings.getFlags(guildSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                                        },
-                                                                        {
-                                                                            name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                                            value: `are currently \`${settings.getFlags(guildSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                                        },
-                                                                        {
-                                                                            name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                                            value: `are currently \`${settings.getFlags(guildSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                                        },
-                                                                        {
-                                                                            name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode`,
-                                                                            value: `is currently \`${settings.getFlags(guildSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
-                                                                        },
+                                                                    fields: [...settings.flags.map((i, o, s) => {
+                                                                        return {
+                                                                            name: `${selection === o ? '> ' : ''}${i}`,
+                                                                            value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                                        }
+                                                                    }),
                                                                         {
                                                                             name: 'Prefix',
                                                                             value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
@@ -465,7 +387,7 @@ module.exports = {
                                 message.removeReaction('🔃');
                                 message.addReaction('❗');
                                 selection = 0;
-                                settings.getValueByID(msg.channel.guild.id).then(guildSettings => {
+                                settings.getValueByID(msg.channel.guild.id).then(setngs => {
                                     message.edit({
                                         embed: {
                                             title: `Server Settings`,
@@ -473,22 +395,12 @@ module.exports = {
                                             thumbnail: {
                                                 url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
                                             },
-                                            fields: [{
-                                                    name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                    value: `are currently \`${settings.getFlags(guildSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                    value: `are currently \`${settings.getFlags(guildSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                    value: `are currently \`${settings.getFlags(guildSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode`,
-                                                    value: `is currently \`${settings.getFlags(guildSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
+                                            fields: [...settings.flags.map((i, o, s) => {
+                                                return {
+                                                    name: `${selection === o ? '> ' : ''}${i}`,
+                                                    value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                }
+                                            }),
                                                 {
                                                     name: 'Prefix',
                                                     value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
@@ -508,7 +420,7 @@ module.exports = {
                                     }
                                     newSettings.flags = settings.toFlags(newFlags);
                                     settings.updateValue({id: newSettings.id, flags: newSettings.flags, RNG: newSettings.RNG});
-                                    settings.getValueByID(channelSelection).then(channelSettings => {
+                                    settings.getValueByID(channelSelection).then(setngs => {
                                         message.edit({
                                             embed: {
                                                 title: `Channel Settings for #${msg.channel.guild.channels.get(channelSelection).name}`,
@@ -516,22 +428,12 @@ module.exports = {
                                                 thumbnail: {
                                                     url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
                                                 },
-                                                fields: [{
-                                                    name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                    value: `are currently \`${settings.getFlags(channelSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                    value: `are currently \`${settings.getFlags(channelSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                    value: `are currently \`${settings.getFlags(channelSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode`,
-                                                    value: `is currently \`${settings.getFlags(channelSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
-                                                }
+                                                fields: [...settings.flags.map((i, o, s) => {
+                                                    return {
+                                                        name: `${selection === o ? '> ' : ''}${i}`,
+                                                        value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                    }
+                                                })
                                                 ]
                                             }
                                         });
@@ -540,7 +442,7 @@ module.exports = {
                                 break;
                             case '⬆️':
                                 if (--selection < 0) selection = settings.flags.length - 1;
-                                settings.getValueByID(channelSelection).then(channelSettings => {
+                                settings.getValueByID(channelSelection).then(setngs => {
                                     message.edit({
                                         embed: {
                                             title: `Channel Settings for #${msg.channel.guild.channels.get(channelSelection).name}`,
@@ -548,22 +450,12 @@ module.exports = {
                                             thumbnail: {
                                                 url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
                                             },
-                                            fields: [{
-                                                name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                value: `are currently \`${settings.getFlags(channelSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                            },
-                                            {
-                                                name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                value: `are currently \`${settings.getFlags(channelSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                            },
-                                            {
-                                                name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                value: `are currently \`${settings.getFlags(channelSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                            },
-                                            {
-                                                name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode`,
-                                                value: `is currently \`${settings.getFlags(channelSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
-                                            }
+                                            fields: [...settings.flags.map((i, o, s) => {
+                                                return {
+                                                    name: `${selection === o ? '> ' : ''}${i}`,
+                                                    value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                }
+                                            })
                                             ]
                                         }
                                     });
@@ -571,7 +463,7 @@ module.exports = {
                                 break;
                             case '⬇️':
                                 if (++selection > settings.flags.length - 1) selection = 0;
-                                settings.getValueByID(channelSelection).then(channelSettings => {
+                                settings.getValueByID(channelSelection).then(setngs => {
                                     message.edit({
                                         embed: {
                                             title: `Channel Settings for #${msg.channel.guild.channels.get(channelSelection).name}`,
@@ -579,22 +471,12 @@ module.exports = {
                                             thumbnail: {
                                                 url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
                                             },
-                                            fields: [{
-                                                name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                value: `are currently \`${settings.getFlags(channelSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                            },
-                                            {
-                                                name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                value: `are currently \`${settings.getFlags(channelSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                            },
-                                            {
-                                                name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                value: `are currently \`${settings.getFlags(channelSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                            },
-                                            {
-                                                name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode`,
-                                                value: `is currently \`${settings.getFlags(channelSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
-                                            }
+                                            fields: [...settings.flags.map((i, o, s) => {
+                                                return {
+                                                    name: `${selection === o ? '> ' : ''}${i}`,
+                                                    value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                }
+                                            })
                                             ]
                                         }
                                     });
@@ -619,7 +501,7 @@ module.exports = {
                                                 messag.channel.createMessage(`The channel: <#${chanID}> has been selected!`).then(mesag => {
                                                     channelSelection = chanID;
                                                     state = 'channelsettings';
-                                                    settings.getValueByID(channelSelection).then(channelSettings => {
+                                                    settings.getValueByID(channelSelection).then(setngs => {
                                                         message.edit({
                                                             embed: {
                                                                 title: `Channel Settings for #${msg.channel.guild.channels.get(channelSelection).name}`,
@@ -627,22 +509,12 @@ module.exports = {
                                                                 thumbnail: {
                                                                     url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
                                                                 },
-                                                                fields: [{
-                                                                    name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                                    value: `are currently \`${settings.getFlags(channelSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                                },
-                                                                {
-                                                                    name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                                    value: `are currently \`${settings.getFlags(channelSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                                },
-                                                                {
-                                                                    name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                                    value: `are currently \`${settings.getFlags(channelSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                                },
-                                                                {
-                                                                    name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode`,
-                                                                    value: `is currently \`${settings.getFlags(channelSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
-                                                                }
+                                                                fields: [...settings.flags.map((i, o, s) => {
+                                                                    return {
+                                                                        name: `${selection === o ? '> ' : ''}${i}`,
+                                                                        value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                                    }
+                                                                })
                                                                 ]
                                                             }
                                                         });
@@ -723,30 +595,20 @@ module.exports = {
                             break;
                             case '⬇️':
                                 if (++selection > settings.flags.length - 1) selection = 0;
-                                settings.getValueByID(msg.author.id).then(userSettings => {
+                                settings.getValueByID(msg.author.id).then(setngs => {
                                     message.edit({
                                         embed: {
                                             title: 'User Settings',
-                                            description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use ⏹ to go back to the main menu.',
+                                            description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use ⏹ to go back to the main menu. PASTA_MODE in this menu means pasta mode Immunity.',
                                             thumbnail: {
                                                 url: msg.author.dynamicAvatarURL(msg.author.avatar.startsWith('a_') ? 'gif' : 'png', 256)
                                             },
-                                            fields: [{
-                                                    name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                    value: `are currently \`${settings.getFlags(userSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                    value: `are currently \`${settings.getFlags(userSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                    value: `are currently \`${settings.getFlags(userSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode Immunity`,
-                                                    value: `is currently \`${settings.getFlags(userSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
+                                            fields: [...settings.flags.map((i, o, s) => {
+                                                return {
+                                                    name: `${selection === o ? '> ' : ''}${i}`,
+                                                    value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
                                                 }
+                                            })
                                             ]
                                         }
                                     });
@@ -754,30 +616,20 @@ module.exports = {
                             break;
                             case '⬆️':
                                 if (--selection < 0) selection = settings.flags.length - 1;
-                                settings.getValueByID(msg.author.id).then(userSettings => {
+                                settings.getValueByID(msg.author.id).then(setngs => {
                                     message.edit({
                                         embed: {
                                             title: 'User Settings',
-                                            description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use ⏹ to go back to the main menu.',
+                                            description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use ⏹ to go back to the main menu. PASTA_MODE in this menu means pasta mode Immunity.',
                                             thumbnail: {
                                                 url: msg.author.dynamicAvatarURL(msg.author.avatar.startsWith('a_') ? 'gif' : 'png', 256)
                                             },
-                                            fields: [{
-                                                    name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                    value: `are currently \`${settings.getFlags(userSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                    value: `are currently \`${settings.getFlags(userSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                    value: `are currently \`${settings.getFlags(userSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode Immunity`,
-                                                    value: `is currently \`${settings.getFlags(userSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
+                                            fields: [...settings.flags.map((i, o, s) => {
+                                                return {
+                                                    name: `${selection === o ? '> ' : ''}${i}`,
+                                                    value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
                                                 }
+                                            })
                                             ]
                                         }
                                     });
@@ -794,30 +646,20 @@ module.exports = {
                                     }
                                     newSettings.flags = settings.toFlags(newFlags);
                                     settings.updateValue({id: newSettings.id, flags: newSettings.flags, RNG: newSettings.RNG});
-                                    settings.getValueByID(msg.author.id).then(userSettings => {
+                                    settings.getValueByID(msg.author.id).then(setngs => {
                                         message.edit({
                                             embed: {
                                                 title: 'User Settings',
-                                                description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use ⏹ to go back to the main menu.',
+                                                description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use ⏹ to go back to the main menu. PASTA_MODE in this menu means pasta mode Immunity.',
                                                 thumbnail: {
                                                     url: msg.author.dynamicAvatarURL(msg.author.avatar.startsWith('a_') ? 'gif' : 'png', 256)
                                                 },
-                                                fields: [{
-                                                    name: `${selection === settings.flags.indexOf('IM_RESPONSES') ? '> ' : ''}I'm Responses`,
-                                                    value: `are currently \`${settings.getFlags(userSettings.flags).includes('IM_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('KYS_RESPONSES') ? '> ' : ''}KYS Responses`,
-                                                    value: `are currently \`${settings.getFlags(userSettings.flags).includes('KYS_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('SHUT_UP_RESPONSES') ? '> ' : ''}Shut Up Responses`,
-                                                    value: `are currently \`${settings.getFlags(userSettings.flags).includes('SHUT_UP_RESPONSES') ? 'ENABLED' : 'DISABLED'}\``
-                                                },
-                                                {
-                                                    name: `${selection === settings.flags.indexOf('PASTA_MODE') ? '> ' : ''}Pasta Mode Immunity`,
-                                                    value: `is currently \`${settings.getFlags(userSettings.flags).includes('PASTA_MODE') ? 'ENABLED' : 'DISABLED'}\``
-                                                }
+                                                fields: [...settings.flags.map((i, o, s) => {
+                                                    return {
+                                                        name: `${selection === o ? '> ' : ''}${i}`,
+                                                        value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                    }
+                                                })
                                                 ]
                                             }
                                         });

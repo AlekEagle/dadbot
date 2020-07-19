@@ -39,8 +39,8 @@ module.exports = {
                                 }
                             })
                         }
+                        message.edit('Update complete.');
                     }, ms('15secs'));
-                    message.edit('Update complete.');
                 });
             });
         }
