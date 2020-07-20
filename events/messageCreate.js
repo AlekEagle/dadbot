@@ -39,17 +39,17 @@ module.exports = {
         }
         settings.getValueByID(msg.channel.guild.id).then(stat => {
             if (!settings.getFlags(stat.flags).includes('IM_RESPONSES')) return;
-            if (msg.content.match(/(?:\b([i|l|\|]'?’?m|[i|l|\|] am)\b\s)?playing\b/i) && settings.getFlags(stat.flags).includes('WINNING_RESPONSES')) return;
+            if (msg.content.match(/\bplaying\b/i) && settings.getFlags(stat.flags).includes('WINNING_RESPONSES')) return;
             if (msg.content.match(/\bplayed\b/i) && settings.getFlags(stat.flags).includes('WINNING_RESPONSES')) return;
             if (msg.content.match(/\bplay\b/i) && settings.getFlags(stat.flags).includes('WINNING_RESPONSES')) return;
             settings.getValueByID(msg.channel.id).then(stat => {
                 if (!settings.getFlags(stat.flags).includes('IM_RESPONSES')) return;
-                if (msg.content.match(/(?:\b([i|l|\|]'?’?m|[i|l|\|] am)\b\s)?playing\b/i) && settings.getFlags(stat.flags).includes('WINNING_RESPONSES')) return;
+                if (msg.content.match(/\bplaying\b/i) && settings.getFlags(stat.flags).includes('WINNING_RESPONSES')) return;
                 if (msg.content.match(/\bplayed\b/i) && settings.getFlags(stat.flags).includes('WINNING_RESPONSES')) return;
                 if (msg.content.match(/\bplay\b/i) && settings.getFlags(stat.flags).includes('WINNING_RESPONSES')) return;
                 settings.getValueByID(msg.author.id).then(stat => {
                     if (!settings.getFlags(stat.flags).includes('IM_RESPONSES')) return;
-                    if (msg.content.match(/(?:\b([i|l|\|]'?’?m|[i|l|\|] am)\b\s)?playing\b/i) && settings.getFlags(stat.flags).includes('WINNING_RESPONSES')) return;
+                    if (msg.content.match(/\bplaying\b/i) && settings.getFlags(stat.flags).includes('WINNING_RESPONSES')) return;
                     if (msg.content.match(/\bplayed\b/i) && settings.getFlags(stat.flags).includes('WINNING_RESPONSES')) return;
                     if (msg.content.match(/\bplay\b/i) && settings.getFlags(stat.flags).includes('WINNING_RESPONSES')) return;
                     globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
@@ -131,7 +131,7 @@ module.exports = {
                             if (stat) return;
                             globalBlacklist.getValueByID(msg.author.id).then(stat => {
                                 if (stat) return;
-                                if (msg.content.match(/(?:\b([i|l|\|]'?’?m|[i|l|\|] am)\b\s)?playing/i)) {
+                                if (msg.content.match(/\bplaying\b/i)) {
                                     ++nums.responses;
                                     msg.channel.createMessage(`Are ya winnin' son?`).catch(() => {});
                                 }
