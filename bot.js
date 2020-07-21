@@ -13,14 +13,23 @@ let stats = require('./functions/commandStatistics');
 let owners = require('./functions/getOwners');
 let prefixes = require('./functions/managePrefixes');
 let shards = require('./functions/shardManager');
+let guildCount = require('./functions/getGuilds');
+let ms = require('ms');
+let fetch = require('node-fetch');
+let time = require('./functions/toReadableTime');
+let cpu = require('util').promisify(require('process-cpu-utilization').get);
+let memory = require('./functions/memoryUsage');
 let i = 0;
 const Sentry = require('@sentry/node');
-Sentry.init({ dsn: 'https://81fb39c6a5904886ba26a90e2a6ea8aa@sentry.io/1407724' });
+Sentry.init({
+    dsn: 'https://81fb39c6a5904886ba26a90e2a6ea8aa@sentry.io/1407724'
+});
 owners.initializeOwners().then(list => {
     console.log(`Loaded owners. There are currently ${list.users.length} owners.`);
 }, (err) => {
     console.error(err)
 });
+
 function nextShard() {
     console.log(`Connecting to shard ${i}`);
     const client = new CommandClient(env.DEBUG ? u_wut_m8.otherToken : u_wut_m8.token, {
@@ -36,6 +45,7 @@ function nextShard() {
         owner: 'AlekEagle#0001',
         prefix: env.DEBUG ? 'test!' : 'd!'
     });
+
     function onDBLVote(data) {
         client.getDMChannel(data.user).then(msg => {
             msg.createMessage("Thanks for voting! This helps me a lot!").catch(() => {});
@@ -43,17 +53,20 @@ function nextShard() {
             console.error('Unable to DM user')
         });
     }
-    if (i < nums.shardCount && !env.DEBUG) request.post(`https://maker.ifttt.com/trigger/process_started/with/key/${u_wut_m8.iftttToken}`,{
-            json: {
-                value1: 'Dad Bot',
-                value2: i.toString()
-            }
-        }, () => {
-            console.log(`Told IFTTT that shard ${i} started`);
+    if (i < nums.shardCount && !env.DEBUG) request.post(`https://maker.ifttt.com/trigger/process_started/with/key/${u_wut_m8.iftttToken}`, {
+        json: {
+            value1: 'Dad Bot',
+            value2: i.toString()
+        }
+    }, () => {
+        console.log(`Told IFTTT that shard ${i} started`);
     });
     client.on('ready', () => {
         if (i < nums.shardCount) {
-            prefixes.managePrefixes({action: 'refresh', client}).then(prefixes => {
+            prefixes.managePrefixes({
+                action: 'refresh',
+                client
+            }).then(prefixes => {
                 console.log(`Loaded ${prefixes.length} guild prefix(es).`)
             });
             prefixes.on('newPrefix', (id, prefix) => client.registerGuildPrefix(id, prefix));
@@ -78,7 +91,7 @@ function nextShard() {
                     if (body.type === 'test') {
                         console.log(body)
                         onDBLVote(body)
-                    }else {
+                    } else {
                         onDBLVote(body)
                     }
                     res.end('{"success":"true"}')
@@ -100,7 +113,7 @@ function nextShard() {
                             if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
                                 msg.channel.createMessage('This channel has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis channel may no longer use these commands: `' + stat.cmds.join(', ') + '`');
                                 return;
-                            }else {
+                            } else {
                                 globalBlacklist.getValueByID(msg.author.id).then(stat => {
                                     if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
                                         msg.author.getDMChannel().then(chn => {
@@ -108,12 +121,12 @@ function nextShard() {
                                                 msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from Dad Bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nYou may no longer use these commands: \`${stat.cmds.join(', ')}\``);
                                             });
                                         });
-                                    }else {
+                                    } else {
                                         globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
                                             if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
                                                 msg.channel.createMessage('This server has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis server may no longer use these commands: `' + stat.cmds.join(', ') + '`');
                                                 return;
-                                            }else {
+                                            } else {
                                                 cmdFile.exec(client, msg, args);
                                             }
                                         });
@@ -135,7 +148,7 @@ function nextShard() {
                         eventlisteners.forEach(ev => {
                             client.removeListener(e, ev);
                         })
-                        
+
                     }
                 });
                 var events = fs.readdirSync('./events');
@@ -151,7 +164,7 @@ function nextShard() {
             server.listen(parseInt(`420${i}`))
         }
         if (i < nums.shardCount && !env.DEBUG) {
-            request.post(`https://maker.ifttt.com/trigger/bot_restarted/with/key/${u_wut_m8.iftttToken}`,{
+            request.post(`https://maker.ifttt.com/trigger/bot_restarted/with/key/${u_wut_m8.iftttToken}`, {
                 json: {
                     value1: 'Dad Bot',
                     value2: client.options.firstShardID.toString()
@@ -163,8 +176,8 @@ function nextShard() {
                 type: 0,
                 name: `how do I use this smartphone thingy`
             });
-        }else if (!env.DEBUG) {
-            request.post(`https://maker.ifttt.com/trigger/bot_reconnected/with/key/${u_wut_m8.iftttToken}`,{
+        } else if (!env.DEBUG) {
+            request.post(`https://maker.ifttt.com/trigger/bot_reconnected/with/key/${u_wut_m8.iftttToken}`, {
                 json: {
                     value1: 'Dad Bot',
                     value2: client.options.firstShardID.toString()
@@ -174,7 +187,7 @@ function nextShard() {
             });
         }
         if (i < nums.shardCount) {
-            i ++
+            i++
             if (i < nums.shardCount) nextShard()
         }
     });
@@ -197,7 +210,7 @@ function nextShard() {
                 if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
                     msg.channel.createMessage('This channel has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis channel may no longer use these commands: `' + stat.cmds.join(', ') + '`');
                     return;
-                }else {
+                } else {
                     globalBlacklist.getValueByID(msg.author.id).then(stat => {
                         if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
                             msg.author.getDMChannel().then(chn => {
@@ -205,12 +218,12 @@ function nextShard() {
                                     msg.channel.createMessage(`<@${msg.author.id}> You have been blacklisted from Dad Bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nYou may no longer use these commands: \`${stat.cmds.join(', ')}\``);
                                 });
                             });
-                        }else {
+                        } else {
                             globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
                                 if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
                                     msg.channel.createMessage('This server has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis server may no longer use these commands: `' + stat.cmds.join(', ') + '`');
                                     return;
-                                }else {
+                                } else {
                                     cmdFile.exec(client, msg, args);
                                 }
                             });
@@ -223,3 +236,40 @@ function nextShard() {
     client.connect();
 }
 nextShard();
+
+setInterval(() => {
+    guildCount().then((guilds) => {
+        cpu(['%cpu']).then(cpudata => {
+            const data = {
+                currentUptime: time(process.uptime()),
+                commandsRan: nums.cmdsRan,
+                messagesRead: nums.msgsRead,
+                serverCount: guilds,
+                userCount: shards.map((s) => s.users.size).reduce((a, b) => a + b, 0),
+                shardCount: nums.shardCount,
+                CPU_USAGE: `${cpudata["%cpu"]}%`,
+                MEM_USAGE: `${memory()} / ${memory(require("os").totalmem())}`,
+                AVG_PING: `${
+            Math.round(
+              (100 *
+                shards
+                  .map((s) => s.shards.get(s.options.firstShardID).latency)
+                  .filter((a) => a !== Infinity)
+                  .reduce((a, b) => a + b, 0)) /
+                shards
+                  .map((e) => e.shards.get(e.options.firstShardID).latency)
+                  .filter((a) => a !== Infinity).length
+            ) / 100
+          } ms`,
+            };
+            fetch('http://dad.eli.fail/data', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: u_wut_m8.analytics_token,
+                },
+                body: JSON.stringify({data: data})
+            });
+        });
+    });
+}, ms('1sec'));

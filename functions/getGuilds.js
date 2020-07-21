@@ -1,8 +1,6 @@
 'use strict';
 
-let nums = require('../functions/numbers');
 let shards = require('../functions/shardManager');
-const request = require('request');
 
 module.exports = () => {
     return new Promise((resolve, reject) => {
