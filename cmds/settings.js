@@ -75,7 +75,7 @@ module.exports = {
                                                     title: 'Server Settings',
                                                     description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to channel settings! Use ❗ to change the bots prefix! Use ⏹ to go back to the main menu.',
                                                     thumbnail: {
-                                                        url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
+                                                        url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                                     },
                                                     fields: [...settings.flags.map((i, o, s) => {
                                                         return {
@@ -137,7 +137,7 @@ module.exports = {
                                                 title: 'User Settings',
                                                 description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use ⏹ to go back to the main menu. PASTA_MODE in this menu means pasta mode Immunity.',
                                                 thumbnail: {
-                                                    url: msg.author.dynamicAvatarURL(msg.author.avatar.startsWith('a_') ? 'gif' : 'png', 256)
+                                                    url: msg.author.dynamicAvatarURL(msg.author.avatar ? (msg.author.avatar.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                                 },
                                                 fields: [...settings.flags.map((i, o, s) => {
                                                     return {
@@ -199,7 +199,7 @@ module.exports = {
                                             title: 'Server Settings',
                                             description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to channel settings! Use ❗ to change the bots prefix! Use ⏹ to go back to the main menu.',
                                             thumbnail: {
-                                                url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
+                                                url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                             },
                                             fields: [...settings.flags.map((i, o, s) => {
                                                 return {
@@ -224,7 +224,7 @@ module.exports = {
                                             title: 'Server Settings',
                                             description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to channel settings! Use ❗ to change the bots prefix! Use ⏹ to go back to the main menu.',
                                             thumbnail: {
-                                                url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
+                                                url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                             },
                                             fields: [...settings.flags.map((i, o, s) => {
                                                 return {
@@ -257,7 +257,7 @@ module.exports = {
                                                 title: 'Server Settings',
                                                 description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to channel settings! Use ❗ to change the bots prefix! Use ⏹ to go back to the main menu.',
                                                 thumbnail: {
-                                                    url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
+                                                    url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                                 },
                                                 fields: [...settings.flags.map((i, o, s) => {
                                                     return {
@@ -286,7 +286,7 @@ module.exports = {
                                             title: `Channel Settings for #${msg.channel.guild.channels.get(channelSelection).name}`,
                                             description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to server settings! Use 🔃 to change what channel you are editing! Use ⏹ to go back to the main menu.',
                                             thumbnail: {
-                                                url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
+                                                url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                             },
                                             fields: [...settings.flags.map((i, o, s) => {
                                                 return {
@@ -317,7 +317,7 @@ module.exports = {
                                                                     title: `Server Settings`,
                                                                     description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to channel settings! Use ❗ to change the bots prefix! Use ⏹ to go back to the main menu.',
                                                                     thumbnail: {
-                                                                        url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
+                                                                        url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                                                     },
                                                                     fields: [...settings.flags.map((i, o, s) => {
                                                                         return {
@@ -351,7 +351,7 @@ module.exports = {
                                                                     title: `Server Settings`,
                                                                     description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to channel settings! Use ❗ to change the bots prefix! Use ⏹ to go back to the main menu.',
                                                                     thumbnail: {
-                                                                        url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
+                                                                        url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                                                     },
                                                                     fields: [...settings.flags.map((i, o, s) => {
                                                                         return {
@@ -393,7 +393,7 @@ module.exports = {
                                             title: `Server Settings`,
                                             description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to channel settings! Use ❗ to change the bots prefix! Use ⏹ to go back to the main menu.',
                                             thumbnail: {
-                                                url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
+                                                url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                             },
                                             fields: [...settings.flags.map((i, o, s) => {
                                                 return {
@@ -426,7 +426,7 @@ module.exports = {
                                                 title: `Channel Settings for #${msg.channel.guild.channels.get(channelSelection).name}`,
                                                 description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to server settings! Use 🔃 to change what channel you are editing! Use ⏹ to go back to the main menu.',
                                                 thumbnail: {
-                                                    url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
+                                                    url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                                 },
                                                 fields: [...settings.flags.map((i, o, s) => {
                                                     return {
@@ -448,7 +448,7 @@ module.exports = {
                                             title: `Channel Settings for #${msg.channel.guild.channels.get(channelSelection).name}`,
                                             description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to server settings! Use 🔃 to change what channel you are editing! Use ⏹ to go back to the main menu.',
                                             thumbnail: {
-                                                url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
+                                                url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                             },
                                             fields: [...settings.flags.map((i, o, s) => {
                                                 return {
@@ -469,7 +469,7 @@ module.exports = {
                                             title: `Channel Settings for #${msg.channel.guild.channels.get(channelSelection).name}`,
                                             description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to server settings! Use 🔃 to change what channel you are editing! Use ⏹ to go back to the main menu.',
                                             thumbnail: {
-                                                url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
+                                                url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                             },
                                             fields: [...settings.flags.map((i, o, s) => {
                                                 return {
@@ -507,7 +507,7 @@ module.exports = {
                                                                 title: `Channel Settings for #${msg.channel.guild.channels.get(channelSelection).name}`,
                                                                 description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to server settings! Use 🔃 to change what channel you are editing! Use ⏹ to go back to the main menu.',
                                                                 thumbnail: {
-                                                                    url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png', 256)
+                                                                    url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                                                 },
                                                                 fields: [...settings.flags.map((i, o, s) => {
                                                                     return {
@@ -601,7 +601,7 @@ module.exports = {
                                             title: 'User Settings',
                                             description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use ⏹ to go back to the main menu. PASTA_MODE in this menu means pasta mode Immunity.',
                                             thumbnail: {
-                                                url: msg.author.dynamicAvatarURL(msg.author.avatar.startsWith('a_') ? 'gif' : 'png', 256)
+                                                url: msg.author.dynamicAvatarURL(msg.author.avatar ? (msg.author.avatar.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                             },
                                             fields: [...settings.flags.map((i, o, s) => {
                                                 return {
@@ -622,7 +622,7 @@ module.exports = {
                                             title: 'User Settings',
                                             description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use ⏹ to go back to the main menu. PASTA_MODE in this menu means pasta mode Immunity.',
                                             thumbnail: {
-                                                url: msg.author.dynamicAvatarURL(msg.author.avatar.startsWith('a_') ? 'gif' : 'png', 256)
+                                                url: msg.author.dynamicAvatarURL(msg.author.avatar ? (msg.author.avatar.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                             },
                                             fields: [...settings.flags.map((i, o, s) => {
                                                 return {
@@ -652,7 +652,7 @@ module.exports = {
                                                 title: 'User Settings',
                                                 description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use ⏹ to go back to the main menu. PASTA_MODE in this menu means pasta mode Immunity.',
                                                 thumbnail: {
-                                                    url: msg.author.dynamicAvatarURL(msg.author.avatar.startsWith('a_') ? 'gif' : 'png', 256)
+                                                    url: msg.author.dynamicAvatarURL(msg.author.avatar ? (msg.author.avatar.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                                                 },
                                                 fields: [...settings.flags.map((i, o, s) => {
                                                     return {
