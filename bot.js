@@ -122,14 +122,18 @@ function nextShard() {
                                             });
                                         });
                                     } else {
-                                        globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
-                                            if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
-                                                msg.channel.createMessage('This server has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis server may no longer use these commands: `' + stat.cmds.join(', ') + '`');
-                                                return;
-                                            } else {
-                                                cmdFile.exec(client, msg, args);
-                                            }
-                                        });
+                                        if (msg.channel.guild) {
+                                            globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
+                                                if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
+                                                    msg.channel.createMessage('This server has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis server may no longer use these commands: `' + stat.cmds.join(', ') + '`');
+                                                    return;
+                                                } else {
+                                                    cmdFile.exec(client, msg, args);
+                                                }
+                                            });
+                                        }else {
+                                            cmdFile.exec(client, msg, args);
+                                        }
                                     }
                                 });
                             }
@@ -256,14 +260,18 @@ function nextShard() {
                                 });
                             });
                         } else {
-                            globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
-                                if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
-                                    msg.channel.createMessage('This server has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis server may no longer use these commands: `' + stat.cmds.join(', ') + '`');
-                                    return;
-                                } else {
-                                    cmdFile.exec(client, msg, args);
-                                }
-                            });
+                            if (msg.channel.guild) {
+                                globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
+                                    if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
+                                        msg.channel.createMessage('This server has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis server may no longer use these commands: `' + stat.cmds.join(', ') + '`');
+                                        return;
+                                    } else {
+                                        cmdFile.exec(client, msg, args);
+                                    }
+                                });
+                            }else {
+                                cmdFile.exec(client, msg, args);
+                            }
                         }
                     });
                 }
