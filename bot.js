@@ -262,7 +262,7 @@ setInterval(() => {
             ) / 100
           } ms`,
             };
-            fetch('http://dad.eli.fail/data', {
+            fetch('https://dad.eli.fail/data', {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
