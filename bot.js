@@ -193,43 +193,6 @@ function nextShard() {
         if (i < nums.shardCount) {
             i++
             if (i < nums.shardCount) nextShard()
-        }else {
-            setInterval(() => {
-                guildCount().then((guilds) => {
-                    cpu(['%cpu']).then(cpudata => {
-                        const data = {
-                            currentUptime: time(process.uptime()),
-                            commandsRan: nums.cmdsRan,
-                            messagesRead: nums.msgsRead,
-                            serverCount: guilds,
-                            userCount: shards.map((s) => s.users.size).reduce((a, b) => a + b, 0),
-                            shardCount: nums.shardCount,
-                            CPU_USAGE: `${cpudata["%cpu"]}%`,
-                            MEM_USAGE: `${memory()} / ${memory(require("os").totalmem())}`,
-                            AVG_PING: `${
-                        Math.round(
-                          (100 *
-                            shards
-                              .map((s) => s.shards.get(s.options.firstShardID).latency)
-                              .filter((a) => a !== Infinity)
-                              .reduce((a, b) => a + b, 0)) /
-                            shards
-                              .map((e) => e.shards.get(e.options.firstShardID).latency)
-                              .filter((a) => a !== Infinity).length
-                        ) / 100
-                      } ms`,
-                        };
-                        fetch('https://dad.eli.fail/data', {
-                            method: 'POST',
-                            headers: {
-                                "Content-Type": "application/json",
-                                Authorization: u_wut_m8.analytics_token,
-                            },
-                            body: JSON.stringify({data: data})
-                        });
-                    });
-                });
-            }, ms('1sec'));
         }
     });
     var events = fs.readdirSync('./events');
@@ -281,3 +244,39 @@ function nextShard() {
     client.connect();
 }
 nextShard();
+setInterval(() => {
+    guildCount().then((guilds) => {
+        cpu(['%cpu']).then(cpudata => {
+            const data = {
+                currentUptime: time(process.uptime()),
+                commandsRan: nums.cmdsRan,
+                messagesRead: nums.msgsRead,
+                serverCount: guilds,
+                userCount: shards.map((s) => s.users.size).reduce((a, b) => a + b, 0),
+                shardCount: nums.shardCount,
+                CPU_USAGE: `${cpudata["%cpu"]}%`,
+                MEM_USAGE: `${memory()} / ${memory(require("os").totalmem())}`,
+                AVG_PING: `${
+            Math.round(
+              (100 *
+                shards
+                  .map((s) => s.shards.get(s.options.firstShardID).latency)
+                  .filter((a) => a !== Infinity)
+                  .reduce((a, b) => a + b, 0)) /
+                shards
+                  .map((e) => e.shards.get(e.options.firstShardID).latency)
+                  .filter((a) => a !== Infinity).length
+            ) / 100
+          } ms`,
+            };
+            fetch('https://dad.eli.fail/data', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: u_wut_m8.analytics_token,
+                },
+                body: JSON.stringify({data: data})
+            });
+        });
+    });
+}, ms('1sec'));
