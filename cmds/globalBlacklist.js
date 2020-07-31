@@ -181,28 +181,29 @@ module.exports = {
                                                     setTimeout(() => {
                                                         messg.delete();
                                                     }, ms('5sec'));
-                                                    globalBlacklist.updateValue({id, cmds});
-                                                    client.off('messageCreate', handleAddBlacklistItem);
-                                                    state = 'mainmenu';
-                                                    globalBlacklist.GlobalBlacklist.findAll().then(values => {
-                                                        message.edit({
-                                                            embed: {
-                                                                title: 'Bad People, Servers, and Channels',
-                                                                thumbnail: {
-                                                                    url: client.user.dynamicAvatarURL('png', 512)
-                                                                },
-                                                                description: 'Blacklist Manager 1.5.8',
-                                                                fields: values.slice(0 + (numPerPage * page), numPerPage + (numPerPage * page)).map((v, i, c) => {
-                                                                    return {
-                                                                        name: `${cursorPos === i ? '> ': ''}${v.id}`,
-                                                                        value: `\`\`\`\n${v.cmds.join('\n')}\`\`\``,
-                                                                        inline: false
-                                                                    };
-                                                                }),
-                                                                footer: {
-                                                                    text: `Page ${page+1} of ${Math.ceil(values.length / numPerPage)}`
+                                                    globalBlacklist.updateValue({id, cmds}).then(() => {
+                                                        client.off('messageCreate', handleAddBlacklistItem);
+                                                        state = 'mainmenu';
+                                                        globalBlacklist.GlobalBlacklist.findAll().then(values => {
+                                                            message.edit({
+                                                                embed: {
+                                                                    title: 'Bad People, Servers, and Channels',
+                                                                    thumbnail: {
+                                                                        url: client.user.dynamicAvatarURL('png', 512)
+                                                                    },
+                                                                    description: 'Blacklist Manager 1.5.8',
+                                                                    fields: values.slice(0 + (numPerPage * page), numPerPage + (numPerPage * page)).map((v, i, c) => {
+                                                                        return {
+                                                                            name: `${cursorPos === i ? '> ': ''}${v.id}`,
+                                                                            value: `\`\`\`\n${v.cmds.join('\n')}\`\`\``,
+                                                                            inline: false
+                                                                        };
+                                                                    }),
+                                                                    footer: {
+                                                                        text: `Page ${page+1} of ${Math.ceil(values.length / numPerPage)}`
+                                                                    }
                                                                 }
-                                                            }
+                                                            });
                                                         });
                                                     });
                                                     break;
