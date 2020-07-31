@@ -4,7 +4,6 @@ const settings = require('../functions/settings'),
     prefixes = require('../functions/managePrefixes'),
     owners = require('../functions/getOwners'),
     ms = require('ms');
-const { flags } = require('../functions/settings');
 
 module.exports = {
     name: 'settings',
@@ -45,6 +44,17 @@ module.exports = {
                 channelSelection = msg.channel.id,
                 timeout = null;
 
+            timeout = setTimeout(() => {
+                message.channel.createMessage(`${msg.member.mention} the menu was cancelled due to inactivity!`).then(mesg => {
+                    client.off('messageReactionAdd', handleReactions);
+                    msg.delete();
+                    message.delete();
+                    setTimeout(() => {
+                        mesg.delete();
+                    }, ms('5sec'));
+                });
+            }, ms('1min'));
+            
             function handleReactions(mesg, emoji, userID) {
                 if (!client.users.get(userID).bot) {
                     message.removeReaction(emoji.name, userID).catch(() => {});
