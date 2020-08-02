@@ -3,13 +3,14 @@
 const owners = require('../functions/getOwners'),
     globalBlacklist = require('../functions/globalBlacklist'),
     ms = require('ms'),
-    numPerPage = 5;
+    numPerPage = 5,
+    permissionOverwrites = require('../functions/permissionOverwrites');
 
 module.exports = {
     name: 'globalblacklist',
 
     exec: (client, msg, args) => {
-        if (!msg.channel.guild.members.get(client.user.id).permission.has('manageMessages')) {
+        if (permissionOverwrites(msg.channel, client.user.id, 'manageMessages') === null ? !msg.channel.guild.members.get(client.user.id).permission.has('manageMessages') : !permissionOverwrites(msg.channel, client.user.id, 'manageMessages')) {
             return;
         }
         if (!owners.isOwner(msg.author.id)) {

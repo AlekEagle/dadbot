@@ -13,6 +13,7 @@ let stats = require('../functions/commandStatistics');
 let shards = require('../functions/shardManager');
 let lists = require('../functions/lists');
 let memory = require('../functions/memoryUsage');
+let permissionOverwrites = require('../functions/permissionOverwrites');
 let fs = require('fs');
 let userAcrossShards = require('../functions/userAcrossShards');
 

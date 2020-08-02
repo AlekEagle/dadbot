@@ -1,6 +1,7 @@
 'use strict';
 
 let lists = require('../functions/lists');
+let permissionOverwrites = require('../functions/permissionOverwrites');
 
 module.exports = {
     name: 'embarrass',
@@ -14,7 +15,7 @@ module.exports = {
             user = msg.member
         }
         var avatarURL = client.users.get(user.id).dynamicAvatarURL('png', 2048).split('?')[0]
-        if (msg.channel.guild.members.get('503720029456695306').permission.has('manageWebhooks')) {
+        if (permissionOverwrites(msg.channel, client.user.id, 'manageWebhooks') === null ? !msg.channel.guild.members.get(client.user.id).permission.has('manageWebhooks') : !permissionOverwrites(msg.channel, client.user.id, 'manageWebhooks')) {
             var embarrassingThing = lists.embarrassingThings[Math.floor(Math.random() * lists.embarrassingThings.length)]
             if (lists.embarrassingThings[0] === embarrassingThing || lists.embarrassingThings[1] === embarrassingThing) {
                 msg.channel.createMessage(`<@${user.id}> ${embarrassingThing}`);
