@@ -9,7 +9,7 @@ module.exports = {
     name: 'globalblacklist',
 
     exec: (client, msg, args) => {
-        if (msg.channel.permissionsOf(client.user.id).has('manageMessages')) {
+        if (!msg.channel.permissionsOf(client.user.id).has('manageMessages')) {
             return;
         }
         if (!owners.isOwner(msg.author.id)) {

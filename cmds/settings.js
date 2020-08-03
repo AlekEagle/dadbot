@@ -9,7 +9,7 @@ module.exports = {
     name: 'settings',
 
     exec: (client, msg, args) => {
-        if (msg.channel.permissionsOf(client.user.id).has('manageMessages')) {
+        if (!msg.channel.permissionsOf(client.user.id).has('manageMessages')) {
             msg.channel.createMessage('I\'m sorry, but I need the permission `MANAGE_MESSAGES` for this command to work!');
             return;
         }
