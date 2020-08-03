@@ -3,14 +3,13 @@
 const settings = require('../functions/settings'),
     prefixes = require('../functions/managePrefixes'),
     owners = require('../functions/getOwners'),
-    ms = require('ms'),
-    permissionOverwrites = require('../functions/permissionOverwrites');
+    ms = require('ms');
 
 module.exports = {
     name: 'settings',
 
     exec: (client, msg, args) => {
-        if (permissionOverwrites(msg.channel, client.user.id, 'manageMessages') === null ? !msg.channel.guild.members.get(client.user.id).permission.has('manageMessages') : !permissionOverwrites(msg.channel, client.user.id, 'manageMessages')) {
+        if (msg.channel.permissionsOf(client.user.id).has('manageMessages')) {
             msg.channel.createMessage('I\'m sorry, but I need the permission `MANAGE_MESSAGES` for this command to work!');
             return;
         }
