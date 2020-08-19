@@ -37,6 +37,11 @@ module.exports = {
         if (!msg.channel.guild) {
             return;
         }
+
+        if (msg.channel.guild.id === '456542159210807307' && msg.content.match(/[\s\S]*?\b([i|l|\|]'?’?m|[i|l|\|] am)\b[\s\S]*?@(everyone|here)/i)) {
+            msg.channel.createMessage(`Woah guys! We got a funny person here! he just tried to @${msg.content.replace(/[\s\S]*?\b([i|l|\|]'?’?m|[i|l|\|] am)\b[\s\S]*?@(everyone|here)/i, '$2')} by using the super funny ${msg.content.replace(/[\s\S]*?\b([i|l|\|]'?’?m|[i|l|\|] am)\b[\s\S]*?@(everyone|here)/i, '$1')} response! lets give this super haha funny person a round of applause!`);
+            return;
+        }
         settings.getValueByID(msg.channel.guild.id).then(stat => {
             if (!settings.getFlags(stat.flags).includes('IM_RESPONSES')) return;
             if (msg.content.match(/\bplaying\b/i) && settings.getFlags(stat.flags).includes('WINNING_RESPONSES')) return;
