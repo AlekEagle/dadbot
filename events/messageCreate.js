@@ -38,8 +38,8 @@ module.exports = {
             return;
         }
 
-        if (msg.channel.guild.id === '456542159210807307' && msg.content.match(/[\s\S]*?\b([i|l|\|]'?’?m|[i|l|\|] am)\b[\s\S]*?@(everyone|here)/i)) {
-            msg.channel.createMessage(`Woah guys! We got a funny person here! he just tried to @${msg.content.replace(/[\s\S]*?\b([i|l|\|]'?’?m|[i|l|\|] am)\b[\s\S]*?@(everyone|here)/i, '$2')} by using the super funny ${msg.content.replace(/[\s\S]*?\b([i|l|\|]'?’?m|[i|l|\|] am)\b[\s\S]*?@(everyone|here)/i, '$1')} response! lets give this super haha funny person a round of applause!`);
+        if (msg.channel.guild.id === '456542159210807307' && msg.content.match(/[\s\S]*?\b([i|l|\|]'?’?m|[i|l|\|] am)\b[\s\S]*?@(everyone|here)[\s\S]*/i)) {
+            msg.channel.createMessage(`Woah guys! We got a funny person here! he just tried to @${msg.content.replace(/[\s\S]*?\b([i|l|\|]'?’?m|[i|l|\|] am)\b[\s\S]*?@(everyone|here)[\s\S]*/i, '$2')} by using the super funny ${msg.content.replace(/[\s\S]*?\b([i|l|\|]'?’?m|[i|l|\|] am)\b[\s\S]*?@(everyone|here)/i, '$1')} response! lets give this super haha funny person a round of applause!`);
             return;
         }
         settings.getValueByID(msg.channel.guild.id).then(stat => {
