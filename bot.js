@@ -16,7 +16,6 @@ let fetch = require('node-fetch');
 let time = require('./functions/toReadableTime');
 let cpu = require('util').promisify(require('process-cpu-utilization').get);
 let memory = require('./functions/memoryUsage');
-let i = 0;
 const Sentry = require('@sentry/node');
 Sentry.init({
     dsn: 'https://81fb39c6a5904886ba26a90e2a6ea8aa@sentry.io/1407724'
@@ -44,19 +43,6 @@ client.editStatus('dnd', {
 });
 
 client.on('ready', () => {
-    prefixes.managePrefixes({
-        action: 'refresh',
-        client
-    }).then(prefixes => {
-        console.log(`Loaded ${prefixes.length} guild prefix(es).`)
-    });
-    prefixes.on('newPrefix', (id, prefix) => client.registerGuildPrefix(id, prefix));
-    prefixes.on('removePrefix', (id) => {
-        delete client.guildPrefixes[id];
-    });
-    prefixes.on('updatePrefix', (id, prefix) => {
-        client.guildPrefixes[id] = prefix;
-    });
     client.editStatus('online', {
         type: 0,
         name: `how do I use this computer thingy?`
@@ -70,6 +56,19 @@ client.on('ready', () => {
             console.log(`Told IFTTT that shard (re)connected`);
         });
     }
+});
+prefixes.managePrefixes({
+    action: 'refresh',
+    client
+}).then(prefixes => {
+    console.log(`Loaded ${prefixes.length} guild prefix(es).`)
+});
+prefixes.on('newPrefix', (id, prefix) => client.registerGuildPrefix(id, prefix));
+prefixes.on('removePrefix', (id) => {
+    delete client.guildPrefixes[id];
+});
+prefixes.on('updatePrefix', (id, prefix) => {
+    client.guildPrefixes[id] = prefix;
 });
 global.loadEvts = (reload) => {
     if (reload) {

@@ -56,7 +56,7 @@ module.exports = {
                             },
                             {
                                 name: 'New Guild Count',
-                                value: guilds,
+                                value: client.guilds.size,
                                 inline: true
                             }
                         ],

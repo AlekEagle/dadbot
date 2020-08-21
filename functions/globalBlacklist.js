@@ -15,7 +15,9 @@ GlobalBlacklist.init({
     sequelize
 });
 
-GlobalBlacklist.sync();
+GlobalBlacklist.sync().then(() => {
+    console.log('Synced GlobalBlacklist successfully!')
+});
 
 const cache = {};
 
