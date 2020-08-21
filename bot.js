@@ -146,15 +146,15 @@ client.connect();
 if (!env.DEBUG) setInterval(() => {
     cpu(['%cpu']).then(cpudata => {
         const data = {
-            "Current Uptime": time(process.uptime()),
-            "Commands Ran": nums.cmdsRan,
-            "Messages Read": nums.msgsRead,
-            "Server Count": client.guilds.size,
-            "User Count": client.users.size,
-            "Chard Count": client.shards.size,
-            "CPU Usage": `${cpudata["%cpu"]}%`,
-            "Memory Usage": `${memory()} / ${memory(require("os").totalmem())}`,
-            "AVG Ping": `${
+            currentUptime: time(process.uptime()),
+            commandsRan: nums.cmdsRan,
+            messagesRead: nums.msgsRead,
+            serverCount: client.guilds.size,
+            userCount: client.users.size,
+            shardCount: client.shards.size,
+            CPU_USAGE: `${cpudata["%cpu"]}%`,
+            MEM_USAGE: `${memory()} / ${memory(require("os").totalmem())}`,
+            AVG_PING: `${
             Math.round(
               (100 *
                 client.shards
