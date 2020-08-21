@@ -244,7 +244,7 @@ function nextShard() {
     client.connect();
 }
 nextShard();
-setInterval(() => {
+if (!env.DEBUG) setInterval(() => {
     guildCount().then((guilds) => {
         cpu(['%cpu']).then(cpudata => {
             const data = {
