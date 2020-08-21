@@ -91,6 +91,7 @@ global.loadEvts = (reload) => {
     var events = fs.readdirSync('./events');
     console.log(`Loading ${events.length} events, please wait...`)
     events.forEach(e => {
+        if (reload) delete require.cache[require.resolve(`./events/${e}`)];
         var eventFile = require(`./events/${e}`);
         client.on(eventFile.name, (...args) => {
             eventFile.exec(client, ...args)
@@ -107,6 +108,7 @@ global.loadCmds = (reload) => {
     var commands = fs.readdirSync('./cmds');
     console.log(`Loading ${commands.length} commands, please wait...`)
     commands.forEach(c => {
+        if (reload) delete require.cache[require.resolve(`./cmds/${c}`)];
         var cmdFile = require(`./cmds/${c}`);
         stats.initializeCommand(cmdFile.name);
         client.registerCommand(cmdFile.name, (msg, args) => {
