@@ -5,17 +5,13 @@ let settings = require('../functions/settings');
 let globalBlacklist = require('../functions/globalBlacklist');
 let owners = require('../functions/getOwners');
 let util = require('util');
-let guildCount = require('../functions/getGuilds');
 let prefixes = require('../functions/managePrefixes');
 let toHHMMSS = require('../functions/toReadableTime');
 let genRanString = require('../functions/genRanString');
 let stats = require('../functions/commandStatistics');
-let shards = require('../functions/shardManager');
 let lists = require('../functions/lists');
 let memory = require('../functions/memoryUsage');
 let fs = require('fs');
-let userAcrossShards = require('../functions/userAcrossShards');
-
 const Logger = require('../functions/logger');
 const console = new Logger();
 
@@ -33,13 +29,7 @@ module.exports = {
                     evaluation = evaluation.replace(client.token, '(insert token here)')
                 }
                 if (evaluation.length > 2000) {
-                    client.createMessage(msg.channel.id, 'Output too large, it should be on your website at https://alekeagle.com/dad_bot/eval_out').then(() => {
-                        fs.writeFile('/home/alekeagle/node_server/root/dad_bot/eval_out/eval_output.txt', evaluation.replace(/\n/g, '<br>'), (err) => {
-                            if (err != undefined) {
-                                client.createMessage(msg.channel.id, 'An error occurred while this action was being preformed error code: `' + err.code + '`')
-                            }
-                        });
-                    });
+                    client.createMessage(msg.channel.id, 'Output too large, heres a file instead!', {file: Buffer.from(evaluation), name: 'output.txt'})
                 } else {
                     client.createMessage(msg.channel.id, evaluation)
                 }

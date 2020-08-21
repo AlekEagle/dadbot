@@ -1,8 +1,6 @@
 'use strict';
 
-let guildCount = require('../functions/getGuilds');
 let u_wut_m8 = require('../.auth.json');
-let nums = require('../functions/numbers');
 let DBL = require('dblapi.js');
 const dbl = new DBL(u_wut_m8.dblToken, {});
 
@@ -13,18 +11,17 @@ module.exports = {
         var bots = guild.members.filter(m => m.bot).length;
         var notBots = guild.memberCount-bots;
         var percent = Math.floor((bots / guild.memberCount) * 100);
-        guildCount().then(guilds => {
             client.executeWebhook('547588483502440464', u_wut_m8.webhookTokenThing, {
                 embeds: [
                     {
-                        title: 'New Server Alert',
+                        title: 'Server Create Alert',
                         thumbnail: {
-                            url: `${guild.dynamicIconURL('png', 512) ? guild.dynamicIconURL('png', 512).split('?')[0] : 'https://cdn.discordapp.com/avatars/503720029456695306/cb6bb2fc3e552a68064d06f808d71fa8.png'}`
+                            url: guild.dynamicIconURL(guild.icon ? (guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                         },
                         author: {
                             name: `${client.users.get(guild.ownerID).username}#${client.users.get(guild.ownerID).discriminator}`,
-                            icon_url: `${client.users.get(guild.ownerID).dynamicAvatarURL('png', 512).split('?')[0]}`,
-                            url: `${client.users.get(guild.ownerID).dynamicAvatarURL('png', 512).split('?')[0]}`
+                            icon_url: client.users.get(guild.ownerID).dynamicAvatarURL(client.users.get(guild.ownerID).avatar ? (client.users.get(guild.ownerID).avatar.startsWith('a_') ? 'gif' : 'png') : 'png', 256),
+                            url: client.users.get(guild.ownerID).dynamicAvatarURL(client.users.get(guild.ownerID).avatar ? (client.users.get(guild.ownerID).avatar.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
                         },
                         fields: [
                             {
@@ -70,7 +67,6 @@ module.exports = {
                     }
                 ]
             });
-        });
-        dbl.postStats(client.guilds.size, client.options.firstShardID, nums.shardCount);
+        dbl.postStats(client.guilds.filter(g => g.shard.id === s.id).length, guild.shard.id, client.shards.size);
     }
 }
