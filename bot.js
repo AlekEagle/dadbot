@@ -26,7 +26,7 @@ owners.initializeOwners().then(list => {
     console.error(err)
 });
 const client = new CommandClient(env.DEBUG ? u_wut_m8.otherToken : u_wut_m8.token, {
-    maxShards: env.DEBUG ? 3 : 'auto',
+    maxShards: env.DEBUG ? 1 : 'auto',
     getAllUsers: true,
     messageLimit: 0,
     defaultImageFormat: 'png',
@@ -43,6 +43,7 @@ client.editStatus('dnd', {
 });
 
 client.on('ready', () => {
+    console.log('Connected.');
     client.editStatus('online', {
         type: 0,
         name: `how do I use this computer thingy?`
@@ -56,6 +57,8 @@ client.on('ready', () => {
             console.log(`Told IFTTT that shard (re)connected`);
         });
     }
+    loadCmds();
+    loadEvts();
 });
 prefixes.managePrefixes({
     action: 'refresh',
@@ -94,7 +97,6 @@ global.loadEvts = (reload) => {
         });
     });
 }
-loadEvts();
 
 global.loadCmds = (reload) => {
     if (reload) {
@@ -140,7 +142,6 @@ global.loadCmds = (reload) => {
         }, cmdFile.options);
     });
 }
-loadCmds();
 client.connect();
 if (!env.DEBUG) setInterval(() => {
     cpu(['%cpu']).then(cpudata => {

@@ -88,12 +88,12 @@ module.exports = {
           )}|${
             client.guilds
               .filter((g) => g.shard.id === s.id)
-              .map((g) => g.memberCount)[0]
+              .map((g) => g.memberCount).reduce((a, b) => a + b, 0)
           }${" ".repeat(
             7 -
               client.guilds
                 .filter((g) => g.shard.id === s.id)
-                .map((g) => g.memberCount)[0]
+                .map((g) => g.memberCount).reduce((a, b) => a + b, 0)
                 .toString().length
           )}|${s.status.toUpperCase()}${
             Object.keys(overallShardStatus)
