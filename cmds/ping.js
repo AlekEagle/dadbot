@@ -4,7 +4,7 @@ module.exports = {
   name: "ping",
 
   exec: (client, msg, args) => {
-    let apiPingTime = client.shards.get(msg.channel.guild.shard.id),
+    let apiPingTime = client.shards.get(msg.channel.guild.shard.id).latency,
     then = Date.now();
     msg.channel.createMessage('Pinging...').then(message => {
       message.edit(`Pong!\nMessage edit time: \`${(Date.now() - then)}ms\`\nAVG Shard Ping: \`${Math.round(
