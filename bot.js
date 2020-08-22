@@ -26,7 +26,7 @@ owners.initializeOwners().then(list => {
     console.error(err)
 });
 const client = new CommandClient(env.DEBUG ? u_wut_m8.otherToken : u_wut_m8.token, {
-    maxShards: env.DEBUG ? 1 : 'auto',
+    maxShards: env.DEBUG ? 3 : 'auto',
     getAllUsers: true,
     messageLimit: 0,
     defaultImageFormat: 'png',
@@ -112,6 +112,7 @@ global.loadCmds = (reload) => {
         var cmdFile = require(`./cmds/${c}`);
         stats.initializeCommand(cmdFile.name);
         client.registerCommand(cmdFile.name, (msg, args) => {
+            stats.updateUses(cmdFile.name);
             globalBlacklist.getValueByID(msg.channel.id).then(stat => {
                 if (stat === null ? false : (stat.cmds.includes('all') || stat.cmds.includes(cmdFile.name))) {
                     msg.channel.createMessage('This channel has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis channel may no longer use these commands: `' + stat.cmds.join(', ') + '`');
