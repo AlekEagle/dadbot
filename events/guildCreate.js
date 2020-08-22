@@ -94,6 +94,6 @@ module.exports = {
         },
       ],
     });
-    dbl.postStats(client.guilds.length, guild.shard.id, client.shards.size);
+    dbl.postStats(client.guilds.size, guild.shard.id, client.shards.size);
   },
 };
