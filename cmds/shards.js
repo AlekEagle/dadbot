@@ -1,19 +1,19 @@
 "use strict";
 
 module.exports = {
-  name: "shards",
+    name: "shards",
 
-  exec: (client, msg, args) => {
-    let e = client.shards.map((s) => s.status.toUpperCase().charAt(0));
-    let overallShardStatus = {};
-    for (let i = 0; i < e.length; i++) {
-      if (!overallShardStatus[e[i]]) overallShardStatus[e[i]] = 0;
-      overallShardStatus[e[i]]++;
-    }
-    let currentShard = msg.channel.guild.shard.id,
-      curInd = 0;
-    let output = [
-      `SHARD|GUILDS |USERS  |STATUS${
+    exec: (client, msg, args) => {
+        let e = client.shards.map((s) => s.status.toUpperCase().charAt(0));
+        let overallShardStatus = {};
+        for (let i = 0; i < e.length; i++) {
+            if (!overallShardStatus[e[i]]) overallShardStatus[e[i]] = 0;
+            overallShardStatus[e[i]]++;
+        }
+        let currentShard = msg.channel.guild.shard.id,
+            curInd = 0;
+        let output = [
+            `SHARD|GUILDS |USERS  |STATUS${
         Object.keys(overallShardStatus)
           .map((k) => `${k}: ${overallShardStatus[k]}`)
           .join(", ").length >=
@@ -70,11 +70,11 @@ module.exports = {
                 .reverse()[0] - 6
             )
       }+------`,
-    ];
-    client.shards
-      .map(
-        (s) =>
-          `${" ".repeat(
+        ];
+        client.shards
+            .map(
+                (s) =>
+                `${" ".repeat(
             5 -
               (s.id === currentShard
                 ? `>${s.id}`.length
@@ -135,15 +135,15 @@ module.exports = {
               ? 9 - "N/A".length
               : 9 - `${s.latency}ms`.length
           )}`
-      )
-      .forEach((e) => {
-        if ((output[curInd] + e).length >= 2000) {
-          output[++curInd] = e;
-        } else {
-          output[curInd] += "\n" + e;
-        }
-      });
-    let totals = `TOTAL|${client.guilds.size}${" ".repeat(
+            )
+            .forEach((e) => {
+                if ((output[curInd] + e).length >= 2000) {
+                    output[++curInd] = e;
+                } else {
+                    output[curInd] += "\n" + e;
+                }
+            });
+        let totals = `TOTAL|${client.guilds.size}${" ".repeat(
       7 - client.guilds.size.toString().length
     )}|${client.users.size}${" ".repeat(
       7 - client.users.size.toString().length
@@ -195,16 +195,16 @@ module.exports = {
             .length
       ) / 100
     }ms`;
-    if ((output[curInd] + totals).length >= 2000) {
-      output[++curInd] = totals;
-    } else {
-      output[curInd] += "\n" + totals;
-    }
-    output.forEach((a) => msg.channel.createMessage(`\`\`\`${a}\`\`\``));
-  },
+        if ((output[curInd] + totals).length >= 2000) {
+            output[++curInd] = totals;
+        } else {
+            output[curInd] += "\n" + totals;
+        }
+        output.forEach((a) => msg.channel.createMessage(`\`\`\`${a}\`\`\``));
+    },
 
-  options: {
-    description: "Show other shards info",
-    fullDescription: "Show other shards info",
-  },
+    options: {
+        description: "Show other shards info",
+        fullDescription: "Show other shards info",
+    },
 };
