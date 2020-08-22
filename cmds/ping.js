@@ -4,10 +4,19 @@ module.exports = {
   name: "ping",
 
   exec: (client, msg, args) => {
-    var apiPingTime = client.shards
-      .filter((s) => msg.channel.guild.shard.id == s.id)
-      .map((s) => s.latency)[0];
-    client.createMessage(msg.channel.id, "Ping: " + apiPingTime);
+    let apiPingTime = client.shards.get(msg.channel.guild.shard.id),
+    then = Date.now();
+    msg.channel.createMessage('Pinging...').then(message => {
+      message.edit(`Pong!\nMessage edit time: \`${(Date.now() - then)}ms\`\nAVG Shard Ping: \`${Math.round(
+        (100 *
+          client.shards
+            .map((s) => s.latency)
+            .filter((a) => a !== Infinity)
+            .reduce((a, b) => a + b, 0)) /
+          client.shards.map((e) => e.latency).filter((a) => a !== Infinity)
+            .length
+      ) / 100}ms\`\nCurrent shard ping: \`${apiPingTime}ms\``);
+    }).catch(err => {});
   },
 
   options: {
