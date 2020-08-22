@@ -5,7 +5,7 @@ let DBL = require("dblapi.js");
 const dbl = new DBL(u_wut_m8.dblToken, {});
 
 module.exports = {
-    name: "guildCreate",
+    name: "guildDelete",
 
     exec: (client, guild) => {
         var bots = guild.members.filter((m) => m.bot).length;
