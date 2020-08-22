@@ -12,6 +12,7 @@ module.exports = {
         ++nums.msgsRead
         try {
             var u = msg.member;
+            if (!u) return;
             settings.getValueByID(msg.channel.guild.id).then(chanStat => {
                 settings.getValueByID(msg.channel.id).then(stat => {
                     if (!settings.getFlags(stat.flags).includes('PASTA_MODE') && !settings.getFlags(chanStat.flags).includes('PASTA_MODE')) return;
