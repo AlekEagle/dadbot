@@ -57,6 +57,7 @@ client.on('ready', () => {
             console.log(`Told IFTTT that shard (re)connected`);
         });
     }
+    client.users.set('1', {id: '1', createdAt: '2015-05-15T04:00:00.000Z', mention: '<@1>', bot: true, username: 'Clyde', discriminator: '0001', avatar: 'f78426a064bc9dd24847519259bc42af', system: true})
     loadCmds();
     loadEvts();
 });

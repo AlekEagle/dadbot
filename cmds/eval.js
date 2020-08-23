@@ -29,6 +29,10 @@ module.exports = {
                     evaluation = evaluation.replace(client.token, '(insert token here)')
                 }
                 if (evaluation.length > 2000) {
+                    if (evaluation.length > 8388608) {
+                        client.createMessage(msg.channel.id, 'Output too large, even for a file! you\'re on your own this time!');
+                        return;
+                    }
                     client.createMessage(msg.channel.id, 'Output too large, heres a file instead!', {file: Buffer.from(evaluation), name: 'output.txt'})
                 } else {
                     client.createMessage(msg.channel.id, evaluation)

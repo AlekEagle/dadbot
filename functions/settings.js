@@ -2,7 +2,7 @@
 
 const u_wut_m8 = require('../.auth.json');
 const Sequelize = require('sequelize');
-const sequelize = new Sequelize(`postgres://alekeagle:${u_wut_m8.serverPass}@127.0.0.1:5432/alekeagle`, {
+const sequelize = new Sequelize(`postgres://alek:${u_wut_m8.serverPass}@127.0.0.1:5432/alekeagle`, {
     logging: false
 });
 class Options extends Sequelize.Model {};
