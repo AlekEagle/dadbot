@@ -316,5 +316,3 @@ getCPUInfo = (callback) => {
     total: total,
   };
 };
-
-client.connect();
