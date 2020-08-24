@@ -5,20 +5,20 @@
   "main": "bot.js",
   "author": "AlekEagle",
   "dependencies": {
-    "@sentry/node": "^5.20.1",
+    "@sentry/node": "^5.21.2",
     "chalk": "^4.1.0",
     "collections": "^5.1.11",
-    "dblapi.js": "^2.4.0",
+    "dblapi.js": "^2.4.1",
     "eris": "^0.13.3",
     "eris-command-handler": "^1.1.4",
     "express": "^4.17.1",
     "ms": "^2.1.2",
     "node-fetch": "^2.6.0",
     "perspective-api-client": "^3.1.0",
-    "pg": "^8.2.1",
+    "pg": "^8.3.2",
     "pg-hstore": "^2.3.3",
     "process-cpu-utilization": "^1.0.2",
     "request": "^2.88.2",
-    "sequelize": "^5.21.13"
+    "sequelize": "^6.3.4"
   }
 }
