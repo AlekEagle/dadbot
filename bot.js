@@ -1,23 +1,27 @@
+require("dotenv").config(); // env vars init
+
 const CommandClient = require("eris-command-handler");
 const env = process.env;
 const fs = require("fs");
-const u_wut_m8 = require("./.auth.json");
 const request = require("request");
 const Logger = require("./functions/logger");
 const console = new Logger();
 const os = require("os");
-let nums = require("./functions/numbers");
-let settings = require("./functions/settings");
+const Sequelize = require("sequelize");
+const ms = require("ms");
+const pm2 = require("pm2");
+global._database = new Sequelize(
+  `postgres://alek:${process.env.serverPass}@127.0.0.1:5432/alekeagle`,
+  {
+    logging: false,
+  }
+);
 let globalBlacklist = require("./functions/globalBlacklist");
 let stats = require("./functions/commandStatistics");
 let owners = require("./functions/getOwners");
 let prefixes = require("./functions/managePrefixes");
-let ms = require("ms");
-let fetch = require("node-fetch");
-let time = require("./functions/toReadableTime");
-let cpu = /*require("util").promisify(require("process-cpu-utilization").get)*/ 0;
-let memory = require("./functions/memoryUsage");
 const Sentry = require("@sentry/node");
+
 Sentry.init({
   dsn: "https://81fb39c6a5904886ba26a90e2a6ea8aa@sentry.io/1407724",
 });
@@ -32,9 +36,9 @@ owners.initializeOwners().then(
   }
 );
 const client = new CommandClient(
-  env.DEBUG ? u_wut_m8.otherToken : u_wut_m8.token,
+  env.DEBUG ? process.env.otherToken : process.env.token,
   {
-    maxShards: env.DEBUG ? 3 : 'auto',
+    maxShards: env.DEBUG ? 3 : "auto",
     getAllUsers: true,
     messageLimit: 0,
     defaultImageFormat: "png",
@@ -46,10 +50,42 @@ const client = new CommandClient(
     prefix: env.DEBUG ? "test!" : "d!",
   }
 );
+
+client.once("connect", () => {
+  client.shards.forEach((s) => {
+    s.on("ready", () => {
+      updateShardCount(s.id + 1);
+    });
+  });
+});
+
 client.editStatus("dnd", {
   type: 3,
   name: `myself start up!`,
 });
+
+updateShardCount();
+
+function updateShardCount(snum) {
+  var avail = client.shards.length;
+  console.log(
+    `Shard Status: ${Math.round(((snum || 0) / avail) * 100) || 0}% [${
+      snum || 0
+    }/${avail}]`
+  );
+}
+
+setTimeout(() => {
+  if (client.shards.length === 0) {
+    console.log(
+      "Discord gave 0 shards available for 15 consecutive seconds. Likely timeout of API or Token is invalid. Killing process."
+    );
+    pm2.connect(() => {
+      console.log("PM2: process kiled.");
+      pm2.stop("dad");
+    });
+  }
+}, ms("15sec"));
 
 client.on("ready", () => {
   console.log("Connected.");
@@ -59,7 +95,7 @@ client.on("ready", () => {
   });
   if (!env.DEBUG) {
     request.post(
-      `https://maker.ifttt.com/trigger/bot_connected/with/key/${u_wut_m8.iftttToken}`,
+      `https://maker.ifttt.com/trigger/bot_connected/with/key/${process.env.iftttToken}`,
       {
         json: {
           value1: "Dad Bot",

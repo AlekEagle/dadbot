@@ -9,3 +9,4 @@ cmdstats.json
 suggestions.json
 owners.json
 deploy.sh
+.env
