@@ -147,39 +147,3 @@ global.loadCmds = (reload) => {
     });
 }
 client.connect();
-if (!env.DEBUG) setInterval(() => {
-    cpu(['%cpu']).then(cpudata => {
-        const data = {
-            currentUptime: time(process.uptime()),
-            commandsRan: nums.cmdsRan,
-            messagesRead: nums.msgsRead,
-            serverCount: client.guilds.size,
-            userCount: client.users.size,
-            shardCount: client.shards.size,
-            CPU_USAGE: `${cpudata["%cpu"]}%`,
-            MEM_USAGE: `${memory()} / ${memory(require("os").totalmem())}`,
-            AVG_PING: `${
-            Math.round(
-              (100 *
-                client.shards
-                  .map((s) => s.latency)
-                  .filter((a) => a !== Infinity)
-                  .reduce((a, b) => a + b, 0)) /
-                client.shards
-                  .map((e) => e.latency)
-                  .filter((a) => a !== Infinity).length
-            ) / 100
-          } ms`,
-        };
-        fetch('https://dad.eli.fail/data', {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: u_wut_m8.analytics_token,
-            },
-            body: JSON.stringify({
-                data: data
-            })
-        });
-    });
-}, ms('1sec'));
