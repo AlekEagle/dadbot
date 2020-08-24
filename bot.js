@@ -34,7 +34,7 @@ owners.initializeOwners().then(
 const client = new CommandClient(
   env.DEBUG ? u_wut_m8.otherToken : u_wut_m8.token,
   {
-    maxShards: env.DEBUG ? 3 : 70,
+    maxShards: env.DEBUG ? 3 : 'auto',
     getAllUsers: true,
     messageLimit: 0,
     defaultImageFormat: "png",
@@ -46,17 +46,6 @@ const client = new CommandClient(
     prefix: env.DEBUG ? "test!" : "d!",
   }
 );
-let prevlist = [];
-setInterval(()=>{
-  let list = [];
-  client.shards.forEach(s=>{
-    if(s.ready) {
-      list.push(s.id)
-    }
-  });
-  if(prevlist != list) {console.log(list)}
-  prevlist = list;
-},1000)
 client.editStatus("dnd", {
   type: 3,
   name: `myself start up!`,
