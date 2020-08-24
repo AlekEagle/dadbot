@@ -1,0 +1,436 @@
+
+{
+  "header": {
+    "reportVersion": 1,
+    "event": "Allocation failed - JavaScript heap out of memory",
+    "trigger": "FatalError",
+    "filename": "report.20200318.172506.21401.0.001.json",
+    "dumpEventTime": "2020-03-18T17:25:06Z",
+    "dumpEventTimeStamp": "1584552306825",
+    "processId": 21401,
+    "cwd": "/home/alekeagle/Dad_Bot",
+    "commandLine": [
+      "node",
+      "/usr/lib/node_modules/pm2/lib/ProcessContainerFork.js",
+      "--max-old-space-size=8192"
+    ],
+    "nodejsVersion": "v12.13.1",
+    "glibcVersionRuntime": "2.24",
+    "glibcVersionCompiler": "2.17",
+    "wordSize": 64,
+    "arch": "x64",
+    "platform": "linux",
+    "componentVersions": {
+      "node": "12.13.1",
+      "v8": "7.7.299.13-node.16",
+      "uv": "1.33.1",
+      "zlib": "1.2.11",
+      "brotli": "1.0.7",
+      "ares": "1.15.0",
+      "modules": "72",
+      "nghttp2": "1.39.2",
+      "napi": "5",
+      "llhttp": "1.1.4",
+      "http_parser": "2.8.0",
+      "openssl": "1.1.1d",
+      "cldr": "35.1",
+      "icu": "64.2",
+      "tz": "2019c",
+      "unicode": "12.1"
+    },
+    "release": {
+      "name": "node",
+      "lts": "Erbium",
+      "headersUrl": "https://nodejs.org/download/release/v12.13.1/node-v12.13.1-headers.tar.gz",
+      "sourceUrl": "https://nodejs.org/download/release/v12.13.1/node-v12.13.1.tar.gz"
+    },
+    "osName": "Linux",
+    "osRelease": "4.9.179-xxxx-std-ipv6-64",
+    "osVersion": "#736350 SMP Mon May 27 08:31:25 UTC 2019",
+    "osMachine": "x86_64",
+    "cpus": [
+      {
+        "model": "Intel(R) Xeon(R) CPU           W3530  @ 2.80GHz",
+        "speed": 1733,
+        "user": 11180412900,
+        "nice": 4024700,
+        "sys": 1998836800,
+        "idle": 227516910000,
+        "irq": 0
+      },
+      {
+        "model": "Intel(R) Xeon(R) CPU           W3530  @ 2.80GHz",
+        "speed": 1733,
+        "user": 19603425500,
+        "nice": 5670600,
+        "sys": 2045545700,
+        "idle": 226567820500,
+        "irq": 0
+      },
+      {
+        "model": "Intel(R) Xeon(R) CPU           W3530  @ 2.80GHz",
+        "speed": 2800,
+        "user": 22502631200,
+        "nice": 6311400,
+        "sys": 2001987200,
+        "idle": 223106602700,
+        "irq": 0
+      },
+      {
+        "model": "Intel(R) Xeon(R) CPU           W3530  @ 2.80GHz",
+        "speed": 1867,
+        "user": 19046305000,
+        "nice": 6096000,
+        "sys": 2003202500,
+        "idle": 227048702600,
+        "irq": 0
+      },
+      {
+        "model": "Intel(R) Xeon(R) CPU           W3530  @ 2.80GHz",
+        "speed": 2133,
+        "user": 10949404600,
+        "nice": 5464100,
+        "sys": 2357070000,
+        "idle": 234676889800,
+        "irq": 0
+      },
+      {
+        "model": "Intel(R) Xeon(R) CPU           W3530  @ 2.80GHz",
+        "speed": 1733,
+        "user": 13854459200,
+        "nice": 4780600,
+        "sys": 2067557700,
+        "idle": 232273527100,
+        "irq": 0
+      },
+      {
+        "model": "Intel(R) Xeon(R) CPU           W3530  @ 2.80GHz",
+        "speed": 1600,
+        "user": 9941015400,
+        "nice": 3981600,
+        "sys": 2030586400,
+        "idle": 235880845100,
+        "irq": 0
+      },
+      {
+        "model": "Intel(R) Xeon(R) CPU           W3530  @ 2.80GHz",
+        "speed": 1733,
+        "user": 15943097500,
+        "nice": 3364000,
+        "sys": 2022849900,
+        "idle": 228738774100,
+        "irq": 0
+      }
+    ],
+    "networkInterfaces": [
+      {
+        "name": "lo",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "127.0.0.1",
+        "netmask": "255.0.0.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "enp1s0",
+        "internal": false,
+        "mac": "00:25:90:71:77:a2",
+        "address": "37.59.53.179",
+        "netmask": "255.255.255.0",
+        "family": "IPv4"
+      },
+      {
+        "name": "lo",
+        "internal": true,
+        "mac": "00:00:00:00:00:00",
+        "address": "::1",
+        "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
+        "family": "IPv6",
+        "scopeid": 0
+      },
+      {
+        "name": "enp1s0",
+        "internal": false,
+        "mac": "00:25:90:71:77:a2",
+        "address": "2001:41d0:8:70b3::1",
+        "netmask": "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff",
+        "family": "IPv6",
+        "scopeid": 0
+      },
+      {
+        "name": "enp1s0",
+        "internal": false,
+        "mac": "00:25:90:71:77:a2",
+        "address": "fe80::225:90ff:fe71:77a2",
+        "netmask": "ffff:ffff:ffff:ffff::",
+        "family": "IPv6",
+        "scopeid": 6
+      }
+    ],
+    "host": "ns3060272"
+  },
+  "javascriptStack": {
+    "message": "No stack.",
+    "stack": [
+      "Unavailable."
+    ]
+  },
+  "nativeStack": [
+    {
+      "pc": "0x0000000000b04935",
+      "symbol": "report::TriggerNodeReport(v8::Isolate*, node::Environment*, char const*, char const*, std::string const&, v8::Local<v8::String>) [node /home/alekeagle/Dad_Bot]"
+    },
+    {
+      "pc": "0x00000000009db9e3",
+      "symbol": "node::OnFatalError(char const*, char const*) [node /home/alekeagle/Dad_Bot]"
+    },
+    {
+      "pc": "0x0000000000b39f1e",
+      "symbol": "v8::Utils::ReportOOMFailure(v8::internal::Isolate*, char const*, bool) [node /home/alekeagle/Dad_Bot]"
+    },
+    {
+      "pc": "0x0000000000b3a299",
+      "symbol": "v8::internal::V8::FatalProcessOutOfMemory(v8::internal::Isolate*, char const*, bool) [node /home/alekeagle/Dad_Bot]"
+    },
+    {
+      "pc": "0x0000000000ce5635",
+      "symbol": " [node /home/alekeagle/Dad_Bot]"
+    },
+    {
+      "pc": "0x0000000000ce5cc6",
+      "symbol": "v8::internal::Heap::RecomputeLimits(v8::internal::GarbageCollector) [node /home/alekeagle/Dad_Bot]"
+    },
+    {
+      "pc": "0x0000000000cf1b5a",
+      "symbol": "v8::internal::Heap::PerformGarbageCollection(v8::internal::GarbageCollector, v8::GCCallbackFlags) [node /home/alekeagle/Dad_Bot]"
+    },
+    {
+      "pc": "0x0000000000cf2a65",
+      "symbol": "v8::internal::Heap::CollectGarbage(v8::internal::AllocationSpace, v8::internal::GarbageCollectionReason, v8::GCCallbackFlags) [node /home/alekeagle/Dad_Bot]"
+    },
+    {
+      "pc": "0x0000000000cf5478",
+      "symbol": "v8::internal::Heap::AllocateRawWithRetryOrFail(int, v8::internal::AllocationType, v8::internal::AllocationAlignment) [node /home/alekeagle/Dad_Bot]"
+    },
+    {
+      "pc": "0x0000000000cbbda7",
+      "symbol": "v8::internal::Factory::NewFillerObject(int, bool, v8::internal::AllocationType) [node /home/alekeagle/Dad_Bot]"
+    },
+    {
+      "pc": "0x0000000000ff1e0b",
+      "symbol": "v8::internal::Runtime_AllocateInYoungGeneration(int, unsigned long*, v8::internal::Isolate*) [node /home/alekeagle/Dad_Bot]"
+    },
+    {
+      "pc": "0x0000000001374fd9",
+      "symbol": " [node /home/alekeagle/Dad_Bot]"
+    }
+  ],
+  "javascriptHeap": {
+    "totalMemory": 2168709120,
+    "totalCommittedMemory": 2165597384,
+    "usedMemory": 1937494760,
+    "availableMemory": 117126368,
+    "memoryLimit": 2197815296,
+    "heapSpaces": {
+      "read_only_space": {
+        "memorySize": 262144,
+        "committedMemory": 32568,
+        "capacity": 261872,
+        "used": 32296,
+        "available": 229576
+      },
+      "new_space": {
+        "memorySize": 33554432,
+        "committedMemory": 31452936,
+        "capacity": 16759808,
+        "used": 2156616,
+        "available": 14603192
+      },
+      "old_space": {
+        "memorySize": 2013638656,
+        "committedMemory": 2012915128,
+        "capacity": 1871757816,
+        "used": 1815330200,
+        "available": 56427616
+      },
+      "code_space": {
+        "memorySize": 1998848,
+        "committedMemory": 1962528,
+        "capacity": 1461888,
+        "used": 1461888,
+        "available": 0
+      },
+      "map_space": {
+        "memorySize": 1576960,
+        "committedMemory": 1556144,
+        "capacity": 1158480,
+        "used": 1158480,
+        "available": 0
+      },
+      "large_object_space": {
+        "memorySize": 117628928,
+        "committedMemory": 117628928,
+        "capacity": 117351664,
+        "used": 117351664,
+        "available": 0
+      },
+      "code_large_object_space": {
+        "memorySize": 49152,
+        "committedMemory": 49152,
+        "capacity": 3616,
+        "used": 3616,
+        "available": 0
+      },
+      "new_large_object_space": {
+        "memorySize": 0,
+        "committedMemory": 0,
+        "capacity": 16759808,
+        "used": 0,
+        "available": 16759808
+      }
+    }
+  },
+  "resourceUsage": {
+    "userCpuSeconds": 62147.4,
+    "kernelCpuSeconds": 2294.56,
+    "cpuConsumptionPercent": 56.1414,
+    "maxRss": 2349920256,
+    "pageFaults": {
+      "IORequired": 6,
+      "IONotRequired": 26614722
+    },
+    "fsActivity": {
+      "reads": 23904,
+      "writes": 16
+    }
+  },
+  "uvthreadResourceUsage": {
+    "userCpuSeconds": 28122.5,
+    "kernelCpuSeconds": 2016.36,
+    "cpuConsumptionPercent": 26.2568,
+    "fsActivity": {
+      "reads": 23896,
+      "writes": 16
+    }
+  },
+  "libuv": [
+  ],
+  "environmentVariables": {
+    "prev_restart_delay": "0",
+    "kill_retry_time": "100",
+    "windowsHide": "true",
+    "username": "alekeagle",
+    "treekill": "true",
+    "automation": "true",
+    "pmx": "true",
+    "instance_var": "NODE_APP_INSTANCE",
+    "watch": "false",
+    "autorestart": "true",
+    "vizion": "true",
+    "merge_logs": "true",
+    "env": "[object Object]",
+    "args": "--max-old-space-size=8192",
+    "namespace": "default",
+    "name": "dad",
+    "node_args": "",
+    "pm_exec_path": "/home/alekeagle/Dad_Bot",
+    "pm_cwd": "/home/alekeagle/Dad_Bot",
+    "exec_interpreter": "node",
+    "exec_mode": "fork_mode",
+    "instances": "1",
+    "pm_out_log_path": "/home/alekeagle/.pm2/logs/dad-out.log",
+    "pm_err_log_path": "/home/alekeagle/.pm2/logs/dad-error.log",
+    "pm_pid_path": "/home/alekeagle/.pm2/pids/dad-3.pid",
+    "km_link": "false",
+    "vizion_running": "false",
+    "NODE_APP_INSTANCE": "0",
+    "PM2_USAGE": "CLI",
+    "OLDPWD": "/home/alekeagle",
+    "_": "/usr/bin/pm2",
+    "PATH": "/usr/local/bin:/usr/bin:/bin:/usr/local/games:/usr/games",
+    "LOGNAME": "alekeagle",
+    "SHLVL": "1",
+    "SHELL": "/bin/bash",
+    "TERM": "xterm",
+    "MAIL": "/var/mail/alekeagle",
+    "SSH_TTY": "/dev/pts/7",
+    "SSH_CLIENT": "174.208.29.253 6524 22",
+    "HOME": "/home/alekeagle",
+    "PWD": "/home/alekeagle/Dad_Bot",
+    "USER": "alekeagle",
+    "LANG": "en_US.UTF-8",
+    "SSH_CONNECTION": "174.208.29.253 6524 37.59.53.179 22",
+    "LS_COLORS": "rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arc=01;31:*.arj=01;31:*.taz=01;31:*.lha=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.tzo=01;31:*.t7z=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lrz=01;31:*.lz=01;31:*.lzo=01;31:*.xz=01;31:*.zst=01;31:*.tzst=01;31:*.bz2=01;31:*.bz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.war=01;31:*.ear=01;31:*.sar=01;31:*.rar=01;31:*.alz=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.cab=01;31:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:",
+    "PM2_HOME": "/home/alekeagle/.pm2",
+    "unique_id": "3d16671c-8724-4d88-9450-c8339f05403d",
+    "status": "launching",
+    "pm_uptime": "1584437520901",
+    "axm_actions": "",
+    "axm_monitor": "[object Object]",
+    "axm_options": "[object Object]",
+    "axm_dynamic": "[object Object]",
+    "created_at": "1583016770972",
+    "pm_id": "3",
+    "restart_time": "18",
+    "unstable_restarts": "0",
+    "version": "2.0.0",
+    "versioning": "null",
+    "node_version": "12.13.1",
+    "exit_code": "0"
+  },
+  "userLimits": {
+    "core_file_size_blocks": {
+      "soft": 0,
+      "hard": "unlimited"
+    },
+    "data_seg_size_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "file_size_blocks": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "max_locked_memory_bytes": {
+      "soft": 65536,
+      "hard": 65536
+    },
+    "max_memory_size_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "open_files": {
+      "soft": 1048576,
+      "hard": 1048576
+    },
+    "stack_size_bytes": {
+      "soft": 8388608,
+      "hard": "unlimited"
+    },
+    "cpu_time_seconds": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    },
+    "max_user_processes": {
+      "soft": 64072,
+      "hard": 64072
+    },
+    "virtual_memory_kbytes": {
+      "soft": "unlimited",
+      "hard": "unlimited"
+    }
+  },
+  "sharedObjects": [
+    "linux-vdso.so.1",
+    "/lib/x86_64-linux-gnu/libdl.so.2",
+    "/usr/lib/x86_64-linux-gnu/libstdc++.so.6",
+    "/lib/x86_64-linux-gnu/libm.so.6",
+    "/lib/x86_64-linux-gnu/libgcc_s.so.1",
+    "/lib/x86_64-linux-gnu/libpthread.so.0",
+    "/lib/x86_64-linux-gnu/libc.so.6",
+    "/lib64/ld-linux-x86-64.so.2",
+    "/lib/x86_64-linux-gnu/libnss_files.so.2",
+    "/lib/x86_64-linux-gnu/libnss_dns.so.2",
+    "/lib/x86_64-linux-gnu/libresolv.so.2"
+  ]
+}
