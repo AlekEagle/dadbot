@@ -232,6 +232,8 @@ global.loadCmds = (reload) => {
   });
 };
 
+client.connect();
+
 global.getCPUUsage = (callback, free) => {
   var stats1 = getCPUInfo();
   var startIdle = stats1.idle;
