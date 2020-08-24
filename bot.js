@@ -54,18 +54,12 @@ const client = new CommandClient(
   }
 );
 
-client.once("connect", () => {
-  client.shards.forEach((s) => {
-    s.on("ready", () => {
-      updateShardCount(s.id);
-    });
-  });
-});
-
 client.editStatus("dnd", {
   type: 3,
   name: `myself start up!`,
 });
+
+client.once("hello", () => updateShardCount());
 
 function updateShardCount(snum) {
   var avail = Number(process.env.totalShards);
