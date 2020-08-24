@@ -59,7 +59,7 @@ client.editStatus("dnd", {
   name: `myself start up!`,
 });
 
-client.once("hello", () => updateShardCount());
+client.on("shardReady", (id) => updateShardCount(id));
 
 function updateShardCount(snum) {
   var avail = Number(process.env.totalShards);
