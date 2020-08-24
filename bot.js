@@ -245,6 +245,7 @@ global.loadCmds = (reload) => {
                           msg.channel.createMessage(
                             "An unexpected error has occured in the processing of this command, if the problem persists please contact Dad Bot's Support Team: https://alekeagle.com/d"
                           );
+                          throw err;
                         }
                       }
                     });
@@ -255,6 +256,7 @@ global.loadCmds = (reload) => {
                     msg.channel.createMessage(
                       "An unexpected error has occured in the processing of this command, if the problem persists please contact Dad Bot's Support Team: https://alekeagle.com/d"
                     );
+                    throw err;
                   }
                 }
               }
