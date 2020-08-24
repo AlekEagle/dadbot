@@ -47,7 +47,7 @@ module.exports = {
             }
         }));
         if (!value) {
-            return await new Promise((resolve, reject) => resolve({id, flags: module.exports.toFlags(["IM_RESPONSES", "KYS_RESPONSES", "SHUT_UP_RESPONSES", "WINNING_RESPONSES"])}));
+            return new Promise((resolve, reject) => resolve({id, flags: module.exports.toFlags(["IM_RESPONSES", "KYS_RESPONSES", "SHUT_UP_RESPONSES", "WINNING_RESPONSES"])}));
         }else {
             cache[id] = value[0];
             return value[0];
