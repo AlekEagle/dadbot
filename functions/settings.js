@@ -54,7 +54,7 @@ module.exports = {
         }
     },
     updateValue: async (options) => {
-        if (options.flags === 27) {
+        if (options.flags === module.exports.toFlags(["IM_RESPONSES", "KYS_RESPONSES", "SHUT_UP_RESPONSES", "WINNING_RESPONSES"])) {
             delete cache[options.id];
             let res = (await Options.findOne({
                 where: {
