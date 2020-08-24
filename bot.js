@@ -1,5 +1,3 @@
-require("dotenv").config(); // env vars init
-
 const CommandClient = require("eris-command-handler");
 const env = process.env;
 const fs = require("fs");
@@ -22,6 +20,8 @@ let owners = require("./functions/getOwners");
 let prefixes = require("./functions/managePrefixes");
 const Sentry = require("@sentry/node");
 
+if (process.env.debug) console.log("DEBUG MODE");
+
 Sentry.init({
   dsn: "https://81fb39c6a5904886ba26a90e2a6ea8aa@sentry.io/1407724",
 });
@@ -35,10 +35,13 @@ owners.initializeOwners().then(
     console.error(err);
   }
 );
+
 const client = new CommandClient(
   env.DEBUG ? process.env.otherToken : process.env.token,
   {
-    maxShards: env.DEBUG ? 3 : "auto",
+    firstShardID: Number(process.env.firstShardId),
+    lastShardID: Number(process.env.lastShardId),
+    maxShards: Number(process.env.totalShards),
     getAllUsers: true,
     messageLimit: 0,
     defaultImageFormat: "png",
@@ -54,7 +57,7 @@ const client = new CommandClient(
 client.once("connect", () => {
   client.shards.forEach((s) => {
     s.on("ready", () => {
-      updateShardCount(s.id + 1);
+      updateShardCount(s.id);
     });
   });
 });
@@ -64,13 +67,11 @@ client.editStatus("dnd", {
   name: `myself start up!`,
 });
 
-updateShardCount();
-
 function updateShardCount(snum) {
-  var avail = client.shards.length;
+  var avail = Number(process.env.totalShards);
   console.log(
-    `Shard Status: ${Math.round(((snum || 0) / avail) * 100) || 0}% [${
-      snum || 0
+    `Shard Status: ${Math.round(((snum + 1 || 0) / avail) * 100) || 0}% [${
+      snum + 1 || 0
     }/${avail}]`
   );
 }
@@ -78,12 +79,8 @@ function updateShardCount(snum) {
 setTimeout(() => {
   if (client.shards.length === 0) {
     console.log(
-      "Discord gave 0 shards available for 15 consecutive seconds. Likely timeout of API or Token is invalid. Killing process."
+      "Discord gave 0 shards available for 15 consecutive seconds. Likely timeout of API or Token is invalid."
     );
-    pm2.connect(() => {
-      console.log("PM2: process kiled.");
-      pm2.stop("dad");
-    });
   }
 }, ms("15sec"));
 
@@ -316,5 +313,3 @@ getCPUInfo = (callback) => {
     total: total,
   };
 };
-
-client.connect();
