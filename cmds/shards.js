@@ -10,7 +10,7 @@ module.exports = {
             if (!overallShardStatus[e[i]]) overallShardStatus[e[i]] = 0;
             overallShardStatus[e[i]]++;
         }
-        let currentShard = msg.channel.guild.shard.id,
+        let currentShard = msg.channel.type === 1 ? 0 : msg.channel.guild.shard.id,
             curInd = 0;
         let output = [
             `SHARD|GUILDS |USERS  |STATUS${
