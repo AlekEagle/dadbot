@@ -96,7 +96,7 @@ module.exports = {
     dbl.postStats(
       client.guilds.filter((g) => g.shard.id === guild.shard.id).length,
       guild.shard.id,
-      client.shards.size
+      Number(process.env.totalShards)
     );
   },
 };
