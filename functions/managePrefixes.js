@@ -1,8 +1,6 @@
 "use strict";
 
 const EventEmitter = require("events").EventEmitter;
-const Logger = require("./logger");
-const console = new Logger();
 const Sequelize = require("sequelize");
 
 class Prefixes extends Sequelize.Model {}

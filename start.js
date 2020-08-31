@@ -5,7 +5,8 @@ const pm2 = require("pm2");
 setTimeout(() => {
   pm2.connect(() => {
     pm2.describe("dad", (err, proc) => {
-      if (!process.env.debug) {
+      process.env.INSTANCES = proc[0].pm2_env.instances;
+      if (!process.env.DEBUG) {
         fetch("https://discord.com/api/v6/gateway/bot", {
           method: "GET",
           headers: {

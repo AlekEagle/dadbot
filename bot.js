@@ -2,12 +2,12 @@ const CommandClient = require("eris-command-handler");
 const env = process.env;
 const fs = require("fs");
 const request = require("request");
-const Logger = require("./functions/logger");
-const console = new Logger();
+const GrafanaAPIClient = require('../grafana-api-client');
 const os = require("os");
 const Sequelize = require("sequelize");
 const ms = require("ms");
-const pm2 = require("pm2");
+const memory = require('./functions/memoryUsage');
+require('./functions/logger')('LOG');
 global._database = new Sequelize(
   `postgres://alek:${process.env.serverPass}@127.0.0.1:5432/alekeagle`,
   {
@@ -35,6 +35,8 @@ owners.initializeOwners().then(
     console.error(err);
   }
 );
+
+if(!process.env.DEBUG) global.grafana = new GrafanaAPIClient(process.env.grafanaToken, process.env.NODE_APP_INSTANCE, process.env.INSTANCES, 'ws://localhost:8080/connect');
 
 const client = new CommandClient(
   env.DEBUG ? process.env.otherToken : process.env.token,
@@ -307,3 +309,21 @@ getCPUInfo = (callback) => {
     total: total,
   };
 };
+
+grafana.on('allReady', () => {
+  setInterval(() => {
+    getCPUUsage(cpuUsage => {
+      grafana.sendStats(client.guilds.size, Math.round(cpuUsage), Math.round(new memory.MB().raw()), Math.round(
+        (100 *
+          client.shards
+            .map((s) => s.latency)
+            .filter((a) => a !== Infinity)
+            .reduce((a, b) => a + b, 0)) /
+          client.shards.map((e) => e.latency).filter((a) => a !== Infinity)
+            .length
+      ) / 100);
+    });
+  }, 1000);
+});
+
+grafana.connect();

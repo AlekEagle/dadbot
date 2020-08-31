@@ -1,7 +1,8 @@
-var chalk = require("chalk");
-var date = function getNowDateTimeStr() {
-  var now = new Date();
-  var hour = now.getHours();
+let chalk = require("chalk");
+let _console = { ...require('console') };
+let date = function getNowDateTimeStr() {
+  let now = new Date();
+  let hour = now.getHours();
   return [
     [
       AddZero(now.getDate()),
@@ -13,22 +14,38 @@ var date = function getNowDateTimeStr() {
     ),
   ].join(" ");
 };
+const logLevels = [
+  'NONE',
+  'ERROR',
+  'WARN',
+  'LOG',
+  'INFO',
+  'DEBUG'
+]
 
 function AddZero(num) {
   return num >= 0 && num < 10 ? "0" + num : num + "";
 }
 
 class Logger {
+  constructor(logLevel) {
+    this.logLevel = typeof logLevel === 'string' ? logLevels.indexOf(logLevel) !== -1 ? logLevel : 'LOG' : logLevels[logLevel];
+  }
   log(thing, ...args) {
-    console.log(
+    if (logLevels.indexOf(this.logLevel) < logLevels.indexOf('LOG')) return;
+    _console.log(
       `${chalk.blue.inverse(date())} ${chalk.inverse(`[LOG]`)} ${chalk.white(
         thing
       )}`,
       !args.length ? " " : args
     );
+    try {
+      grafana.sendLog(thing);
+    }catch (err) {}
   }
   warn(thing, ...args) {
-    console.log(
+    if (logLevels.indexOf(this.logLevel) < logLevels.indexOf('WARN')) return;
+    _console.log(
       `${chalk.blue.inverse(date())} ${chalk
         .rgb(255, 124, 43)
         .inverse(`[WARN]`)} ${chalk.white(thing)}`,
@@ -36,7 +53,8 @@ class Logger {
     );
   }
   debug(thing, ...args) {
-    console.log(
+    if (logLevels.indexOf(this.logLevel) < logLevels.indexOf('DEBUG')) return;
+    _console.log(
       `${chalk.blue.inverse(date())} ${chalk.grey.inverse(
         `[DEBUG]`
       )} ${chalk.white(thing)}`,
@@ -44,7 +62,8 @@ class Logger {
     );
   }
   info(thing, ...args) {
-    console.log(
+    if (logLevels.indexOf(this.logLevel) < logLevels.indexOf('INFO')) return;
+    _console.log(
       `${chalk.blue.inverse(date())} ${chalk
         .rgb(255, 255, 0)
         .inverse(`[INFO]`)} ${chalk.white(thing)}`,
@@ -52,7 +71,8 @@ class Logger {
     );
   }
   error(thing, ...args) {
-    console.log(
+    if (logLevels.indexOf(this.logLevel) < logLevels.indexOf('ERROR')) return;
+    _console.log(
       `${chalk.blue.inverse(date())} ${chalk.bgRgb(
         255,
         0,
@@ -60,6 +80,9 @@ class Logger {
       )(`[ERROR]`)} ${chalk.white(thing)}`,
       !args.length ? " " : args
     );
+    try {
+      grafana.sendError(thing);
+    }catch (err) {}
   }
-}
-module.exports = Logger;
+} Logger
+module.exports = (logLevel) => global.console = new Logger(logLevel);
