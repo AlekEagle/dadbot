@@ -313,7 +313,7 @@ getCPUInfo = (callback) => {
 grafana.on('allReady', () => {
   setInterval(() => {
     getCPUUsage(cpuUsage => {
-      grafana.sendStats(client.guilds.size, Math.round(cpuUsage), Math.round(new memory.MB().raw()), Math.round(
+      grafana.sendStats(client.guilds.size, Math.round(cpuUsage * 100), Math.round(new memory.MB().raw()), Math.round(
         (100 *
           client.shards
             .map((s) => s.latency)
