@@ -36,7 +36,7 @@ owners.initializeOwners().then(
   }
 );
 
-if(!process.env.DEBUG) global.grafana = new GrafanaAPIClient(process.env.grafanaToken, process.env.NODE_APP_INSTANCE, process.env.INSTANCES, 'ws://localhost:8080/connect');
+global.grafana = new GrafanaAPIClient(process.env.grafanaToken, process.env.NODE_APP_INSTANCE, process.env.INSTANCES, 'ws://localhost:8080/connect');
 
 const client = new CommandClient(
   env.DEBUG ? process.env.otherToken : process.env.token,
@@ -314,14 +314,13 @@ grafana.on('allReady', () => {
   setInterval(() => {
     getCPUUsage(cpuUsage => {
       grafana.sendStats(client.guilds.size, Math.round(cpuUsage * 100), Math.round(new memory.MB().raw()), Math.round(
-        (100 *
-          client.shards
+        (client.shards
             .map((s) => s.latency)
             .filter((a) => a !== Infinity)
             .reduce((a, b) => a + b, 0)) /
           client.shards.map((e) => e.latency).filter((a) => a !== Infinity)
             .length
-      ) / 100);
+      ));
     });
   }, 1000);
 });
