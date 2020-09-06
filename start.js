@@ -18,34 +18,34 @@ setTimeout(() => {
             console.debug(json);
             process.env.totalShards = json.shards;
             process.env.firstShardId =
-              Math.floor(process.env.totalShards / proc[0].pm2_env.instances) *
+              Math.floor(process.env.totalShards / process.env.INSTANCES) *
               process.env.NODE_APP_INSTANCE;
 
             process.env.lastShardId =
-              process.env.NODE_APP_INSTANCE == proc[0].pm2_env.instances - 1
+              process.env.NODE_APP_INSTANCE == process.env.INSTANCES - 1
                 ? process.env.totalShards - 1
                 : Math.abs(
                     Number(process.env.firstShardId) +
                       Math.floor(
-                        process.env.totalShards / proc[0].pm2_env.instances
+                        process.env.totalShards / process.env.INSTANCES
                       )
                   ) - 1;
             console.log(process.env.firstShardId, process.env.lastShardId);
             require("./bot.js");
           });
       } else {
-        process.env.totalShards = proc[0].pm2_env.instances;
+        process.env.totalShards = process.env.INSTANCES;
         process.env.firstShardId =
-          Math.floor(process.env.totalShards / proc[0].pm2_env.instances) *
+          Math.floor(process.env.totalShards / process.env.INSTANCES) *
           process.env.NODE_APP_INSTANCE;
 
         process.env.lastShardId =
-          process.env.NODE_APP_INSTANCE == proc[0].pm2_env.instances - 1
+          process.env.NODE_APP_INSTANCE == process.env.INSTANCES - 1
             ? process.env.totalShards - 1
             : Math.abs(
                 Number(process.env.firstShardId) +
                   Math.floor(
-                    process.env.totalShards / proc[0].pm2_env.instances
+                    process.env.totalShards / process.env.INSTANCES
                   )
               ) - 1;
 
