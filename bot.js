@@ -20,8 +20,8 @@ let owners = require("./functions/getOwners");
 let prefixes = require("./functions/managePrefixes");
 const Sentry = require("@sentry/node");
 
-if (process.env.debug) {
-  console.log("DEBUG MODE");
+if (process.env.DEBUG) {
+  console.log("DEBUG MODE", process.env.DEBUG);
   console.logLevel = 'DEBUG';
 }
 

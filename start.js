@@ -15,7 +15,7 @@ setTimeout(() => {
         })
           .then((response) => response.json())
           .then((json) => {
-            console.log(json.session_start_limit);
+            console.log(json);
             process.env.totalShards = json.shards;
             process.env.firstShardId =
               Math.floor(process.env.totalShards / proc[0].pm2_env.instances) *
