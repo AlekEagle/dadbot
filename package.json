@@ -16,6 +16,7 @@
     "grafana-api-client": "github:AlekEagle/grafana-api-client",
     "ms": "^2.1.2",
     "node-fetch": "^2.6.1",
+    "os-utils": "0.0.14",
     "perspective-api-client": "^3.1.0",
     "pg": "^8.3.3",
     "pg-hstore": "^2.3.3",
