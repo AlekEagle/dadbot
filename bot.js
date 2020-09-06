@@ -4,7 +4,7 @@ const fs = require("fs");
 const request = require("request");
 const GrafanaAPIClient = require('grafana-api-client');
 const Sequelize = require("sequelize");
-const cpuUsage = require('./functions/cpuUsage');
+const { cpuUsage } = require('os-utils');
 const ms = require("ms");
 const memory = require('./functions/memoryUsage');
 require('./functions/logger')('LOG');
@@ -269,14 +269,16 @@ client.connect();
 
 grafana.on('allReady', () => {
   setInterval(() => {
-    grafana.sendStats(client.guilds.size, cpuUsage(), Math.round(new memory.MB().raw()), Math.round(
-      (client.shards
-        .map((s) => s.latency)
-        .filter((a) => a !== Infinity)
-        .reduce((a, b) => a + b, 0)) /
-      client.shards.map((e) => e.latency).filter((a) => a !== Infinity)
-        .length
-    ));
+    cpuUsage(percent => {
+      grafana.sendStats(client.guilds.size, percent, Math.round(new memory.MB().raw()), Math.round(
+        (client.shards
+          .map((s) => s.latency)
+          .filter((a) => a !== Infinity)
+          .reduce((a, b) => a + b, 0)) /
+        client.shards.map((e) => e.latency).filter((a) => a !== Infinity)
+          .length
+      ));
+    });
   }, 1000);
 });
 
