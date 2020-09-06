@@ -5,7 +5,7 @@ const pm2 = require("pm2");
 setTimeout(() => {
   pm2.connect(() => {
     pm2.describe("dad", (err, proc) => {
-      process.env.INSTANCES = proc[0].pm2_env.instances;
+      process.env.INSTANCES = proc.length;
       if (!process.env.DEBUG) {
         fetch("https://discord.com/api/v6/gateway/bot", {
           method: "GET",
@@ -15,9 +15,8 @@ setTimeout(() => {
         })
           .then((response) => response.json())
           .then((json) => {
-            console.log(json);
+            console.debug(json);
             process.env.totalShards = json.shards;
-            console.log(proc.length)
             process.env.firstShardId =
               Math.floor(process.env.totalShards / proc[0].pm2_env.instances) *
               process.env.NODE_APP_INSTANCE;
