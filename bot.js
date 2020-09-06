@@ -270,7 +270,7 @@ client.connect();
 grafana.on('allReady', () => {
   setInterval(() => {
     cpuUsage(percent => {
-      grafana.sendStats(client.guilds.size, percent, Math.round(new memory.MB().raw()), Math.round(
+      grafana.sendStats(client.guilds.size, Math.round(percent * 100), Math.round(new memory.MB().raw()), Math.round(
         (client.shards
           .map((s) => s.latency)
           .filter((a) => a !== Infinity)
