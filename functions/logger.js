@@ -30,6 +30,7 @@ function AddZero(num) {
 class Logger {
   constructor(logLevel) {
     this.logLevel = typeof logLevel === 'string' ? logLevels.indexOf(logLevel) !== -1 ? logLevel : 'LOG' : logLevels[logLevel];
+    this.logLevels = [...logLevels];
   }
   log(thing, ...args) {
     if (logLevels.indexOf(this.logLevel) < logLevels.indexOf('LOG')) return;

@@ -3,8 +3,8 @@ const env = process.env;
 const fs = require("fs");
 const request = require("request");
 const GrafanaAPIClient = require('grafana-api-client');
-const os = require("os");
 const Sequelize = require("sequelize");
+const cpuUsage = require('./functions/cpuUsage');
 const ms = require("ms");
 const memory = require('./functions/memoryUsage');
 require('./functions/logger')('LOG');
@@ -20,7 +20,10 @@ let owners = require("./functions/getOwners");
 let prefixes = require("./functions/managePrefixes");
 const Sentry = require("@sentry/node");
 
-if (process.env.debug) console.log("DEBUG MODE");
+if (process.env.debug) {
+  console.log("DEBUG MODE");
+  console.logLevel = 'DEBUG';
+}
 
 Sentry.init({
   dsn: "https://81fb39c6a5904886ba26a90e2a6ea8aa@sentry.io/1407724",
@@ -67,7 +70,7 @@ function updateShardCount(snum) {
   var avail = Number(process.env.totalShards);
   console.log(
     `Shard Status: ${Math.round(((snum + 1 || 0) / avail) * 100) || 0}% [${
-      snum + 1 || 0
+    snum + 1 || 0
     }/${avail}]`
   );
 }
@@ -185,8 +188,8 @@ global.loadCmds = (reload) => {
           ) {
             msg.channel.createMessage(
               "This channel has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis channel may no longer use these commands: `" +
-                stat.cmds.join(", ") +
-                "`"
+              stat.cmds.join(", ") +
+              "`"
             );
             return;
           } else {
@@ -195,19 +198,19 @@ global.loadCmds = (reload) => {
                 stat === null
                   ? false
                   : stat.cmds.includes("all") ||
-                    stat.cmds.includes(cmdFile.name)
+                  stat.cmds.includes(cmdFile.name)
               ) {
                 msg.author.getDMChannel().then((chn) => {
                   chn
                     .createMessage(
                       "You have been blacklisted from Dad Bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nYou may no longer use these commands: `" +
-                        stat.cmds.join(", ") +
-                        "`"
+                      stat.cmds.join(", ") +
+                      "`"
                     )
                     .catch(() => {
                       msg.channel.createMessage(
                         `<@${
-                          msg.author.id
+                        msg.author.id
                         }> You have been blacklisted from Dad Bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nYou may no longer use these commands: \`${stat.cmds.join(
                           ", "
                         )}\``
@@ -223,12 +226,12 @@ global.loadCmds = (reload) => {
                         stat === null
                           ? false
                           : stat.cmds.includes("all") ||
-                            stat.cmds.includes(cmdFile.name)
+                          stat.cmds.includes(cmdFile.name)
                       ) {
                         msg.channel.createMessage(
                           "This server has been blacklisted from Dad Bot!, if you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nThis server may no longer use these commands: `" +
-                            stat.cmds.join(", ") +
-                            "`"
+                          stat.cmds.join(", ") +
+                          "`"
                         );
                         return;
                       } else {
@@ -264,64 +267,16 @@ global.loadCmds = (reload) => {
 
 client.connect();
 
-global.getCPUUsage = (callback, free) => {
-  var stats1 = getCPUInfo();
-  var startIdle = stats1.idle;
-  var startTotal = stats1.total;
-
-  setTimeout(function () {
-    var stats2 = getCPUInfo();
-    var endIdle = stats2.idle;
-    var endTotal = stats2.total;
-
-    var idle = endIdle - startIdle;
-    var total = endTotal - startTotal;
-    var perc = idle / total;
-
-    if (free === true) callback(perc);
-    else callback(1 - perc);
-  }, 1000);
-};
-
-getCPUInfo = (callback) => {
-  var cpus = os.cpus();
-
-  var user = 0;
-  var nice = 0;
-  var sys = 0;
-  var idle = 0;
-  var irq = 0;
-  var total = 0;
-
-  for (var cpu in cpus) {
-    if (!cpus.hasOwnProperty(cpu)) continue;
-    user += cpus[cpu].times.user;
-    nice += cpus[cpu].times.nice;
-    sys += cpus[cpu].times.sys;
-    irq += cpus[cpu].times.irq;
-    idle += cpus[cpu].times.idle;
-  }
-
-  var total = user + nice + sys + idle + irq;
-
-  return {
-    idle: idle,
-    total: total,
-  };
-};
-
 grafana.on('allReady', () => {
   setInterval(() => {
-    getCPUUsage(cpuUsage => {
-      grafana.sendStats(client.guilds.size, Math.round(cpuUsage * 100), Math.round(new memory.MB().raw()), Math.round(
-        (client.shards
-            .map((s) => s.latency)
-            .filter((a) => a !== Infinity)
-            .reduce((a, b) => a + b, 0)) /
-          client.shards.map((e) => e.latency).filter((a) => a !== Infinity)
-            .length
-      ));
-    });
+    grafana.sendStats(client.guilds.size, cpuUsage(), Math.round(new memory.MB().raw()), Math.round(
+      (client.shards
+        .map((s) => s.latency)
+        .filter((a) => a !== Infinity)
+        .reduce((a, b) => a + b, 0)) /
+      client.shards.map((e) => e.latency).filter((a) => a !== Infinity)
+        .length
+    ));
   }, 1000);
 });
 

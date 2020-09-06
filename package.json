@@ -5,7 +5,7 @@
   "main": "start.js",
   "author": "AlekEagle",
   "dependencies": {
-    "@sentry/node": "^5.21.2",
+    "@sentry/node": "^5.22.3",
     "chalk": "^4.1.0",
     "collections": "^5.1.11",
     "dblapi.js": "^2.4.1",
@@ -15,12 +15,12 @@
     "express": "^4.17.1",
     "grafana-api-client": "github:AlekEagle/grafana-api-client",
     "ms": "^2.1.2",
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^2.6.1",
     "perspective-api-client": "^3.1.0",
-    "pg": "^8.3.2",
+    "pg": "^8.3.3",
     "pg-hstore": "^2.3.3",
     "pm2": "^4.4.1",
     "request": "^2.88.2",
-    "sequelize": "^6.3.4"
+    "sequelize": "^6.3.5"
   }
 }
