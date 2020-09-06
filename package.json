@@ -2,7 +2,7 @@
   "name": "dad_bot",
   "version": "2.0.0",
   "description": "Dad Bot Cool edition",
-  "main": "bot.js",
+  "main": "start.js",
   "author": "AlekEagle",
   "dependencies": {
     "@sentry/node": "^5.21.2",
@@ -13,6 +13,7 @@
     "eris": "^0.13.3",
     "eris-command-handler": "^1.1.4",
     "express": "^4.17.1",
+    "grafana-api-client": "github:AlekEagle/grafana-api-client",
     "ms": "^2.1.2",
     "node-fetch": "^2.6.0",
     "perspective-api-client": "^3.1.0",
