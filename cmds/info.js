@@ -3,6 +3,7 @@
 let nums = require("../functions/numbers");
 let time = require("../functions/toReadableTime");
 let util = require("util");
+const { cpuUsage } = require('os-utils');
 let memory = require("../functions/memoryUsage");
 
 module.exports = {
@@ -52,8 +53,13 @@ module.exports = {
                 inline: true,
               },
               {
+                name: "Current Cluster",
+                value: process.env.NODE_APP_INSTANCE,
+                inline: true
+              },
+              {
                 name: "CPU Usage",
-                value: `${Math.round(cpuusage * 100)}%`,
+                value: `${Math.round(cpuusage * 10000)/100}%`,
                 inline: true,
               },
               {
