@@ -11,7 +11,7 @@ module.exports = {
 
   exec: (client, msg, args) => {
     msg.channel.sendTyping();
-    getCPUUsage((cpuusage) => {
+    cpuUsage((cpuusage) => {
       msg.channel
         .createMessage({
           embed: {
