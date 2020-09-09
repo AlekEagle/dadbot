@@ -1,3 +1,4 @@
+// Old code LOOOOOL
 const CommandClient = require("eris-command-handler");
 const env = process.env;
 const fs = require("fs");
