@@ -282,4 +282,8 @@ grafana.on('allReady', () => {
   }, 1000);
 });
 
+process.on('uncaughtException', function (exception) {
+  console.error(exception); 
+});
+
 grafana.connect();
