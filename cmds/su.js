@@ -7,38 +7,40 @@ module.exports = {
 
     exec: (client, msg, args) => {
         var thing;
-        if (owners.isOwner(msg.author.id)) {
-            var userID = args[0].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')
-            msg.channel.createMessage(`Executing \`${args[1]}\` as \`${client.users.get(userID).username}\`.`)
-            var command = args[1]
-            if (msg.channel.guild !== undefined) {
-                if (msg.channel.guild.members.get(userID) !== undefined) {
-                    thing = {
-                        ...msg,
-                        author: client.users.get(userID),
-                        content: `${client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : 'd!'}${args.slice(1).join(' ')}`,
-                        member: msg.channel.guild.members.get(userID)
+        owners.isAdmin(msg.author.id).then(owner => {
+            if (owner) {
+                var userID = args[0].replace(/</g, '').replace(/@/g, '').replace(/!/g, '').replace(/>/g, '')
+                msg.channel.createMessage(`Executing \`${args[1]}\` as \`${client.users.get(userID).username}\`.`)
+                var command = args[1]
+                if (msg.channel.guild !== undefined) {
+                    if (msg.channel.guild.members.get(userID) !== undefined) {
+                        thing = {
+                            ...msg,
+                            author: client.users.get(userID),
+                            content: `${client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : 'd!'}${args.slice(1).join(' ')}`,
+                            member: msg.channel.guild.members.get(userID)
+                        }
+                    } else {
+                        thing = {
+                            ...msg,
+                            author: client.users.get(userID),
+                            content: `${client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : 'd!'}${args.slice(1).join(' ')}`
+                        }
                     }
-                }else {
+                } else {
                     thing = {
                         ...msg,
                         author: client.users.get(userID),
                         content: `${client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : 'd!'}${args.slice(1).join(' ')}`
                     }
                 }
-            }else {
-                thing = {
-                    ...msg,
-                    author: client.users.get(userID),
-                    content: `${client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : 'd!'}${args.slice(1).join(' ')}`
+                var execedCmd = client.resolveCommand(command).executeCommand(thing, args.slice(2))
+                if (typeof execedCmd === 'object' || typeof execedCmd === 'string') {
+                    msg.channel.createMessage(execedCmd);
                 }
-            }
-            var execedCmd = client.resolveCommand(command).executeCommand(thing, args.slice(2))
-            if (typeof execedCmd === 'object' || typeof execedCmd === 'string') {
-                msg.channel.createMessage(execedCmd);
-            }
-        }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
-        
+            } else client.createMessage(msg.channel.id, 'You need the permission `BOT_ADMIN_OWNER` to use this command!')
+        });
+
     },
 
     options: {

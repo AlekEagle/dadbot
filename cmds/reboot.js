@@ -6,7 +6,7 @@ module.exports = {
     name: 'reboot',
 
     exec: (client, msg, args) => {
-        if (owners.isAdminOwner(msg.author.id)) {
+        if (owners.isAdmin(msg.author.id)) {
             client.createMessage(msg.channel.id, `Alright ${msg.author.username}! Imma go take a nap!`)
             setTimeout(() => {
                 process.exit(0);

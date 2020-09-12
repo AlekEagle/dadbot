@@ -7,11 +7,12 @@ module.exports = {
     name: 'refreshlists',
 
     exec: (client, msg, args) => {
-        if (owners.isOwner(msg.author.id)) {
-            lists.reloadLists()
-            msg.channel.createMessage('Lists should be refreshed now.')
-        }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
-        
+        owners.isOwner(msg.author.id).then(owner => {
+            if (owner) {
+                lists.reloadLists()
+                msg.channel.createMessage('Lists should be refreshed now.')
+            }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
+        });
     },
 
     options: {

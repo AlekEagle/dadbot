@@ -12,9 +12,11 @@ module.exports = {
         if (!msg.channel.permissionsOf(client.user.id).has('manageMessages')) {
             return;
         }
-        if (!owners.isOwner(msg.author.id)) {
-            return;
-        }
+        owners.isOwner(msg.author.id).then(owner => {
+            if (!owner) {
+                return;
+            }
+        });
         let page = 0,
             cursorPos = 0,
             state = 'mainmenu',

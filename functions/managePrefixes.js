@@ -15,7 +15,7 @@ Prefixes.sync({
   force: false,
 })
   .then(() => {
-    console.log("Prefixes synced to database successfully!");
+    console.info("Prefixes synced to database successfully!");
   })
   .catch((err) => {
     console.error("an error occured while proforming this operation");

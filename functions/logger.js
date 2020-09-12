@@ -38,7 +38,7 @@ class Logger {
       `${chalk.blue.inverse(date())} ${chalk.inverse(`[LOG]`)} ${chalk.white(
         thing
       )}`,
-      !args.length ? " " : args
+      !args.length ? "" : args.join(' ')
     );
     try {
       grafana.sendLog(thing);
@@ -50,7 +50,7 @@ class Logger {
       `${chalk.blue.inverse(date())} ${chalk
         .rgb(255, 124, 43)
         .inverse(`[WARN]`)} ${chalk.white(thing)}`,
-      !args.length ? " " : args
+      !args.length ? "" : args.join(' ')
     );
   }
   debug(thing, ...args) {
@@ -59,7 +59,7 @@ class Logger {
       `${chalk.blue.inverse(date())} ${chalk.grey.inverse(
         `[DEBUG]`
       )} ${chalk.white(thing)}`,
-      !args.length ? " " : args
+      !args.length ? "" : args.join(' ')
     );
   }
   info(thing, ...args) {
@@ -68,7 +68,7 @@ class Logger {
       `${chalk.blue.inverse(date())} ${chalk
         .rgb(255, 255, 0)
         .inverse(`[INFO]`)} ${chalk.white(thing)}`,
-      !args.length ? " " : args
+      !args.length ? "" : args.join(' ')
     );
   }
   error(thing, ...args) {
@@ -79,7 +79,7 @@ class Logger {
         0,
         0
       )(`[ERROR]`)} ${chalk.white(thing)}`,
-      !args.length ? " " : args
+      !args.length ? "" : args.join(' ')
     );
     try {
       grafana.sendError(thing);

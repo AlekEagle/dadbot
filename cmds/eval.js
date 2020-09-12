@@ -7,7 +7,7 @@ module.exports = {
   name: "eval",
 
   exec: (client, msg, args) => {
-    if (owners.isAdminOwner(msg.author.id)) {
+    if (owners.isAdmin(msg.author.id)) {
       try {
         var evalCommand = args.join(" ");
         let evaluation = eval(evalCommand);

@@ -14,7 +14,7 @@ GlobalBlacklist.init(
 );
 
 GlobalBlacklist.sync().then(() => {
-  console.log("Synced GlobalBlacklist successfully!");
+  console.info("Synced GlobalBlacklist successfully!");
 });
 
 const cache = {};

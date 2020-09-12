@@ -6,12 +6,14 @@ module.exports = {
     name: 'reloadevts',
 
     exec: (client, msg, args) => {
-        if (owners.isOwner(msg.author.id)) {
-            msg.channel.createMessage(`Unloading all events not important to the CommandClient and loading \`${require('fs').readdirSync('./events').length}\` events.`)
-            setTimeout(() => {
-                loadEvts(true);
-            }, 500);
-        }
+        owners.isOwner(msg.author.id).then(owner => {
+            if (owner) {
+                msg.channel.createMessage(`Unloading all events not important to the CommandClient and loading \`${require('fs').readdirSync('./events').length}\` events.`)
+                setTimeout(() => {
+                    loadEvts(true);
+                }, 500);
+            }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
+        });
     },
 
     options: {
