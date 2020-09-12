@@ -3,7 +3,7 @@ const CommandClient = require("eris-command-handler");
 const env = process.env;
 const fs = require("fs");
 const request = require("request");
-const GrafanaAPIClient = require('grafana-api-client').Client;
+const GrafanaAPIClient = require('grafana-api-client');
 const Sequelize = require("sequelize");
 const { cpuUsage } = require('os-utils');
 const ms = require("ms");
@@ -40,7 +40,7 @@ owners.initializeOwners().then(
   }
 );
 
-global.grafana = new GrafanaAPIClient(process.env.grafanaToken, process.env.NODE_APP_INSTANCE, process.env.INSTANCES, 'ws://localhost:8080/connect');
+global.grafana = new GrafanaAPIClient.Client(process.env.grafanaToken, process.env.NODE_APP_INSTANCE, process.env.INSTANCES, 'ws://localhost:8080/connect');
 
 const client = new CommandClient(
   env.DEBUG ? process.env.otherToken : process.env.token,
