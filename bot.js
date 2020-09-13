@@ -101,7 +101,7 @@ function clusterStatusUpdate(connected) {
             .reduce((a, b) => a + b, 0)) /
           client.shards.map((e) => e.latency).filter((a) => a !== Infinity)
             .length
-        ));
+        )).catch(() => {});
       });
     }, 1000);
   }
