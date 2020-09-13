@@ -103,7 +103,7 @@ function clusterStatusUpdate(connected) {
             .length
         )).catch(() => {});
       });
-    }, 1000);
+    }, 10000);
   }
 }
 
