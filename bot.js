@@ -30,6 +30,8 @@ if (!process.env.NODE_APP_INSTANCE || !process.env.instances) {
   throw new Error("Not started via pm2!");
 }
 
+grafana.on('error', err => console.error(err));
+
 process.on('SIGINT', () => {
   client.disconnect();
   grafana.disconnect();
