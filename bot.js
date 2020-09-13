@@ -113,6 +113,16 @@ Sentry.init({
   dsn: "https://81fb39c6a5904886ba26a90e2a6ea8aa@sentry.io/1407724",
 });
 
+grafana.on('remoteEval', (data, callback) => {
+  let evaluation;
+  try {
+      evaluation = eval(data);
+  } catch (err) {
+      callback(err);
+      return;
+  }
+  callback(null, typeof evaluation !== 'string' ? require('util').inspect(evaluation) : evaluation);
+});
 
 if (process.env.DEBUG) {
   console.logLevel = 'DEBUG';
