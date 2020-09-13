@@ -40,9 +40,7 @@ class Logger {
       )}`,
       !args.length ? "" : args.join(' ')
     );
-    try {
-      grafana.sendLog(thing);
-    }catch (err) {}
+    grafana.sendLog(thing).catch(() => {});
   }
   warn(thing, ...args) {
     if (logLevels.indexOf(this.logLevel) < logLevels.indexOf('WARN')) return;
@@ -52,6 +50,7 @@ class Logger {
         .inverse(`[WARN]`)} ${chalk.white(thing)}`,
       !args.length ? "" : args.join(' ')
     );
+    grafana.sendError(thing).catch(() => {});
   }
   debug(thing, ...args) {
     if (logLevels.indexOf(this.logLevel) < logLevels.indexOf('DEBUG')) return;
@@ -61,6 +60,7 @@ class Logger {
       )} ${chalk.white(thing)}`,
       !args.length ? "" : args.join(' ')
     );
+    grafana.sendLog(thing).catch(() => {});
   }
   info(thing, ...args) {
     if (logLevels.indexOf(this.logLevel) < logLevels.indexOf('INFO')) return;
@@ -70,6 +70,7 @@ class Logger {
         .inverse(`[INFO]`)} ${chalk.white(thing)}`,
       !args.length ? "" : args.join(' ')
     );
+    grafana.sendLog(thing).catch(() => {});
   }
   error(thing, ...args) {
     if (logLevels.indexOf(this.logLevel) < logLevels.indexOf('ERROR')) return;
@@ -81,9 +82,7 @@ class Logger {
       )(`[ERROR]`)} ${chalk.white(thing)}`,
       !args.length ? "" : args.join(' ')
     );
-    try {
-      grafana.sendError(thing);
-    }catch (err) {}
+    grafana.sendError(thing).catch(() => {});
   }
 } Logger
 module.exports = (logLevel) => global.console = new Logger(logLevel);
