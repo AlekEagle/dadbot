@@ -137,7 +137,7 @@ function startupSequence() {
       firstShardID: Number(process.env.firstShardId),
       lastShardID: Number(process.env.lastShardId),
       maxShards: Number(process.env.totalShards),
-      getAllUsers: true,
+      getAllUsers: false,
       messageLimit: 0,
       defaultImageFormat: "png",
       defaultImageSize: 2048,
