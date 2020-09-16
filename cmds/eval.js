@@ -7,7 +7,8 @@ module.exports = {
   name: "eval",
 
   exec: (client, msg, args) => {
-    if (owners.isAdmin(msg.author.id)) {
+    owners.isAdmin(msg.author.id).then(isAdmin => {
+    if (isAdmin) {
       try {
         var evalCommand = args.join(" ");
         let evaluation = eval(evalCommand);
@@ -49,6 +50,7 @@ module.exports = {
         msg.channel.id,
         "You need the permission `BOT_ADMIN_OWNER` to use this command!"
       );
+    });
   },
 
   options: {
