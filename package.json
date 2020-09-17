@@ -2,7 +2,7 @@
   "name": "dad_bot",
   "version": "3.0.0",
   "description": "Dad Bot Cooler edition",
-  "main": "start.js",
+  "main": "bot.js",
   "author": "AlekEagle",
   "dependencies": {
     "@sentry/node": "^5.23.0",
