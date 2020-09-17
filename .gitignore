@@ -10,3 +10,5 @@ suggestions.json
 owners.json
 deploy.sh
 .env
+debug.log
+websocket.log

@@ -148,7 +148,8 @@ function startupSequence() {
       prefix: process.env.DEBUG ? "test!" : "d!",
     }
   );
-
+  client.on("debug", log=>{fs.appendFileSync("debug.log", new Date().toISOString() + "  --  " + log + "\n")})
+  client.on("rawWS", (log,sid)=>{fs.appendFileSync("websocket.log", new Date().toISOString() + "  --  " + sid + "  --  " + JSON.stringify(log) + "\n")})
   global.loadEvts = (reload) => {
     if (reload) {
       client.eventNames().forEach((e) => {
