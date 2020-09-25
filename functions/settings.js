@@ -54,6 +54,23 @@ module.exports = {
     });
     if (!value) {
       return new Promise((resolve, reject) =>
+        cache[id] = {
+
+          id,
+
+          flags: module.exports.toFlags([
+
+            "IM_RESPONSES",
+
+            "KYS_RESPONSES",
+
+            "SHUT_UP_RESPONSES",
+
+            "WINNING_RESPONSES",
+
+          ]),
+
+        };
         resolve({
           id,
           flags: module.exports.toFlags([
