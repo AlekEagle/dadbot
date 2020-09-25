@@ -53,7 +53,7 @@ module.exports = {
       },
     });
     if (!value) {
-      return new Promise((resolve, reject) =>
+      return new Promise((resolve, reject) => {
         cache[id] = {
 
           id,
@@ -80,7 +80,7 @@ module.exports = {
             "WINNING_RESPONSES",
           ]),
         })
-      );
+      });
     } else {
       cache[id] = value.toJSON();
       return value.toJSON();
