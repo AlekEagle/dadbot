@@ -19,6 +19,11 @@ module.exports = {
                 watching: '**Watching**'
             }
 
+            if (Object.keys(types).indexOf(args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')) === -1) {
+                msg.channel.createMessage(`\`${args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')}\` is not a valid game type!`);
+                return;
+            }
+
             for (let i = 0; i < Number(process.env.instances); i++) {
                 grafana.remoteEval(i, `client.editStatus('${args[0]}', ${JSON.stringify({
                     name: text,
