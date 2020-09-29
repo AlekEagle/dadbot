@@ -125,7 +125,7 @@ grafana.on('remoteEval', (data, callback) => {
 });
 
 if (process.env.DEBUG) {
-  console.logLevel = 'DEBUG';
+  console.logLevel = 'INFO';
   console.debug("DEBUG MODE");
 }
 

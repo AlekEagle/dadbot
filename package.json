@@ -5,9 +5,9 @@
   "main": "bot.js",
   "author": "AlekEagle",
   "dependencies": {
-    "@sentry/node": "^5.23.0",
+    "@sentry/node": "^5.24.2",
     "chalk": "^4.1.0",
-    "collections": "^5.1.11",
+    "collections": "^5.1.12",
     "dblapi.js": "^2.4.1",
     "dotenv": "^8.2.0",
     "eris": "^0.13.3",
@@ -20,7 +20,7 @@
     "perspective-api-client": "^3.1.0",
     "pg": "^8.3.3",
     "pg-hstore": "^2.3.3",
-    "pm2": "^4.4.1",
+    "pm2": "^4.5.0",
     "request": "^2.88.2",
     "sequelize": "^6.3.5"
   }
