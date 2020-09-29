@@ -118,7 +118,7 @@ grafana.on('remoteEval', (data, callback) => {
   try {
       evaluation = eval(data);
   } catch (err) {
-      callback(err);
+      callback(typeof err !== 'string' ? require('util').inspect(err) : err);
       return;
   }
   callback(null, typeof evaluation !== 'string' ? require('util').inspect(evaluation) : evaluation);

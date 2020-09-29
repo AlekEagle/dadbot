@@ -19,15 +19,15 @@ module.exports = {
                 watching: '**Watching**'
             }
 
-
-            client.editStatus(args[0], {
-                name: text,
-                type: Object.keys(types).indexOf(args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')),
-                url: n
-            });
+            for (let i = 0; i < Number(process.env.instances); i++) {
+                grafana.remoteEval(i, `client.editStatus('${args[0]}', ${JSON.stringify({
+                    name: text,
+                    type: Object.keys(types).indexOf(args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')),
+                    url: n
+                })})`).then(out => console.log(out));
+            }
 
             msg.channel.createMessage('I am now ' + types[args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')] + ' ' + text);
-
             }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
         });
     },
