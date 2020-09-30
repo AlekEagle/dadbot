@@ -34,7 +34,7 @@ module.exports = {
                     if (++i === Number(process.env.instances)) {
                         clearInterval(interval);
                     }
-                }, 200);
+                }, 500);
 
                 msg.channel.createMessage('I am now ' + types[args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')] + ' ' + text);
             } else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
