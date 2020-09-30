@@ -300,7 +300,7 @@ function startupSequence() {
     console.log("Connected.");
     client.editStatus("online", {
       type: 0,
-      name: `how do I use this computer thingy?`,
+      name: `Join for the latest dad bot updates! https://discord.gg/72Px4Ag`,
     });
     client.users.set("1", {
       id: "1",
