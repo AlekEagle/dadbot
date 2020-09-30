@@ -9,31 +9,35 @@ module.exports = {
         owners.isOwner(msg.author.id).then(owner => {
             if (owner) {
                 var text = args.slice(args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ');
-            var n = text.split(' | ')[1];
-            text = text.split(' | ')[0];
+                var n = text.split(' | ')[1];
+                text = text.split(' | ')[0];
 
-            let types = {
-                playing: '**Playing**',
-                streaming: '**Streaming**',
-                'listening to': '**Listening To**',
-                watching: '**Watching**'
-            }
+                let types = {
+                    playing: '**Playing**',
+                    streaming: '**Streaming**',
+                    'listening to': '**Listening To**',
+                    watching: '**Watching**'
+                }
 
-            if (Object.keys(types).indexOf(args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')) === -1) {
-                msg.channel.createMessage(`\`${args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')}\` is not a valid game type!`);
-                return;
-            }
+                if (Object.keys(types).indexOf(args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')) === -1) {
+                    msg.channel.createMessage(`\`${args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')}\` is not a valid game type!`);
+                    return;
+                }
 
-            for (let i = 0; i < Number(process.env.instances); i++) {
-                grafana.remoteEval(i, `client.editStatus('${args[0]}', ${JSON.stringify({
-                    name: text,
-                    type: Object.keys(types).indexOf(args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')),
-                    url: n
-                })})`).then(out => console.log(out));
-            }
+                let i = 0;
+                let interval = setInterval(() => {
+                    grafana.remoteEval(i, `client.editStatus('${args[0]}', ${JSON.stringify({
+                        name: text,
+                        type: Object.keys(types).indexOf(args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')),
+                        url: n
+                    })})`);
+                    if (++i === Number(process.env.instances)) {
+                        clearInterval(interval);
+                    }
+                }, 200);
 
-            msg.channel.createMessage('I am now ' + types[args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')] + ' ' + text);
-            }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
+                msg.channel.createMessage('I am now ' + types[args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')] + ' ' + text);
+            } else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
         });
     },
 

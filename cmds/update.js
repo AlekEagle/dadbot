@@ -13,14 +13,18 @@ module.exports = {
                 msg.channel.createMessage(`Updating <a:loading1:470030932775272469>`).then(message => {
                     exec('git pull', (err, stdout, stderr) => {
                         setTimeout(() => {
-                            for (let i = 0; i < Number(process.env.instances); i++) {
-                                grafana.remoteEval(i, `loadCmds(true);loadEvts(true);`);
-                            }
+                            let i = 0;
+                            let interval = setInterval(() => {
+                                grafana.remoteEval(i, 'loadCmds(true);loadEvts(true);'); 
+                                if (++i === Number(process.env.instances)) {
+                                    clearInterval(interval);
+                                } 
+                            }, 200);
                             message.edit('Update complete.');
                         }, ms('15secs'));
                     });
                 });
-            }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
+            } else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
         });
     },
 
