@@ -10,7 +10,7 @@ module.exports = {
         if (args[0] && msg.channel.guild.members.get(args[0].replace(/(<@!?|>)/g, '')) !== undefined) {
             args[0] = args[0].replace(/(<@!?|>)/g, '')
             user = msg.channel.guild.members.get(args[0]);
-        }else {
+        } else {
             user = msg.member
         }
         var avatarURL = client.users.get(user.id).dynamicAvatarURL('png', 2048).split('?')[0]
@@ -18,18 +18,18 @@ module.exports = {
             var embarrassingThing = lists.embarrassingThings[Math.floor(Math.random() * lists.embarrassingThings.length)]
             if (lists.embarrassingThings[0] === embarrassingThing || lists.embarrassingThings[1] === embarrassingThing) {
                 msg.channel.createMessage(`<@${user.id}> ${embarrassingThing}`);
-            }else {
-                msg.channel.createWebhook({name: user.username}).then(thing => {
+            } else {
+                msg.channel.createWebhook({ name: user.username }).then(thing => {
                     setTimeout(() => {
-                        client.executeWebhook(thing.id, thing.token, {content: embarrassingThing, avatarURL: avatarURL, username: user.nick ? user.nick : user.username}).catch(() => {});
+                        client.executeWebhook(thing.id, thing.token, { content: embarrassingThing, avatarURL: avatarURL, username: user.nick ? user.nick : user.username }).catch(() => { });
                         setTimeout(() => {
                             client.deleteWebhook(thing.id);
                         }, 5000);
                     }, 100);
-                }, () => {});
+                }, () => { });
             }
-        }else msg.channel.createMessage('No can do bub, in order for me to embarrass people I need the permission `MANAGE_WEBHOOKS`.')
-        
+        } else msg.channel.createMessage('No can do bub, in order for me to embarrass people I need the permission `MANAGE_WEBHOOKS`.')
+
     },
 
     options: {

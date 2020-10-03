@@ -15,10 +15,10 @@ module.exports = {
                         setTimeout(() => {
                             let i = 0;
                             let interval = setInterval(() => {
-                                grafana.remoteEval(i, 'loadCmds(true);loadEvts(true);'); 
+                                grafana.remoteEval(i, 'loadCmds(true);loadEvts(true);');
                                 if (++i === Number(process.env.instances)) {
                                     clearInterval(interval);
-                                } 
+                                }
                             }, 200);
                             message.edit('Update complete.');
                         }, ms('15secs'));

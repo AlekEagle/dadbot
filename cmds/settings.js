@@ -54,10 +54,10 @@ module.exports = {
                     }, ms('5sec'));
                 });
             }, ms('1min'));
-            
+
             function handleReactions(mesg, emoji, userID) {
                 if (!client.users.get(userID).bot) {
-                    message.removeReaction(emoji.name, userID).catch(() => {});
+                    message.removeReaction(emoji.name, userID).catch(() => { });
                 }
                 if (userID !== msg.author.id || mesg.id !== message.id) return;
                 clearTimeout(timeout);
@@ -79,7 +79,7 @@ module.exports = {
                                     message.removeReactions().then(() => {
                                         state = 'serversettings';
                                         settings.getValueByID(msg.channel.guild.id).then(setngs => {
-                                            
+
                                             message.edit({
                                                 embed: {
                                                     title: 'Server Settings',
@@ -93,10 +93,10 @@ module.exports = {
                                                             value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
                                                         }
                                                     }),
-                                                        {
-                                                            name: 'Prefix',
-                                                            value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
-                                                        }
+                                                    {
+                                                        name: 'Prefix',
+                                                        value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
+                                                    }
                                                     ]
                                                 }
                                             }).then(() => {
@@ -217,10 +217,10 @@ module.exports = {
                                                     value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
                                                 }
                                             }),
-                                                {
-                                                    name: 'Prefix',
-                                                    value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
-                                                }
+                                            {
+                                                name: 'Prefix',
+                                                value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
+                                            }
                                             ]
                                         }
                                     });
@@ -242,10 +242,10 @@ module.exports = {
                                                     value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
                                                 }
                                             }),
-                                                {
-                                                    name: 'Prefix',
-                                                    value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
-                                                }
+                                            {
+                                                name: 'Prefix',
+                                                value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
+                                            }
                                             ]
                                         }
                                     });
@@ -260,7 +260,7 @@ module.exports = {
                                         newFlags.push(settings.flags[selection]);
                                     }
                                     newSettings.flags = settings.toFlags(newFlags);
-                                    settings.updateValue({id: newSettings.id, flags: newSettings.flags, RNG: newSettings.RNG});
+                                    settings.updateValue({ id: newSettings.id, flags: newSettings.flags, RNG: newSettings.RNG });
                                     settings.getValueByID(msg.channel.guild.id).then(setngs => {
                                         message.edit({
                                             embed: {
@@ -275,10 +275,10 @@ module.exports = {
                                                         value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
                                                     }
                                                 }),
-                                                    {
-                                                        name: 'Prefix',
-                                                        value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
-                                                    }
+                                                {
+                                                    name: 'Prefix',
+                                                    value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
+                                                }
                                                 ]
                                             }
                                         });
@@ -309,84 +309,84 @@ module.exports = {
                                     });
                                 });
                                 break;
-                                case '❗':
-                                    state = 'setprefix';
-                                    msg.channel.createMessage('Say what you want the prefix to be surrounded like this: `d!` or `dad ` using this symbol ` (yes you can have spaces in the prefix)').then(messg => {
-                                        function setPrefix(messag) {
-                                            if (messag.author.id !== msg.author.id || messag.channel.id !== msg.channel.id) return;
-                                            let prefix = messag.content.replace(/^`([\s\S]+)`$/, '$1');
-                                            if(prefix === client.commandOptions.prefix) {
-                                                prefixes.managePrefixes({ action: 'remove', serverID: msg.channel.guild.id }).then(() => {
-                                                    messag.channel.createMessage(`Prefix is now set to \`${client.commandOptions.prefix}\`!`).then(mesag => {
-                                                        messg.delete();
-                                                        messag.delete();
-                                                        state = 'serversettings';
-                                                        settings.getValueByID(msg.channel.guild.id).then(setngs => {
-                                                            message.edit({
-                                                                embed: {
-                                                                    title: `Server Settings`,
-                                                                    description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to channel settings! Use ❗ to change the bots prefix! Use ⏹ to go back to the main menu.',
-                                                                    thumbnail: {
-                                                                        url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
-                                                                    },
-                                                                    fields: [...settings.flags.map((i, o, s) => {
-                                                                        return {
-                                                                            name: `${selection === o ? '> ' : ''}${i}`,
-                                                                            value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
-                                                                        }
-                                                                    }),
-                                                                        {
-                                                                            name: 'Prefix',
-                                                                            value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
-                                                                        }
-                                                                    ]
+                            case '❗':
+                                state = 'setprefix';
+                                msg.channel.createMessage('Say what you want the prefix to be surrounded like this: `d!` or `dad ` using this symbol ` (yes you can have spaces in the prefix)').then(messg => {
+                                    function setPrefix(messag) {
+                                        if (messag.author.id !== msg.author.id || messag.channel.id !== msg.channel.id) return;
+                                        let prefix = messag.content.replace(/^`([\s\S]+)`$/, '$1');
+                                        if (prefix === client.commandOptions.prefix) {
+                                            prefixes.managePrefixes({ action: 'remove', serverID: msg.channel.guild.id }).then(() => {
+                                                messag.channel.createMessage(`Prefix is now set to \`${client.commandOptions.prefix}\`!`).then(mesag => {
+                                                    messg.delete();
+                                                    messag.delete();
+                                                    state = 'serversettings';
+                                                    settings.getValueByID(msg.channel.guild.id).then(setngs => {
+                                                        message.edit({
+                                                            embed: {
+                                                                title: `Server Settings`,
+                                                                description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to channel settings! Use ❗ to change the bots prefix! Use ⏹ to go back to the main menu.',
+                                                                thumbnail: {
+                                                                    url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
+                                                                },
+                                                                fields: [...settings.flags.map((i, o, s) => {
+                                                                    return {
+                                                                        name: `${selection === o ? '> ' : ''}${i}`,
+                                                                        value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                                    }
+                                                                }),
+                                                                {
+                                                                    name: 'Prefix',
+                                                                    value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
                                                                 }
-                                                            });
+                                                                ]
+                                                            }
                                                         });
-                                                        client.off('messageCreate', setPrefix);
-                                                        setTimeout(() => {
-                                                            mesag.delete();
-                                                        }, 5000);
                                                     });
+                                                    client.off('messageCreate', setPrefix);
+                                                    setTimeout(() => {
+                                                        mesag.delete();
+                                                    }, 5000);
                                                 });
-                                            }else {
-                                                prefixes.managePrefixes({ action: 'add', prefix, serverID: msg.channel.guild.id }).then(() => {
-                                                    messag.channel.createMessage(`Prefix is now set to \`${prefix}\`!`).then(mesag => {
-                                                        messg.delete();
-                                                        messag.delete();
-                                                        state = 'serversettings';
-                                                        settings.getValueByID(msg.channel.guild.id).then(setngs => {
-                                                            message.edit({
-                                                                embed: {
-                                                                    title: `Server Settings`,
-                                                                    description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to channel settings! Use ❗ to change the bots prefix! Use ⏹ to go back to the main menu.',
-                                                                    thumbnail: {
-                                                                        url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
-                                                                    },
-                                                                    fields: [...settings.flags.map((i, o, s) => {
-                                                                        return {
-                                                                            name: `${selection === o ? '> ' : ''}${i}`,
-                                                                            value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
-                                                                        }
-                                                                    }),
-                                                                        {
-                                                                            name: 'Prefix',
-                                                                            value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
-                                                                        }
-                                                                    ]
+                                            });
+                                        } else {
+                                            prefixes.managePrefixes({ action: 'add', prefix, serverID: msg.channel.guild.id }).then(() => {
+                                                messag.channel.createMessage(`Prefix is now set to \`${prefix}\`!`).then(mesag => {
+                                                    messg.delete();
+                                                    messag.delete();
+                                                    state = 'serversettings';
+                                                    settings.getValueByID(msg.channel.guild.id).then(setngs => {
+                                                        message.edit({
+                                                            embed: {
+                                                                title: `Server Settings`,
+                                                                description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to channel settings! Use ❗ to change the bots prefix! Use ⏹ to go back to the main menu.',
+                                                                thumbnail: {
+                                                                    url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
+                                                                },
+                                                                fields: [...settings.flags.map((i, o, s) => {
+                                                                    return {
+                                                                        name: `${selection === o ? '> ' : ''}${i}`,
+                                                                        value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                                    }
+                                                                }),
+                                                                {
+                                                                    name: 'Prefix',
+                                                                    value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
                                                                 }
-                                                            });
+                                                                ]
+                                                            }
                                                         });
-                                                        client.off('messageCreate', setPrefix);
-                                                        setTimeout(() => {
-                                                            mesag.delete();
-                                                        }, 5000);
                                                     });
+                                                    client.off('messageCreate', setPrefix);
+                                                    setTimeout(() => {
+                                                        mesag.delete();
+                                                    }, 5000);
                                                 });
-                                            }
+                                            });
                                         }
-                                        client.on('messageCreate', setPrefix);
-                                    });
+                                    }
+                                    client.on('messageCreate', setPrefix);
+                                });
                                 break;
                         }
                         break;
@@ -411,10 +411,10 @@ module.exports = {
                                                     value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
                                                 }
                                             }),
-                                                {
-                                                    name: 'Prefix',
-                                                    value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
-                                                }
+                                            {
+                                                name: 'Prefix',
+                                                value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
+                                            }
                                             ]
                                         }
                                     });
@@ -429,7 +429,7 @@ module.exports = {
                                         newFlags.push(settings.flags[selection]);
                                     }
                                     newSettings.flags = settings.toFlags(newFlags);
-                                    settings.updateValue({id: newSettings.id, flags: newSettings.flags, RNG: newSettings.RNG});
+                                    settings.updateValue({ id: newSettings.id, flags: newSettings.flags, RNG: newSettings.RNG });
                                     settings.getValueByID(channelSelection).then(setngs => {
                                         message.edit({
                                             embed: {
@@ -542,7 +542,7 @@ module.exports = {
                                         client.on('messageCreate', selectNewChannel);
                                     });
                                 });
-                            break;
+                                break;
                             case '⏹':
                                 state = 'idle';
                                 selection = 0;
@@ -574,7 +574,7 @@ module.exports = {
                         }
                         break;
                     case 'usersettings':
-                        switch(emoji.name) {
+                        switch (emoji.name) {
                             case '⏹':
                                 state = 'idle';
                                 selection = 0;
@@ -602,7 +602,7 @@ module.exports = {
                                     });
                                     addReactions(message, ['🌆', '👤', '⏹']);
                                 });
-                            break;
+                                break;
                             case '⬇️':
                                 if (++selection > settings.flags.length - 1) selection = 0;
                                 settings.getValueByID(msg.author.id).then(setngs => {
@@ -623,7 +623,7 @@ module.exports = {
                                         }
                                     });
                                 });
-                            break;
+                                break;
                             case '⬆️':
                                 if (--selection < 0) selection = settings.flags.length - 1;
                                 settings.getValueByID(msg.author.id).then(setngs => {
@@ -655,7 +655,7 @@ module.exports = {
                                         newFlags.push(settings.flags[selection]);
                                     }
                                     newSettings.flags = settings.toFlags(newFlags);
-                                    settings.updateValue({id: newSettings.id, flags: newSettings.flags, RNG: newSettings.RNG});
+                                    settings.updateValue({ id: newSettings.id, flags: newSettings.flags, RNG: newSettings.RNG });
                                     settings.getValueByID(msg.author.id).then(setngs => {
                                         message.edit({
                                             embed: {

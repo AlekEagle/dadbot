@@ -11,7 +11,7 @@ module.exports = {
             if (owner) {
                 lists.reloadLists()
                 msg.channel.createMessage('Lists should be refreshed now.')
-            }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
+            } else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
         });
     },
 

@@ -12,7 +12,7 @@ module.exports = {
                     url: lists.kumiko[Math.floor(Math.random() * lists.kumiko.length)]
                 }
             }
-        }).catch(() => {});
+        }).catch(() => { });
     },
 
     options: {

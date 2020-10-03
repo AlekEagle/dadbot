@@ -12,7 +12,7 @@ module.exports = {
                 setTimeout(() => {
                     loadEvts(true);
                 }, 500);
-            }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
+            } else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
         });
     },
 
