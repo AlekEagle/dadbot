@@ -30,6 +30,12 @@ const flagNames = [
 ],
     cache = {};
 
+Options.findAll().then(settings => {
+    settings.forEach(setting => {
+        cache[setting.id] = setting.toJSON();
+    })
+})
+
 module.exports = {
     getFlags: (flags) => {
         let flagArray = [];
@@ -112,5 +118,5 @@ module.exports = {
             });
         }
     },
-    flags: flagNames,
+    flags: flagNames
 };
