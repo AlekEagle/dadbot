@@ -10,19 +10,19 @@ module.exports = {
         owners.isOwner(msg.author.id).then(owner => {
             if (owner) {
                 owners.isOwner(ownerID).then(ownid => {
-                    if(ownid) {
+                    if (ownid) {
                         owners.removeOwner(ownerID, msg.author.id).then(() => {
                             msg.channel.createMessage('They are no longer an owner!');
                         }, (err) => {
-                            if (err.message === 'functionCaller doesn\'t have permissions to affect other owner') msg.channel.createMessage('You do not have permission to edit this owner!'); else msg.channel.createMessage('An unknown error occurred while proforming this action.');console.error(err);
+                            if (err.message === 'functionCaller doesn\'t have permissions to affect other owner') msg.channel.createMessage('You do not have permission to edit this owner!'); else msg.channel.createMessage('An unknown error occurred while proforming this action.'); console.error(err);
                         });
-                    }else {
+                    } else {
                         owners.addOwner(ownerID, JSON.parse(args[1] || "false"), msg.author.id).then((newOwner) => {
                             msg.channel.createMessage(`They are now an owner! And there admin is set to ${newOwner.admin}`)
                         });
                     }
                 })
-            }else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
+            } else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
         });
     },
 

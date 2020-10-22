@@ -32,13 +32,13 @@ module.exports = {
                     description: 'Blacklist Manager 1.5.8',
                     fields: values.slice(0 + (numPerPage * page), numPerPage + (numPerPage * page)).map((v, i, c) => {
                         return {
-                            name: `${cursorPos === i ? '> ': ''}${v.id}`,
+                            name: `${cursorPos === i ? '> ' : ''}${v.id}`,
                             value: `\`\`\`\n${v.cmds.join('\n')}\`\`\``,
                             inline: false
                         };
                     }),
                     footer: {
-                        text: `Page ${page+1} of ${Math.ceil(values.length / numPerPage)}`
+                        text: `Page ${page + 1} of ${Math.ceil(values.length / numPerPage)}`
                     }
                 }
             }).then(message => {
@@ -63,7 +63,7 @@ module.exports = {
 
                 function handleReactions(mesg, emoji, userID) {
                     if (!client.users.get(userID).bot) {
-                        message.removeReaction(emoji.name, userID).catch(() => {});
+                        message.removeReaction(emoji.name, userID).catch(() => { });
                     }
                     if (userID !== msg.author.id || mesg.id !== message.id) return;
                     clearTimeout(timeout);
@@ -113,13 +113,13 @@ module.exports = {
                                                 description: 'Blacklist Manager 1.5.8',
                                                 fields: values.slice(0 + (numPerPage * page), numPerPage + (numPerPage * page)).map((v, i, c) => {
                                                     return {
-                                                        name: `${cursorPos === i ? '> ': ''}${v.id}`,
+                                                        name: `${cursorPos === i ? '> ' : ''}${v.id}`,
                                                         value: `\`\`\`\n${v.cmds.join('\n')}\`\`\``,
                                                         inline: false
                                                     };
                                                 }),
                                                 footer: {
-                                                    text: `Page ${page+1} of ${Math.ceil(values.length / numPerPage)}`
+                                                    text: `Page ${page + 1} of ${Math.ceil(values.length / numPerPage)}`
                                                 }
                                             }
                                         });
@@ -151,13 +151,13 @@ module.exports = {
                                                 description: 'Blacklist Manager 1.5.8',
                                                 fields: values.slice(0 + (numPerPage * page), numPerPage + (numPerPage * page)).map((v, i, c) => {
                                                     return {
-                                                        name: `${cursorPos === i ? '> ': ''}${v.id}`,
+                                                        name: `${cursorPos === i ? '> ' : ''}${v.id}`,
                                                         value: `\`\`\`\n${v.cmds.join('\n')}\`\`\``,
                                                         inline: false
                                                     };
                                                 }),
                                                 footer: {
-                                                    text: `Page ${page+1} of ${Math.ceil(values.length / numPerPage)}`
+                                                    text: `Page ${page + 1} of ${Math.ceil(values.length / numPerPage)}`
                                                 }
                                             }
                                         });
@@ -183,7 +183,7 @@ module.exports = {
                                                     setTimeout(() => {
                                                         messg.delete();
                                                     }, ms('5sec'));
-                                                    globalBlacklist.updateValue({id, cmds}).then(() => {
+                                                    globalBlacklist.updateValue({ id, cmds }).then(() => {
                                                         client.off('messageCreate', handleAddBlacklistItem);
                                                         state = 'mainmenu';
                                                         globalBlacklist.GlobalBlacklist.findAll().then(values => {
@@ -196,13 +196,13 @@ module.exports = {
                                                                     description: 'Blacklist Manager 1.5.8',
                                                                     fields: values.slice(0 + (numPerPage * page), numPerPage + (numPerPage * page)).map((v, i, c) => {
                                                                         return {
-                                                                            name: `${cursorPos === i ? '> ': ''}${v.id}`,
+                                                                            name: `${cursorPos === i ? '> ' : ''}${v.id}`,
                                                                             value: `\`\`\`\n${v.cmds.join('\n')}\`\`\``,
                                                                             inline: false
                                                                         };
                                                                     }),
                                                                     footer: {
-                                                                        text: `Page ${page+1} of ${Math.ceil(values.length / numPerPage)}`
+                                                                        text: `Page ${page + 1} of ${Math.ceil(values.length / numPerPage)}`
                                                                     }
                                                                 }
                                                             });
@@ -235,13 +235,13 @@ module.exports = {
                                                         description: 'Blacklist Manager 1.5.8',
                                                         fields: values.slice(0 + (numPerPage * page), numPerPage + (numPerPage * page)).map((v, i, c) => {
                                                             return {
-                                                                name: `${cursorPos === i ? '> ': ''}${v.id}`,
+                                                                name: `${cursorPos === i ? '> ' : ''}${v.id}`,
                                                                 value: `\`\`\`\n${v.cmds.join('\n')}\`\`\``,
                                                                 inline: false
                                                             };
                                                         }),
                                                         footer: {
-                                                            text: `Page ${page+1} of ${Math.ceil(values.length / numPerPage)}`
+                                                            text: `Page ${page + 1} of ${Math.ceil(values.length / numPerPage)}`
                                                         }
                                                     }
                                                 });
@@ -261,30 +261,30 @@ module.exports = {
                                             setTimeout(() => {
                                                 messg.delete();
                                             }, ms('5sec'));
-                                            globalBlacklist.updateValue({id: values.slice(0 + (numPerPage * page), numPerPage + (numPerPage * page))[cursorPos].id, cmds}).then(() => {
+                                            globalBlacklist.updateValue({ id: values.slice(0 + (numPerPage * page), numPerPage + (numPerPage * page))[cursorPos].id, cmds }).then(() => {
                                                 client.off('messageCreate', handleEditBlacklistItem);
-                                            state = 'mainmenu';
-                                            globalBlacklist.GlobalBlacklist.findAll().then(values => {
-                                                message.edit({
-                                                    embed: {
-                                                        title: 'Bad People, Servers, and Channels',
-                                                        thumbnail: {
-                                                            url: client.user.dynamicAvatarURL('png', 512)
-                                                        },
-                                                        description: 'Blacklist Manager 1.5.8',
-                                                        fields: values.slice(0 + (numPerPage * page), numPerPage + (numPerPage * page)).map((v, i, c) => {
-                                                            return {
-                                                                name: `${cursorPos === i ? '> ': ''}${v.id}`,
-                                                                value: `\`\`\`\n${v.cmds.join('\n')}\`\`\``,
-                                                                inline: false
-                                                            };
-                                                        }),
-                                                        footer: {
-                                                            text: `Page ${page+1} of ${Math.ceil(values.length / numPerPage)}`
+                                                state = 'mainmenu';
+                                                globalBlacklist.GlobalBlacklist.findAll().then(values => {
+                                                    message.edit({
+                                                        embed: {
+                                                            title: 'Bad People, Servers, and Channels',
+                                                            thumbnail: {
+                                                                url: client.user.dynamicAvatarURL('png', 512)
+                                                            },
+                                                            description: 'Blacklist Manager 1.5.8',
+                                                            fields: values.slice(0 + (numPerPage * page), numPerPage + (numPerPage * page)).map((v, i, c) => {
+                                                                return {
+                                                                    name: `${cursorPos === i ? '> ' : ''}${v.id}`,
+                                                                    value: `\`\`\`\n${v.cmds.join('\n')}\`\`\``,
+                                                                    inline: false
+                                                                };
+                                                            }),
+                                                            footer: {
+                                                                text: `Page ${page + 1} of ${Math.ceil(values.length / numPerPage)}`
+                                                            }
                                                         }
-                                                    }
+                                                    });
                                                 });
-                                            });
                                             });
                                         }
                                         client.on('messageCreate', handleEditBlacklistItem);

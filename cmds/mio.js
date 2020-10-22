@@ -12,7 +12,7 @@ module.exports = {
                     url: lists.mio[Math.floor(Math.random() * lists.mio.length)]
                 }
             }
-        }).catch(() => {});
+        }).catch(() => { });
     },
 
     options: {

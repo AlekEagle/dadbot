@@ -7,10 +7,10 @@ module.exports = {
     uses: new Map(),
 
     updateUses: (command) => {
-        nums.cmdsRan ++;
+        nums.cmdsRan++;
         if (module.exports.uses.has(command)) {
             var temp = module.exports.uses.get(command);
-            temp ++;
+            temp++;
             module.exports.uses.delete(command);
             module.exports.uses.set(command, temp);
             return module.exports.uses.get(command);
@@ -20,7 +20,7 @@ module.exports = {
     initializeCommand: (command) => {
         if (module.exports.uses.has(command)) {
             return module.exports.uses.get(command);
-        }else {
+        } else {
             module.exports.uses.set(command, 0);
             return module.exports.uses.get(command);
         }
