@@ -148,6 +148,7 @@ function startupSequence() {
             prefix: process.env.DEBUG ? "test!" : "d!",
         }
     );
+    client.on('error', () => { });
     global.loadEvts = (reload) => {
         if (reload) {
             client.eventNames().forEach((e) => {
@@ -225,8 +226,7 @@ function startupSequence() {
                                             )
                                             .catch(() => {
                                                 msg.channel.createMessage(
-                                                    `<@${
-                                                    msg.author.id
+                                                    `<@${msg.author.id
                                                     }> You have been blacklisted from Dad Bot! If you think this is a mistake, please go here https://alekeagle.com/discord and ask AlekEagle#0001 about this issue.\nYou may no longer use these commands: \`${stat.cmds.join(
                                                         ", "
                                                     )}\``
@@ -353,8 +353,7 @@ function startupSequence() {
 function updateShardCount(snum, client) {
     var avail = (client.options.lastShardID - (client.options.firstShardID - 1));
     console.log(
-        `Shard Status: ${Math.round((((snum - client.options.firstShardID) + 1 || 0) / avail) * 100) || 0}% [${
-        (snum - client.options.firstShardID) + 1 || 0
+        `Shard Status: ${Math.round((((snum - client.options.firstShardID) + 1 || 0) / avail) * 100) || 0}% [${(snum - client.options.firstShardID) + 1 || 0
         }/${avail}]`
     );
 }
