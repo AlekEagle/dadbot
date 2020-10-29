@@ -75,68 +75,70 @@ module.exports = {
                     case 'idle':
                         switch (emoji.name) {
                             case '🌆':
-                                if (msg.member.permission.has('manageServer') || msg.member.permission.has('administrator') || owners.isAdmin(msg.author.id)) {
-                                    message.removeReactions().then(() => {
-                                        state = 'serversettings';
-                                        settings.getValueByID(msg.channel.guild.id).then(setngs => {
+                                owners.isAdmin(msg.author.id).then(owner => {
+                                    if (msg.member.permission.has('manageServer') || msg.member.permission.has('administrator') || owner) {
+                                        message.removeReactions().then(() => {
+                                            state = 'serversettings';
+                                            settings.getValueByID(msg.channel.guild.id).then(setngs => {
 
-                                            message.edit({
-                                                embed: {
-                                                    title: 'Server Settings',
-                                                    description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to channel settings! Use ❗ to change the bots prefix! Use ⏹ to go back to the main menu.',
-                                                    thumbnail: {
-                                                        url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
-                                                    },
-                                                    fields: [...settings.flags.map((i, o, s) => {
-                                                        return {
-                                                            name: `${selection === o ? '> ' : ''}${i}`,
-                                                            value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                message.edit({
+                                                    embed: {
+                                                        title: 'Server Settings',
+                                                        description: 'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use #️⃣ to switch to channel settings! Use ❗ to change the bots prefix! Use ⏹ to go back to the main menu.',
+                                                        thumbnail: {
+                                                            url: msg.channel.guild.dynamicIconURL(msg.channel.guild.icon ? (msg.channel.guild.icon.startsWith('a_') ? 'gif' : 'png') : 'png', 256)
+                                                        },
+                                                        fields: [...settings.flags.map((i, o, s) => {
+                                                            return {
+                                                                name: `${selection === o ? '> ' : ''}${i}`,
+                                                                value: `is currently set to \`${settings.getFlags(setngs.flags).includes(i) ? 'ENABLED' : 'DISABLED'}\``
+                                                            }
+                                                        }),
+                                                        {
+                                                            name: 'Prefix',
+                                                            value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
                                                         }
-                                                    }),
-                                                    {
-                                                        name: 'Prefix',
-                                                        value: client.guildPrefixes[msg.channel.guild.id] ? client.guildPrefixes[msg.channel.guild.id] : client.commandOptions.prefix
+                                                        ]
                                                     }
-                                                    ]
-                                                }
-                                            }).then(() => {
-                                                addReactions(message, ['⬆️', '⬇️', '⏺', '#️⃣', '⏹', '❗']);
+                                                }).then(() => {
+                                                    addReactions(message, ['⬆️', '⬇️', '⏺', '#️⃣', '⏹', '❗']);
+                                                });
                                             });
                                         });
-                                    });
-                                } else {
-                                    message.edit({
-                                        embed: {
-                                            title: 'Insufficient Permissions!',
-                                            description: 'You need `MANAGE_SERVER` or higher to edit server settings!',
-                                            color: parseInt('0xff0000')
-                                        }
-                                    }).then(() => {
-                                        setTimeout(() => {
-                                            message.edit({
-                                                embed: {
-                                                    title: 'Settings',
-                                                    thumbnail: {
-                                                        url: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/twitter/248/gear_2699.png'
-                                                    },
-                                                    description: 'Manage any setting for yourself or the server! (The bot requires manage message permissions for the menu to work)',
-                                                    fields: [{
-                                                        name: '🌆',
-                                                        value: 'Manage settings for the server!',
-                                                        inline: false
-                                                    }, {
-                                                        name: '👤',
-                                                        value: 'Manage settings for yourself!',
-                                                        inline: false
-                                                    }, {
-                                                        name: '⏹',
-                                                        value: 'Exit settings.'
-                                                    }]
-                                                }
-                                            });
-                                        }, 5000);
-                                    });
-                                }
+                                    } else {
+                                        message.edit({
+                                            embed: {
+                                                title: 'Insufficient Permissions!',
+                                                description: 'You need `MANAGE_SERVER` or higher to edit server settings!',
+                                                color: parseInt('0xff0000')
+                                            }
+                                        }).then(() => {
+                                            setTimeout(() => {
+                                                message.edit({
+                                                    embed: {
+                                                        title: 'Settings',
+                                                        thumbnail: {
+                                                            url: 'https://emojipedia-us.s3.dualstack.us-west-1.amazonaws.com/thumbs/160/twitter/248/gear_2699.png'
+                                                        },
+                                                        description: 'Manage any setting for yourself or the server! (The bot requires manage message permissions for the menu to work)',
+                                                        fields: [{
+                                                            name: '🌆',
+                                                            value: 'Manage settings for the server!',
+                                                            inline: false
+                                                        }, {
+                                                            name: '👤',
+                                                            value: 'Manage settings for yourself!',
+                                                            inline: false
+                                                        }, {
+                                                            name: '⏹',
+                                                            value: 'Exit settings.'
+                                                        }]
+                                                    }
+                                                });
+                                            }, 5000);
+                                        });
+                                    }
+                                });
                                 break;
                             case '👤':
                                 message.removeReactions().then(() => {
