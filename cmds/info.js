@@ -2,7 +2,6 @@
 
 let nums = require("../functions/numbers");
 let time = require("../functions/toReadableTime");
-let util = require("util");
 const { cpuUsage } = require('os-utils');
 let memory = require("../functions/memoryUsage");
 
@@ -39,7 +38,7 @@ module.exports = {
                             },
                             {
                                 name: "User count",
-                                value: client.users.size.toLocaleString(),
+                                value: client.guilds.map(g => g.memberCount).reduce((a, b) => a + b, 0).toLocaleString(),
                                 inline: true,
                             },
                             {
@@ -55,6 +54,11 @@ module.exports = {
                             {
                                 name: "Current Cluster",
                                 value: process.env.NODE_APP_INSTANCE,
+                                inline: true
+                            },
+                            {
+                                name: "Total Clusters",
+                                value: process.env.instances,
                                 inline: true
                             },
                             {
