@@ -138,7 +138,7 @@ module.exports = {
                   .sort((a, b) => a - b)
                   .reverse()[0]
               )
-            }|${s.ping !== Infinity ? `${s.ping}ms` : "N/A"}${" ".repeat(
+            }|${typeof s.ping === 'number' ? `${s.ping}ms` : "N/A"}${" ".repeat(
               `${s.ping}ms`.length > 9
                 ? 9 - "N/A".length
                 : 9 - `${s.ping}ms`.length
@@ -195,9 +195,9 @@ module.exports = {
           (100 *
             shards
               .map((s) => s.ping)
-              .filter((a) => a !== Infinity)
+              .filter((a) => typeof a === 'number')
               .reduce((a, b) => a + b, 0)) /
-          shards.map((e) => e.ping).filter((a) => a !== Infinity)
+          shards.map((e) => e.ping).filter((a) => typeof a === 'number')
             .length
         ) / 100
         }ms`;
