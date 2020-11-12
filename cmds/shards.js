@@ -1,167 +1,189 @@
-"use strict";
+'use strict';
+
+const Map = require('collections/map');
 
 module.exports = {
-  name: "shards",
+  name: 'shards',
 
   exec: (client, msg, args) => {
-    let e = client.shards.map((s) => s.status.toUpperCase().charAt(0));
-    let overallShardStatus = {};
-    for (let i = 0; i < e.length; i++) {
-      if (!overallShardStatus[e[i]]) overallShardStatus[e[i]] = 0;
-      overallShardStatus[e[i]]++;
+    let shards,
+      shardsArr = [],
+      i = 0;
+
+    function getData() {
+      return new Promise((resolve, reject) => {
+        grafana.remoteEval(i, 'JSON.stringify(client.shards.map(s => { return [s.id, { id: s.id, guildCount: s.client.guilds.filter(g => g.shard.id === s.id).length, userCount: s.client.guilds.filter(g => g.shard.id === s.id).map(g => g.memberCount).reduce((a, b) => a + b, 0), status: s.status.toUpperCase(), ping: s.latency }] }))').then(res => {
+          shardsArr.push(...JSON.parse(res));
+          if (++i < Number(process.env.instances)) getData().then(resolve);
+          else resolve();
+        }, reject);
+      });
     }
-    let currentShard = msg.channel.type === 1 ? 0 : msg.channel.guild.shard.id,
-      curInd = 0;
-    let output = [
-      `SHARD|GUILDS |USERS  |STATUS${Object.keys(overallShardStatus)
-        .map((k) => `${k}: ${overallShardStatus[k]}`)
-        .join(", ").length >=
-        client.shards
-          .map((s) => s.status.length)
-          .sort((a, b) => a - b)
-          .reverse()[0]
-        ? Object.keys(overallShardStatus)
+
+    getData().then(() => {
+      shards = new Map(shardsArr);
+      let e = shards.map((s) => s.status.toUpperCase().charAt(0));
+      let overallShardStatus = {};
+      for (let i = 0; i < e.length; i++) {
+        if (!overallShardStatus[e[i]]) overallShardStatus[e[i]] = 0;
+        overallShardStatus[e[i]]++;
+      }
+      let currentShard = msg.channel.type === 1 ? 0 : msg.channel.guild.shard.id,
+        curInd = 0;
+      let output = [
+        `SHARD|GUILDS |USERS  |STATUS${Object.keys(overallShardStatus)
           .map((k) => `${k}: ${overallShardStatus[k]}`)
-          .join(", ").length < 6
-          ? ""
-          : " ".repeat(
-            Object.keys(overallShardStatus)
-              .map((k) => `${k}: ${overallShardStatus[k]}`)
-              .join(", ").length - 6
-          )
-        : client.shards
-          .map((s) => s.status.length)
-          .sort((a, b) => a - b)
-          .reverse()[0] < 6
-          ? ""
-          : " ".repeat(
-            client.shards
-              .map((s) => s.status.length)
-              .sort((a, b) => a - b)
-              .reverse()[0] - 6
-          )
-      }|PING     \n-----+-------+-------+------${Object.keys(overallShardStatus)
-        .map((k) => `${k}: ${overallShardStatus[k]}`)
-        .join(", ").length >=
-        client.shards
-          .map((s) => s.status.length)
-          .sort((a, b) => a - b)
-          .reverse()[0]
-        ? Object.keys(overallShardStatus)
-          .map((k) => `${k}: ${overallShardStatus[k]}`)
-          .join(", ").length < 6
-          ? ""
-          : "-".repeat(
-            Object.keys(overallShardStatus)
-              .map((k) => `${k}: ${overallShardStatus[k]}`)
-              .join(", ").length - 6
-          )
-        : client.shards
-          .map((s) => s.status.length)
-          .sort((a, b) => a - b)
-          .reverse()[0] < 6
-          ? ""
-          : "-".repeat(
-            client.shards
-              .map((s) => s.status.length)
-              .sort((a, b) => a - b)
-              .reverse()[0] - 6
-          )
-      }+------`,
-    ];
-    client.shards
-      .map(
-        (s) =>
-          `${" ".repeat(
-            5 -
-            (s.id === currentShard
-              ? `>${s.id}`.length
-              : s.id.toString().length)
-          )}${s.id === currentShard ? `>${s.id}` : s.id}|${client.guilds.filter((g) => g.shard.id === s.id).length
-          }${" ".repeat(
-            7 -
-            client.guilds.filter((g) => g.shard.id === s.id).length.toString()
-              .length
-          )}|${client.guilds
-            .filter((g) => g.shard.id === s.id)
-            .map((g) => g.memberCount).reduce((a, b) => a + b, 0)
-          }${" ".repeat(
-            7 -
-            client.guilds
-              .filter((g) => g.shard.id === s.id)
-              .map((g) => g.memberCount).reduce((a, b) => a + b, 0)
-              .toString().length
-          )}|${s.status.toUpperCase()}${Object.keys(overallShardStatus)
+          .join(", ").length >=
+          shards
+            .map((s) => s.status.length)
+            .sort((a, b) => a - b)
+            .reverse()[0]
+          ? Object.keys(overallShardStatus)
             .map((k) => `${k}: ${overallShardStatus[k]}`)
-            .join(", ").length <=
-            client.shards
-              .map((s) => s.status.length)
-              .sort((a, b) => a - b)
-              .reverse()[0]
-            ? client.shards
-              .map((s) => s.status.length)
-              .sort((a, b) => a - b)
-              .reverse()[0] < 6
-              ? " ".repeat(
+            .join(", ").length < 6
+            ? ""
+            : " ".repeat(
+              Object.keys(overallShardStatus)
+                .map((k) => `${k}: ${overallShardStatus[k]}`)
+                .join(", ").length - 6
+            )
+          : shards
+            .map((s) => s.status.length)
+            .sort((a, b) => a - b)
+            .reverse()[0] < 6
+            ? ""
+            : " ".repeat(
+              shards
+                .map((s) => s.status.length)
+                .sort((a, b) => a - b)
+                .reverse()[0] - 6
+            )
+        }|PING     \n-----+-------+-------+------${Object.keys(overallShardStatus)
+          .map((k) => `${k}: ${overallShardStatus[k]}`)
+          .join(", ").length >=
+          shards
+            .map((s) => s.status.length)
+            .sort((a, b) => a - b)
+            .reverse()[0]
+          ? Object.keys(overallShardStatus)
+            .map((k) => `${k}: ${overallShardStatus[k]}`)
+            .join(", ").length < 6
+            ? ""
+            : "-".repeat(
+              Object.keys(overallShardStatus)
+                .map((k) => `${k}: ${overallShardStatus[k]}`)
+                .join(", ").length - 6
+            )
+          : shards
+            .map((s) => s.status.length)
+            .sort((a, b) => a - b)
+            .reverse()[0] < 6
+            ? ""
+            : "-".repeat(
+              shards
+                .map((s) => s.status.length)
+                .sort((a, b) => a - b)
+                .reverse()[0] - 6
+            )
+        }+------`,
+      ];
+      shards
+        .map(
+          (s) =>
+            `${" ".repeat(
+              5 -
+              (s.id === currentShard
+                ? `>${s.id}`.length
+                : s.id.toString().length)
+            )}${s.id === currentShard ? `>${s.id}` : s.id}|${s.guildCount
+            }${" ".repeat(
+              7 -
+              s.guildCount.toString()
+                .length
+            )}|${s.userCount
+            }${" ".repeat(
+              7 -
+              s.userCount.toString().length
+            )}|${s.status.toUpperCase()}${Object.keys(overallShardStatus)
+              .map((k) => `${k}: ${overallShardStatus[k]}`)
+              .join(", ").length <=
+              shards
+                .map((s) => s.status.length)
+                .sort((a, b) => a - b)
+                .reverse()[0]
+              ? shards
+                .map((s) => s.status.length)
+                .sort((a, b) => a - b)
+                .reverse()[0] < 6
+                ? " ".repeat(
+                  6 -
+                  shards
+                    .map((s) => s.status.length)
+                    .sort((a, b) => a - b)
+                    .reverse()[0]
+                )
+                : " ".repeat(
+                  shards
+                    .map((s) => s.status.length)
+                    .sort((a, b) => a - b)
+                    .reverse()[0] - s.status.toUpperCase().length
+                )
+              : " ".repeat(
                 6 -
-                client.shards
+                Object.keys(overallShardStatus)
+                  .map((k) => `${k}: ${overallShardStatus[k]}`)
+                  .join(", ").length -
+                shards
                   .map((s) => s.status.length)
                   .sort((a, b) => a - b)
                   .reverse()[0]
               )
-              : " ".repeat(
-                client.shards
-                  .map((s) => s.status.length)
-                  .sort((a, b) => a - b)
-                  .reverse()[0] - s.status.toUpperCase().length
-              )
-            : " ".repeat(
+            }|${s.ping !== Infinity ? `${s.ping}ms` : "N/A"}${" ".repeat(
+              `${s.ping}ms`.length > 9
+                ? 9 - "N/A".length
+                : 9 - `${s.ping}ms`.length
+            )}`
+        )
+        .forEach((e) => {
+          if ((output[curInd] + e).length >= 2000) {
+            output[++curInd] = e;
+          } else {
+            output[curInd] += "\n" + e;
+          }
+        });
+      let totals = `TOTAL|${shards.map(s => s.guildCount).reduce((a, b) => a + b, 0)}${" ".repeat(
+        7 - shards.map(s => s.guildCount).reduce((a, b) => a + b, 0).toString().length
+      )}|${shards.map(s => s.userCount).reduce((a, b) => a + b, 0).toString()}${" ".repeat(
+        7 - shards.map(s => s.userCount).reduce((a, b) => a + b, 0).toString().length
+      )}|${Object.keys(overallShardStatus)
+        .map((k) => `${k}: ${overallShardStatus[k]}`)
+        .join(", ")}${shards
+          .map((s) => s.status.length)
+          .sort((a, b) => a - b)
+          .reverse()[0] >=
+          Object.keys(overallShardStatus)
+            .map((k) => `${k}: ${overallShardStatus[k]}`)
+            .join(", ").length
+          ? Object.keys(overallShardStatus)
+            .map((k) => `${k}: ${overallShardStatus[k]}`)
+            .join(", ").length < 6
+            ? " ".repeat(
               6 -
               Object.keys(overallShardStatus)
                 .map((k) => `${k}: ${overallShardStatus[k]}`)
-                .join(", ").length -
-              client.shards
+                .join(", ").length
+            )
+            : " ".repeat(
+              shards
                 .map((s) => s.status.length)
                 .sort((a, b) => a - b)
-                .reverse()[0]
+                .reverse()[0] -
+              Object.keys(overallShardStatus)
+                .map((k) => `${k}: ${overallShardStatus[k]}`)
+                .join(", ").length
             )
-          }|${s.latency !== Infinity ? `${s.latency}ms` : "N/A"}${" ".repeat(
-            `${s.latency}ms`.length > 9
-              ? 9 - "N/A".length
-              : 9 - `${s.latency}ms`.length
-          )}`
-      )
-      .forEach((e) => {
-        if ((output[curInd] + e).length >= 2000) {
-          output[++curInd] = e;
-        } else {
-          output[curInd] += "\n" + e;
-        }
-      });
-    let totals = `TOTAL|${client.guilds.size}${" ".repeat(
-      7 - client.guilds.size.toString().length
-    )}|${client.users.size}${" ".repeat(
-      7 - client.users.size.toString().length
-    )}|${Object.keys(overallShardStatus)
-      .map((k) => `${k}: ${overallShardStatus[k]}`)
-      .join(", ")}${client.shards
-        .map((s) => s.status.length)
-        .sort((a, b) => a - b)
-        .reverse()[0] >=
-        Object.keys(overallShardStatus)
-          .map((k) => `${k}: ${overallShardStatus[k]}`)
-          .join(", ").length
-        ? Object.keys(overallShardStatus)
-          .map((k) => `${k}: ${overallShardStatus[k]}`)
-          .join(", ").length < 6
-          ? " ".repeat(
-            6 -
-            Object.keys(overallShardStatus)
-              .map((k) => `${k}: ${overallShardStatus[k]}`)
-              .join(", ").length
-          )
           : " ".repeat(
-            client.shards
+            shards
               .map((s) => s.status.length)
               .sort((a, b) => a - b)
               .reverse()[0] -
@@ -169,35 +191,28 @@ module.exports = {
               .map((k) => `${k}: ${overallShardStatus[k]}`)
               .join(", ").length
           )
-        : " ".repeat(
-          client.shards
-            .map((s) => s.status.length)
-            .sort((a, b) => a - b)
-            .reverse()[0] -
-          Object.keys(overallShardStatus)
-            .map((k) => `${k}: ${overallShardStatus[k]}`)
-            .join(", ").length
-        )
-      }|AVG ${Math.round(
-        (100 *
-          client.shards
-            .map((s) => s.latency)
-            .filter((a) => a !== Infinity)
-            .reduce((a, b) => a + b, 0)) /
-        client.shards.map((e) => e.latency).filter((a) => a !== Infinity)
-          .length
-      ) / 100
-      }ms`;
-    if ((output[curInd] + totals).length >= 2000) {
-      output[++curInd] = totals;
-    } else {
-      output[curInd] += "\n" + totals;
-    }
-    output.forEach((a) => msg.channel.createMessage(`\`\`\`${a}\`\`\``));
+        }|AVG ${Math.round(
+          (100 *
+            shards
+              .map((s) => s.ping)
+              .filter((a) => a !== Infinity)
+              .reduce((a, b) => a + b, 0)) /
+          shards.map((e) => e.ping).filter((a) => a !== Infinity)
+            .length
+        ) / 100
+        }ms`;
+      if ((output[curInd] + totals).length >= 2000) {
+        output[++curInd] = totals;
+      } else {
+        output[curInd] += "\n" + totals;
+      }
+      output.forEach((a) => msg.channel.createMessage(`\`\`\`${a}\`\`\``));
+    });
+
   },
 
   options: {
     description: "Show other shards info",
     fullDescription: "Show other shards info",
   },
-};
+}
