@@ -22,7 +22,6 @@ class ReactionMenu {
         this.channel.createMessage(message).then(message => {
             this.message = message;
             this.client.on('messageReactionAdd', this.reactionHandlerInstance);
-            console.log(this.client.rawListeners('messageReactionAdd').indexOf(this.reactionHandlerInstance));
             this.addReactions(this.message, this.states.get(this.state).reactions).then(() => {
                 this.timeout = setTimeout(() => {
                     this.message.delete();
