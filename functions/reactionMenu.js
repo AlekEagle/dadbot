@@ -15,7 +15,7 @@ class ReactionMenu {
         this.messageChanging = true;
         this.states = new Map();
         this.timeoutDur = timeout ? timeout : '1m';
-        if (!msg.channel.permissionsOf(client.user.id).has('manageMessages')) {
+        if (!this.channel.permissionsOf(client.user.id).has('manageMessages')) {
             this.channel.createMessage('I\'m sorry, but I need the permission `MANAGE_MESSAGES` for this to work!');
             throw new Error('Missing permission manageMessages');
         }
