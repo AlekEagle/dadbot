@@ -4,8 +4,6 @@ const Eris = require('eris'),
     Map = require('collections/map'),
     ms = require('ms');
 
-
-
 class ReactionMenu {
     constructor(client, channel, user, message, reactions, timeout) {
         this.client = client;
