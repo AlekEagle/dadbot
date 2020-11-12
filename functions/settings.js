@@ -111,11 +111,20 @@ module.exports = {
             return await res.destroy();
         } else {
             cache[options.id] = options;
-            return await Options.update(options, {
+            let oldVal = await Options.findOne({
                 where: {
                     id: options.id,
                 },
             });
+            if (oldVal === null) {
+                return await Options.create(options);
+            } else {
+                return await Options.update(options, {
+                    where: {
+                        id: options.id,
+                    },
+                });
+            }
         }
     },
     flags: flagNames
