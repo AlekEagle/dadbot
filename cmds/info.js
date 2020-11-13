@@ -1,6 +1,5 @@
 "use strict";
 
-let nums = require("../functions/numbers");
 let time = require("../functions/toReadableTime");
 const { cpuUsage } = require('os-utils');
 let memory = require("../functions/memoryUsage");
@@ -11,19 +10,25 @@ module.exports = {
     exec: (client, msg, args) => {
         let shards,
             shardsArr = [],
-            i = 0;
+            i = 0,
+            stats,
+            statsArr = [];
         msg.channel.sendTyping();
         function getData() {
             return new Promise((resolve, reject) => {
-                grafana.remoteEval(i, 'JSON.stringify(client.shards.map(s => { return [s.id, { id: s.id, guildCount: s.client.guilds.filter(g => g.shard.id === s.id).length, userCount: s.client.guilds.filter(g => g.shard.id === s.id).map(g => g.memberCount).reduce((a, b) => a + b, 0), status: s.status.toUpperCase(), ping: s.latency }] }))').then(res => {
+                grafana.remoteEval(i, 'let nums = require("./functions/numbers");JSON.stringify(client.shards.map(s => { return [s.id, { id: s.id, guildCount: s.client.guilds.filter(g => g.shard.id === s.id).length, userCount: s.client.guilds.filter(g => g.shard.id === s.id).map(g => g.memberCount).reduce((a, b) => a + b, 0), status: s.status.toUpperCase(), ping: s.latency, cmdsRan: nums.cmdsRan, msgsRead: nums.msgsRead, responses: nums.responses }] }))').then(res => {
                     shardsArr.push(...JSON.parse(res));
-                    if (++i < Number(process.env.instances)) getData().then(resolve);
-                    else resolve();
+                    grafana.remoteEval(i, 'let { cmdsRan, msgsRead, responses } = require("./functions/numbers");JSON.stringify([Number(process.env.NODE_APP_INSTANCE), {cmdsRan, msgsRead, responses}])').then(statsStr => {
+                        statsArr.push(JSON.parse(statsStr));
+                        if (++i < Number(process.env.instances)) getData().then(resolve);
+                        else resolve();
+                    }, reject);
                 }, reject);
             });
         }
         getData().then(() => {
             shards = new Map(shardsArr);
+            stats = new Map(statsArr);
             cpuUsage((cpuusage) => {
                 msg.channel
                     .createMessage({
@@ -32,17 +37,17 @@ module.exports = {
                             fields: [
                                 {
                                     name: "Commands ran",
-                                    value: nums.cmdsRan.toLocaleString(),
+                                    value: stats.map(s => s.cmdsRan).reduce((a, b) => a + b, 0).toLocaleString(),
                                     inline: true,
                                 },
                                 {
                                     name: "Messages Read",
-                                    value: nums.msgsRead.toLocaleString(),
+                                    value: stats.map(s => s.msgsRead).reduce((a, b) => a + b, 0).toLocaleString(),
                                     inline: true,
                                 },
                                 {
                                     name: "Auto responses answered",
-                                    value: nums.responses.toLocaleString(),
+                                    value: stats.map(s => s.responses).reduce((a, b) => a + b, 0).toLocaleString(),
                                     inline: true,
                                 },
                                 {
