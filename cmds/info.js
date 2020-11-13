@@ -52,7 +52,7 @@ module.exports = {
                                 },
                                 {
                                     name: "User count",
-                                    value: shards.map(s => s.userCount).reduce((a, b) => a + b, 0).reduce((a, b) => a + b, 0).toLocaleString(),
+                                    value: shards.map(s => s.userCount).reduce((a, b) => a + b, 0).toLocaleString(),
                                     inline: true,
                                 },
                                 {
