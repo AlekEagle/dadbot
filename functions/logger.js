@@ -84,5 +84,14 @@ class Logger {
         );
         grafana.sendError(thing).catch(() => { });
     }
+    trace(thing, ...args) {
+        _console.trace(
+            `${chalk.blue.inverse(date())} ${chalk.inverse(`[TRACE]`)} ${chalk.white(
+                thing
+            )}`,
+            !args.length ? "" : args.join(' ')
+        );
+        grafana.sendLog(thing).catch(() => { });
+    }
 } Logger
 module.exports = (logLevel) => global.console = new Logger(logLevel);
