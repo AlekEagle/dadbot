@@ -1,7 +1,6 @@
 'use strict';
 
-const Eris = require('eris'),
-    Map = require('collections/map'),
+const Map = require('collections/map'),
     ms = require('ms');
 
 class ReactionMenu {
@@ -34,7 +33,7 @@ class ReactionMenu {
                 }, ms(this.timeoutDur));
                 this.messageChanging = false;
             });
-        });
+        }, err => { throw err });
     }
 
     reactionAddListener(msg, emoji, userID) {
