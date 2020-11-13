@@ -1,15 +1,5 @@
 'use strict';
 
-function monkeyPatch() {
-    const oldExit = process.exit;
-    process.exit = function () {
-        console.trace("PROCESS.EXIT WAS CALLED");
-        oldExit(...arguments);
-    };
-}
-
-monkeyPatch();
-
 require("dotenv").config();
 const fetch = require("node-fetch"),
     CommandClient = require('eris-command-handler'),
