@@ -6,12 +6,19 @@ module.exports = {
     name: 'reloadcmds',
 
     exec: (client, msg, args) => {
+        function getData() {
+            return new Promise((resolve, reject) => {
+                grafana.remoteEval(i, 'loadCmds(true);').then(res => {
+                    if (++i < Number(process.env.instances)) getData().then(resolve);
+                }, reject);
+            });
+        }
+
         owners.isOwner(msg.author.id).then(owner => {
             if (owner) {
-                msg.channel.createMessage(`Unloading \`${Object.values(client.commands).filter(c => c.label !== 'help').map(c => c.label).length}\` commands and reloading \`${require('fs').readdirSync('./cmds').length}\` commands.`)
-                setTimeout(() => {
-                    loadCmds(true);
-                }, 500);
+                getData().then(() => {
+                    msg.channel.createMessage(`Unloading \`${Object.values(client.commands).filter(c => c.label !== 'help').map(c => c.label).length}\` commands and reloading \`${require('fs').readdirSync('./cmds').length}\` commands.`);
+                });
             } else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
         });
     },
