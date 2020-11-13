@@ -25,29 +25,28 @@ module.exports = {
                         ),
                     },
                     author: {
-                        name: `${client.users.get(guild.ownerID).username}#${
-                            client.users.get(guild.ownerID).discriminator
+                        name: `${client.users.get(guild.ownerID) ? client.users.get(guild.ownerID).username : 'Not Cached'}#${client.users.get(guild.ownerID) ? client.users.get(guild.ownerID).discriminator : '0000'
                             }`,
                         icon_url: client.users
-                            .get(guild.ownerID)
-                            .dynamicAvatarURL(
-                                client.users.get(guild.ownerID).avatar
-                                    ? client.users.get(guild.ownerID).avatar.startsWith("a_")
-                                        ? "gif"
-                                        : "png"
-                                    : "png",
-                                256
-                            ),
+                            .get(guild.ownerID) ? client.users
+                                .get(guild.ownerID).dynamicAvatarURL(
+                                    client.users.get(guild.ownerID).avatar
+                                        ? client.users.get(guild.ownerID).avatar.startsWith("a_")
+                                            ? "gif"
+                                            : "png"
+                                        : "png",
+                                    256
+                                ) : client.user.defaultAvatarURL,
                         url: client.users
-                            .get(guild.ownerID)
-                            .dynamicAvatarURL(
-                                client.users.get(guild.ownerID).avatar
-                                    ? client.users.get(guild.ownerID).avatar.startsWith("a_")
-                                        ? "gif"
-                                        : "png"
-                                    : "png",
-                                256
-                            ),
+                            .get(guild.ownerID) ? client.users
+                                .get(guild.ownerID).dynamicAvatarURL(
+                                    client.users.get(guild.ownerID).avatar
+                                        ? client.users.get(guild.ownerID).avatar.startsWith("a_")
+                                            ? "gif"
+                                            : "png"
+                                        : "png",
+                                    256
+                                ) : client.user.defaultAvatarURL,
                     },
                     fields: [
                         {
