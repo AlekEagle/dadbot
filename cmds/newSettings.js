@@ -138,14 +138,14 @@ module.exports = {
             }),
             reactions: ['⬆️', '⬇️', '⏺', '#️⃣', '⏹', '🔃']
         });
-        menu.addEmoji('channelsettings', '⏹', () => { menu.setState('default'); selection = 0; channelSelection = message.channel.id; });
+        menu.addEmoji('channelsettings', '⏹', () => { menu.setState('default'); selection = 0; channelSelection = menu.message.channel.id; });
         menu.addEmoji('channelsettings', '⬆️', (async () => {
             if (--selection < 0) selection = settings.flags.length - 1;
         }));
         menu.addEmoji('channelsettings', '⬇️', (async () => {
             if (++selection > settings.flags.length - 1) selection = 0;
         }));
-        menu.addEmoji('channelsettings', '#️⃣', () => { menu.setState('serversettings'); selection = 0; channelSelection = message.channel.id; });
+        menu.addEmoji('channelsettings', '#️⃣', () => { menu.setState('serversettings'); selection = 0; channelSelection = menu.message.channel.id; });
         menu.addEmoji('channelsettings', '⏺', (async () => {
             let newSettings = await settings.getValueByID(channelSelection);
             let newFlags = settings.getFlags(newSettings.flags);
