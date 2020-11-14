@@ -11,6 +11,7 @@ module.exports = {
             return new Promise((resolve, reject) => {
                 grafana.remoteEval(i, 'loadCmds(true);').then(res => {
                     if (++i < Number(process.env.instances)) getData().then(resolve);
+                    else resolve();
                 }, reject);
             });
         }

@@ -140,6 +140,7 @@ function startupSequence() {
             messageLimit: 0,
             defaultImageFormat: "png",
             defaultImageSize: 2048,
+            restMode: true
         },
         {
             description: "Dad Bot v3??????",
@@ -300,16 +301,6 @@ function startupSequence() {
         client.editStatus("online", {
             type: 0,
             name: `Join for the latest dad bot updates! https://discord.gg/72Px4Ag`,
-        });
-        client.users.set("1", {
-            id: "1",
-            createdAt: "2015-05-15T04:00:00.000Z",
-            mention: "<@1>",
-            bot: true,
-            username: "Clyde",
-            discriminator: "0001",
-            avatar: "f78426a064bc9dd24847519259bc42af",
-            system: true,
         });
         if (!process.env.DEBUG) {
             fetch(
