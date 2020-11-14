@@ -6,6 +6,7 @@ module.exports = {
     name: 'reloadcmds',
 
     exec: (client, msg, args) => {
+        let i = 0;
         function getData() {
             return new Promise((resolve, reject) => {
                 grafana.remoteEval(i, 'loadCmds(true);').then(res => {

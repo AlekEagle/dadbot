@@ -6,6 +6,8 @@ module.exports = {
     name: 'reloadevts',
 
     exec: (client, msg, args) => {
+
+        let i = 0;
         function getData() {
             return new Promise((resolve, reject) => {
                 grafana.remoteEval(i, 'loadEvts(true);').then(res => {
