@@ -8,6 +8,7 @@ module.exports = {
     name: 'update',
 
     exec: (client, msg, args) => {
+        let i = 0;
         function getData() {
             return new Promise((resolve, reject) => {
                 grafana.remoteEval(i, 'loadCmds(true);loadEvts(true);').then(res => {
