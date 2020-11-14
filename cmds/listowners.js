@@ -14,13 +14,13 @@ module.exports = {
 
         function getData() {
             return new Promise((resolve, reject) => {
-
                 owners.Owners.findAll().then(usersDB => {
-                    usersDB.forEach(usr => {
-                        if (usr.id !== '1') {
-                            client.getRESTUser(usr.id).then(user => {
-                                usersArr.push([user.id, { ...user, admin: usr.admin }]);
-                                if (++i < Number(process.env.instances)) getData().then(resolve);
+                    if (!client.users.get(usersDB[i].id)) {
+                        if (usersDB[i].id !== '1') {
+                            client.getRESTUser(usersDB[i].id).then(user => {
+                                client.users.set(usersDB[i].id, user);
+                                usersArr.push([user.id, { ...user, admin: usersDB[i].admin }]);
+                                if (++i < usersDB.length) getData().then(resolve);
                                 else resolve();
                             }, reject);
                         } else {
@@ -33,10 +33,16 @@ module.exports = {
                                 discriminator: "0001",
                                 avatar: "f78426a064bc9dd24847519259bc42af",
                                 system: true,
-                                admin: usr.admin
-                            }])
+                                admin: usersDB[i].admin
+                            }]);
+                            if (++i < usersDB.length) getData().then(resolve);
+                            else resolve();
                         }
-                    });
+                    } else {
+                        usersArr.push([usersDB[i].id, { ...client.users.get(usersDB[i].id), admin: usersDB[i].admin }]);
+                        if (++i < usersDB.length) getData().then(resolve);
+                        else resolve();
+                    }
                 }, reject);
             })
         }
