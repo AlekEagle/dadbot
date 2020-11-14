@@ -23,13 +23,13 @@ Owners.sync({
 module.exports = {
     Owners,
 
-    isOwner: (id) => {
+    isOwner: (async (id) => {
         try {
             return !!(await module.exports.Owners.findOne({ where: { id } }));
         } catch (err) {
             throw err;
         }
-    },
+    }),
 
     isAdmin: (async (id) => {
         try {
