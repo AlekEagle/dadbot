@@ -4,12 +4,13 @@ require("dotenv").config();
 const fetch = require("node-fetch"),
     CommandClient = require('eris-command-handler'),
     Sequelize = require('sequelize');
+const getCPU = require("./functions/getCPU");
 
 global._database = new Sequelize(`postgres://alek:${process.env.serverPass}@localhost:5432/alekeagle`, {
     logging: false
 });
 
-const { cpuUsage } = require('os-utils'),
+const cpuUsage = require('./functions/getCPU'),
     ms = require('ms'),
     GrafanaAPIClient = require('grafana-api-client'),
     memory = require('./functions/memoryUsage'),
@@ -92,8 +93,8 @@ function clusterStatusUpdate(connected) {
     if (connected) {
         grafana.off('clusterStatusUpdate', clusterStatusUpdate);
         setInterval(() => {
-            cpuUsage(percent => {
-                grafana.sendStats(client.guilds ? client.guilds.size : 0, Math.round(percent * 100), Math.round(new memory.MB().raw()), Math.round(
+            getCPU().then(percent => {
+                grafana.sendStats(client.guilds ? client.guilds.size : 0, Math.round(percent), Math.round(new memory.MB().raw()), Math.round(
                     (client.shards
                         .map((s) => s.latency)
                         .filter((a) => a !== Infinity)

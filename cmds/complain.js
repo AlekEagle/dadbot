@@ -1,7 +1,5 @@
 'use strict';
 
-const ms = require('ms');
-
 module.exports = {
     name: 'complain',
 

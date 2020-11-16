@@ -1,7 +1,7 @@
 "use strict";
 
 let time = require("../functions/toReadableTime");
-const { cpuUsage } = require('os-utils');
+const cpuUsage = require('../functions/getCPU');
 let memory = require("../functions/memoryUsage");
 
 module.exports = {
@@ -29,7 +29,7 @@ module.exports = {
         getData().then(() => {
             shards = new Map(shardsArr);
             stats = new Map(statsArr);
-            cpuUsage((cpuusage) => {
+            cpuUsage().then(cpuusage => {
                 msg.channel
                     .createMessage({
                         embed: {
@@ -82,12 +82,12 @@ module.exports = {
                                 },
                                 {
                                     name: "CPU Usage",
-                                    value: `${Math.round(cpuusage * 10000) / 100}%`,
+                                    value: `${Math.round(cpuusage * 100) / 100}%`,
                                     inline: true,
                                 },
                                 {
                                     name: "Memory Usage",
-                                    value: `${memory()} / ${memory(require("os").totalmem())}`,
+                                    value: `${memory()} / ${memory(require('v8').getHeapStatistics().total_available_size)}`,
                                     inline: true,
                                 },
                                 {
