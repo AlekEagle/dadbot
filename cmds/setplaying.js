@@ -16,11 +16,13 @@ module.exports = {
                     playing: '**Playing**',
                     streaming: '**Streaming**',
                     'listening to': '**Listening To**',
-                    watching: '**Watching**'
+                    watching: '**Watching**',
+                    custom: '**Custom**',
+                    'competing in': '**Competing In**'
                 }
 
-                if (Object.keys(types).indexOf(args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')) === -1) {
-                    msg.channel.createMessage(`\`${args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')}\` is not a valid game type!`);
+                if (Object.keys(types).indexOf(args.slice(1, (args[1].toLowerCase() === 'listening' || args[1].toLowerCase() === 'competing') ? 3 : 2).join(' ')) === -1) {
+                    msg.channel.createMessage(`\`${args.slice(1, (args[1].toLowerCase() === 'listening' || args[1].toLowerCase() === 'competing') ? 3 : 2).join(' ')}\` is not a valid game type!`);
                     return;
                 }
 
@@ -28,7 +30,7 @@ module.exports = {
                 let interval = setInterval(() => {
                     grafana.remoteEval(i, `client.editStatus('${args[0]}', ${JSON.stringify({
                         name: text,
-                        type: Object.keys(types).indexOf(args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')),
+                        type: Object.keys(types).indexOf(args.slice(1, (args[1].toLowerCase() === 'listening' || args[1].toLowerCase() === 'competing') ? 3 : 2).join(' ')),
                         url: n
                     })})`);
                     if (++i === Number(process.env.instances)) {
@@ -36,7 +38,7 @@ module.exports = {
                     }
                 }, 500);
 
-                msg.channel.createMessage('I am now ' + types[args.slice(1, args[1].toLowerCase() === 'listening' ? 3 : 2).join(' ')] + ' ' + text);
+                msg.channel.createMessage('I am now ' + types[args.slice(1, (args[1].toLowerCase() === 'listening' || args[1].toLowerCase() === 'competing') ? 3 : 2).join(' ')] + ' ' + text);
             } else client.createMessage(msg.channel.id, 'You need the permission `BOT_OWNER` to use this command!')
         });
     },
