@@ -23,7 +23,7 @@ Suggestions.init({
 }, {
     sequelize: _database
 });
-Suggestions.sync({ force: true })
+Suggestions.sync({ force: false })
     .then(() => {
         console.info("Suggestions synced to database successfully!");
     })
