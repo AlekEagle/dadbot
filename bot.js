@@ -4,13 +4,12 @@ require("dotenv").config();
 const fetch = require("node-fetch"),
     CommandClient = require('eris-command-handler'),
     Sequelize = require('sequelize');
-const getCPU = require("./functions/getCPU");
 
 global._database = new Sequelize(`postgres://alek:${process.env.serverPass}@localhost:5432/alekeagle`, {
     logging: false
 });
 
-const cpuUsage = require('./functions/getCPU'),
+const getCPU = require('./functions/getCPU'),
     ms = require('ms'),
     GrafanaAPIClient = require('grafana-api-client'),
     memory = require('./functions/memoryUsage'),
