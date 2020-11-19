@@ -1,5 +1,5 @@
 'use strict';
-// Nex is a god at rl
+
 let owners = require('../functions/getOwners');
 
 module.exports = {

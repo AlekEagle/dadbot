@@ -47,31 +47,34 @@ module.exports = {
 
             emitter.once("complete", (result, isErr) => {
                 result = typeof result !== 'string' ? util.inspect(result) : result;
+                const buffer = Buffer.from(result);
                 if (result.length > 1900) {
-                    const buffer = Buffer.from(result);
                     if (buffer.length > 8388608) {
                         msg.channel.createMessage('The output is too big for a file! You\'re outta\' luck!');
                     } else {
                         msg.channel.createMessage('The output is too big to fit in a message, here\'s a file instead!', { name: 'output.txt', file: buffer });
                     }
                 } else {
-                    msg.channel.createMessage(`${isErr ? 'An error occurred:\n' : ''}\`\`\`js\n${result}\n\`\`\``);
+                    msg.channel.createMessage(`${isErr ? 'An error occurred:\n' : ''}\`\`\`js\n${result}\n\`\`\``).catch(() => {
+                        msg.channel.createMessage('The output is too big to fit in a message, here\'s a file instead!', { name: 'output.txt', file: buffer });
+                    });
                 }
             });
 
             emitter.on("timeoutError", (error, type) => {
                 error = typeof error !== "string" ? util.inspect(error) : error;
                 const extra = Date.now() - evaledAt >= 10000 ? `${msg.author.mention}! ` : "";
-
+                const buffer = Buffer.from(error);
                 if (error.length > 1900) {
-                    const buffer = Buffer.from(error);
                     if (buffer.length > 8388608) {
                         msg.channel.createMessage(`${extra} There was an error in ${type} but it was too big for a file! You\'re outta\' luck, although I did clear the ${type} for you to prevent any more errors.`);
                     } else {
-                        msg.channel.createMessage(`${extra} There was an error in ${type} but it was too big to fit in a message, here\'s a file instead! I've cleared the ${type} for you to prevent any more errors.`, { name: 'output.txt', file: buffer });
+                        msg.channel.createMessage(`${extra} There was an error in ${type} but it was too big to fit in a message, here\'s a file instead! I've also cleared the ${type} for you to prevent any more errors.`, { name: 'output.txt', file: buffer });
                     }
                 } else {
-                    msg.channel.createMessage(`${extra} Error in ${type}: \`\`\`js\n${error}\n\`\`\`\nI've cleared the ${type} for you to prevent any more errors.`);
+                    msg.channel.createMessage(`${extra} Error in ${type}: \`\`\`js\n${error}\n\`\`\`\nI've cleared the ${type} for you to prevent any more errors.`).catch(() => {
+                        msg.channel.createMessage(`${extra} There was an error in ${type} but it was too big to fit in a message, here\'s a file instead! I've also cleared the ${type} for you to prevent any more errors.`, { name: 'output.txt', file: buffer });
+                    });
                 }
             });
         }

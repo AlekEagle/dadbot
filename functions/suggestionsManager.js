@@ -93,7 +93,7 @@ module.exports = {
         });
     },
 
-    async reply(id, message, content) {
+    /* async reply(id, message, content) {
         let suggestion;
         try {
             suggestion = await Suggestions.findOne({
@@ -107,10 +107,10 @@ module.exports = {
         if (suggestion === null) throw new Error('Suggestion with that ID does not exist');
         message._client.createMessage(suggestion.channelID, `Hey <@${suggestion.userID}>! Your ${Object.keys(channels)[suggestion.type]} (linked here for reference 👉 <https://canary.discord.com/channels/${suggestion.guildID || '@me'}/${suggestion.channelID}/${suggestion.messageID}>​) got a reply from the Dad Bot Crew! Here's what they said: \n\`${content}\``);
         return await suggestion.update({ replies: suggestion.replies ? [...suggestion.replies, { replied: message.author.id, content, at: message.createdAt }] : [{ replied: message.author.id, content, at: message.createdAt }] });
-    },
+    }, */
 
     // Inline reply implementation of replying to suggestions.
-    /* async reply(id, message, content) {
+    async reply(id, message, content) {
         let suggestion;
         try {
             suggestion = await Suggestions.findOne({
@@ -124,7 +124,7 @@ module.exports = {
         if (suggestion === null) throw new Error('Suggestion with that ID does not exist');
         message._client.createMessage(suggestion.channelID, { content: `Hey! Your ${Object.keys(channels)[suggestion.type]} got a reply from the Dad Bot Crew! Here's what they said: \n\`${content}\``, messageReference: { channelID: suggestion.channelID, guildID: suggestion.guildID, messageID: suggestion.messageID }, allowedMentions: { repliedUser: !!suggestion.guildID } });
         return await suggestion.update({ replies: suggestion.replies ? [...suggestion.replies, { replied: message.author.id, content, at: message.createdAt }] : [{ replied: message.author.id, content, at: message.createdAt }] });
-    }, */
+    },
 
     async delete(id, client) {
         let suggestion;
