@@ -41,7 +41,8 @@ module.exports = {
         if (isAdmin) {
             let emitter = evaluateSafe(args.join(" ").replace(/(^(?:```(?:js\n))|(?:(?:\n?)```)$)/g, ''), {
                 "msg": msg,
-                "client": client
+                "client": client,
+                "require": require
             });
             const evaledAt = Date.now();
 
