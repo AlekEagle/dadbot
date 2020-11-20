@@ -303,6 +303,7 @@ module.exports = {
     options: {
         aliases: ['gblacklist', 'gblk', 'gb', 'blacklist', 'bl', 'blk', 'gbl'],
         fullDescription: 'Manage the global blacklist across the bots!',
-        hidden: true
+        hidden: true,
+        guildOnly: true
     }
 }
