@@ -36,9 +36,9 @@ class ReactionMenu {
         }, err => { throw err });
     }
 
-    reactionAddListener(msg, emoji, userID) {
-        if (msg.id === this.message.id && userID !== this.client.user.id) this.message.removeReaction(emoji.id ? `${emoji.name}:${emoji.id}` : emoji.name, userID).catch(() => { });
-        if (msg.id === this.message.id && this.user.includes(userID) && !this.messageChanging) this.handleReaction(emoji, userID);
+    reactionAddListener(msg, emoji, user) {
+        if (msg.id === this.message.id && user.id !== this.client.user.id) this.message.removeReaction(emoji.id ? `${emoji.name}:${emoji.id}` : emoji.name, user.id).catch(() => { });
+        if (msg.id === this.message.id && this.user.includes(user.id) && !this.messageChanging) this.handleReaction(emoji, user);
     }
 
     addReactions(message, reactions) {
@@ -58,7 +58,7 @@ class ReactionMenu {
         });
     }
 
-    async handleReaction(emoji, userID) {
+    async handleReaction(emoji, user) {
         clearTimeout(this.timeout);
         this.timeout = setTimeout(() => {
             this.message.delete();
@@ -69,7 +69,7 @@ class ReactionMenu {
             });
         }, ms(this.timeoutDur));
         if (!this.states.has(this.state)) throw new Error(`State '${this.state}' does not exist`);
-        if (this.states.get(this.state).emojis.has(emoji.id ? `${emoji.name}:${emoji.id}` : emoji.name)) await this.states.get(this.state).emojis.get(emoji.id ? `${emoji.name}:${emoji.id}` : emoji.name)(this.message, userID);
+        if (this.states.get(this.state).emojis.has(emoji.id ? `${emoji.name}:${emoji.id}` : emoji.name)) await this.states.get(this.state).emojis.get(emoji.id ? `${emoji.name}:${emoji.id}` : emoji.name)(this.message, user);
         if (typeof this.states.get(this.state).message === 'function') {
             this.message.edit((await this.states.get(this.state).message()));
         }

@@ -42,8 +42,8 @@ module.exports = {
                 }
             }
         });
-        menu.addEmoji('default', '🌆', (async (message, userID) => {
-            if (await owners.isAdmin(userID) || message.channel.guild.members.get(userID).permission.has('manageServer') || message.channel.guild.members.get(userID).permission.has('administrator')) menu.setState('serversettings');
+        menu.addEmoji('default', '🌆', (async (message, user) => {
+            if (await owners.isAdmin(user.id) || message.channel.guild.members.get(user.id).permission.has('manageServer') || message.channel.guild.members.get(user.id).permission.has('administrator')) menu.setState('serversettings');
             else {
                 menu.setState('noperms');
                 setTimeout(() => menu.setState('default'), 5000);
@@ -98,11 +98,11 @@ module.exports = {
         }));
         menu.addEmoji('serversettings', '#️⃣', () => { menu.setState('channelsettings'); selection = 0; });
         menu.addState('changeprefix');
-        menu.addEmoji('serversettings', '❗', (async (message, userID) => {
+        menu.addEmoji('serversettings', '❗', (async (message, user) => {
             menu.setState('changeprefix');
             let newMsg = await message.channel.createMessage('Say what you want the prefix to be surrounded like this: `d!` or `dad ` using this symbol ` (yes you can have spaces in the prefix)');
             async function changePrefix(messag) {
-                if (messag.author.id !== userID || messag.channel.id !== message.channel.id) return;
+                if (messag.author.id !== user.id || messag.channel.id !== message.channel.id) return;
                 client.off('messageCreate', changePrefix);
                 let prefix = messag.content.replace(/^`([\s\S]+)`$/, '$1');
                 if (prefix === client.commandOptions.prefix) {
@@ -159,11 +159,11 @@ module.exports = {
             return;
         }));
         menu.addState('changechannel');
-        menu.addEmoji('channelsettings', '🔃', (async (message, userID) => {
+        menu.addEmoji('channelsettings', '🔃', (async (message, user) => {
             menu.setState('changechannel');
             let newMsg = await message.channel.createMessage('Mention the channel or send the ID in a message to select a new channel!');
             async function checkChannel(messag) {
-                if (messag.author.id !== userID || messag.channel.id !== message.channel.id) return;
+                if (messag.author.id !== user.id || messag.channel.id !== message.channel.id) return;
                 let chanID = messag.content.replace(/^<?#?(\d+)>? ?$/, '$1');
                 if (!message.channel.guild.channels.get(chanID)) {
                     await newMsg.edit('That\'s not a valid channel, try again!');
