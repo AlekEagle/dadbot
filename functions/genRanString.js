@@ -1,11 +1,12 @@
 'use strict';
 
-module.exports = (length) => {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+module.exports = length => {
+  var text = '';
+  var possible =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-    for (var i = 0; i < length; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
+  for (var i = 0; i < length; i++)
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
 
-    return text;
-}
+  return text;
+};

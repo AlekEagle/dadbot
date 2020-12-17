@@ -3,13 +3,17 @@
 let lists = require('../functions/lists');
 
 module.exports = {
-    name: 'advice',
+  name: 'advice',
 
-    exec: (client, msg, args) => {
-        msg.channel.createMessage(lists.advice[Math.floor(Math.random() * lists.advice.length)]).catch(() => { });
-    },
+  exec: (client, msg, args) => {
+    msg.channel
+      .createMessage(
+        lists.advice[Math.floor(Math.random() * lists.advice.length)]
+      )
+      .catch(() => {});
+  },
 
-    options: {
-        description: 'Very Good Advice!'
-    }
-}
+  options: {
+    description: 'Very Good Advice!'
+  }
+};

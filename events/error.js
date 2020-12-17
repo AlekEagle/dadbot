@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = {
-    name: 'error',
+  name: 'error',
 
-    exec: (client, err) => {
-        console.error(err);
-    }
-}
+  exec: (client, err) => {
+    console.error(err);
+  }
+};

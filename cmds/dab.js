@@ -3,19 +3,24 @@
 let lists = require('../functions/lists');
 
 module.exports = {
-    name: 'dab',
+  name: 'dab',
 
-    exec: (client, msg, args) => {
-        msg.channel.createMessage({
-            embed: {
-                image: {
-                    url: lists.dadsDabbing[Math.floor(Math.random() * lists.dadsDabbing.length)]
-                }
-            }
-        }).catch(() => { });
-    },
+  exec: (client, msg, args) => {
+    msg.channel
+      .createMessage({
+        embed: {
+          image: {
+            url:
+              lists.dadsDabbing[
+                Math.floor(Math.random() * lists.dadsDabbing.length)
+              ]
+          }
+        }
+      })
+      .catch(() => {});
+  },
 
-    options: {
-        description: 'Just dads dabbing'
-    }
-}
+  options: {
+    description: 'Just dads dabbing'
+  }
+};
