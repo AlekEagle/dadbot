@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  name: 'embarass',
+  name: 'aem',
 
   exec: (client, msg, args) => {
     let user = msg.member,
@@ -9,21 +9,33 @@ module.exports = {
         .get(user.id)
         .dynamicAvatarURL('png', 2048)
         .split('?')[0];
-    msg.channel.createWebhook({ name: user.username }).then(
+    msg.channel.getWebhooks().then(
       thing => {
-        setTimeout(() => {
-          client.executeWebhook(thing.id, thing.token, {
-            content: `I don't know how to spell \`embarrass\` properly.`,
-            avatarURL: avatarURL,
-            username: user.nick ? user.nick : user.username
-          });
-          setTimeout(() => {
-            client.deleteWebhook(thing.id);
-          }, 5000);
-        }, 100);
-      },
-      () => {}
-    );
+        if (
+          !thing.length ||
+          !thing.find(t => t.type === 1)
+        ) {
+          msg.channel.createWebhook({ name: 'Dad bot' }).then(
+            webhook => {
+              client
+                .executeWebhook(webhook.id, webhook.token, {
+                  content: `I don't know how to spell \`embarrass\` properly.`,
+                  username: user.nick || user.username,
+                  avatarURL
+                }).catch(() => {});
+            }
+          ).catch(() => {});
+        } else {
+          const webhook = thing.find(wh => wh.type === 1);
+          client
+            .executeWebhook(webhook.id, webhook.token, {
+              content: `I don't know how to spell \`embarrass\` properly.`,
+              username: user.nick || user.username,
+              avatarURL
+            }).catch(() => {});
+        }
+      }
+    ).catch(() => {});
   },
 
   options: {
