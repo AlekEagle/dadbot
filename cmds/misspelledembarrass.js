@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  name: 'aem',
+  name: 'embarass',
 
   exec: (client, msg, args) => {
     let user = msg.member,
