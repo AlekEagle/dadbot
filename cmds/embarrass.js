@@ -1,6 +1,8 @@
 'use strict';
 
 let lists = require('../functions/lists');
+let getOrCreateWebhoook = require('../functions/getOrCreateWebhook');
+
 
 module.exports = {
   name: 'embarrass',
@@ -32,31 +34,13 @@ module.exports = {
       ) {
         msg.channel.createMessage(`<@${user.id}> ${embarrassingThing}`);
       } else {
-        msg.channel.getWebhooks().then(
-          thing => {
-            if (
-              !thing.length ||
-              !thing.find(t => t.type === 1)
-            ) {
-              msg.channel.createWebhook({ name: 'Dad bot' }).then(
-                webhook => {
-                  client
-                    .executeWebhook(webhook.id, webhook.token, {
-                      content: embarrassingThing,
-                      username: user.nick || user.username,
-                      avatarURL
-                    }).catch(() => {});
-                }
-              ).catch(() => {});
-            } else {
-              const webhook = thing.find(wh => wh.type === 1);
-              client
-                .executeWebhook(webhook.id, webhook.token, {
-                  content: embarrassingThing,
-                  username: user.nick || user.username,
-                  avatarURL
-                }).catch(() => {});
-            }
+        getOrCreateWebhoook(client, msg).then(
+          webhook => {
+            client.executeWebhook(webhook.id, webhook.token, {
+              content: embarrassingThing,
+              username: user.nick || user.username,
+              avatarURL
+            }).catch(() => {});
           }
         ).catch(() => {});
       }
