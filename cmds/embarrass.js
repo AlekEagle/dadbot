@@ -32,23 +32,33 @@ module.exports = {
       ) {
         msg.channel.createMessage(`<@${user.id}> ${embarrassingThing}`);
       } else {
-        msg.channel.createWebhook({ name: user.username }).then(
+        msg.channel.getWebhooks().then(
           thing => {
-            setTimeout(() => {
+            if (
+              !thing.length ||
+              !thing.find(t => t.type === 1)
+            ) {
+              msg.channel.createWebhook({ name: 'Dad bot' }).then(
+                webhook => {
+                  client
+                    .executeWebhook(webhook.id, webhook.token, {
+                      content: embarrassingThing,
+                      username: user.nick || user.username,
+                      avatarURL
+                    }).catch(() => {});
+                }
+              ).catch(() => {});
+            } else {
+              const webhook = thing.find(wh => wh.type === 1);
               client
-                .executeWebhook(thing.id, thing.token, {
+                .executeWebhook(webhook.id, webhook.token, {
                   content: embarrassingThing,
-                  avatarURL: avatarURL,
-                  username: user.nick ? user.nick : user.username
-                })
-                .catch(() => {});
-              setTimeout(() => {
-                client.deleteWebhook(thing.id);
-              }, 5000);
-            }, 100);
-          },
-          () => {}
-        );
+                  username: user.nick || user.username,
+                  avatarURL
+                }).catch(() => {});
+            }
+          }
+        ).catch(() => {});
       }
     } else
       msg.channel.createMessage(
