@@ -1,5 +1,7 @@
 'use strict';
 
+let getOrCreateWebhoook = require('../functions/getOrCreateWebhook');
+
 module.exports = {
   name: 'embarass',
 
@@ -9,31 +11,14 @@ module.exports = {
         .get(user.id)
         .dynamicAvatarURL('png', 2048)
         .split('?')[0];
-    msg.channel.getWebhooks().then(
-      thing => {
-        if (
-          !thing.length ||
-          !thing.find(t => t.type === 1)
-        ) {
-          msg.channel.createWebhook({ name: 'Dad bot' }).then(
-            webhook => {
-              client
-                .executeWebhook(webhook.id, webhook.token, {
-                  content: `I don't know how to spell \`embarrass\` properly.`,
-                  username: user.nick || user.username,
-                  avatarURL
-                }).catch(() => {});
-            }
-          ).catch(() => {});
-        } else {
-          const webhook = thing.find(wh => wh.type === 1);
-          client
-            .executeWebhook(webhook.id, webhook.token, {
-              content: `I don't know how to spell \`embarrass\` properly.`,
-              username: user.nick || user.username,
-              avatarURL
-            }).catch(() => {});
-        }
+
+    getOrCreateWebhoook(client, msg).then(
+      webhook => {
+        client.executeWebhook(webhook.id, webhook.token, {
+          content: "I don't know how to spell `embarrass` properly.",
+          username: user.nick || user.username,
+          avatarURL
+        }).catch(() => {});
       }
     ).catch(() => {});
   },
