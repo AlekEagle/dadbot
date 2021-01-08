@@ -4,6 +4,10 @@ module.exports = {
   name: 'embarass',
 
   exec: (client, msg, args) => {
+    msg.channel.createMessage(
+      'This command is currently disabled until AlekEagle can fix the command and make it not violate ratelimits (it caused the bot to crash)'
+    );
+    return;
     let user = msg.member,
       avatarURL = client.users
         .get(user.id)
