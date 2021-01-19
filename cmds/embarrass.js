@@ -11,7 +11,7 @@ module.exports = {
     if (msg.channel.permissionsOf(client.user.id).has('manageWebhooks')) {
       let random = Math.floor(Math.random() * lists.embarrassingThings.length),
         user = msg.member;
-      if (msg.mentions[0] instanceof Eris.ExtendedUser) {
+      if (msg.mentions[0] instanceof Eris.User) {
         user = msg.channel.guild.members.get(msg.mentions[0].id);
       }
       if (random > 1) {
