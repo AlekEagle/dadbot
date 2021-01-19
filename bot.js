@@ -47,7 +47,7 @@ process.on('SIGINT', () => {
 
 setTimeout(() => {
   if (!process.env.DEBUG) {
-    fetch('https://discord.com/api/v6/gateway/bot', {
+    fetch('https://discord.com/api/v8/gateway/bot', {
       method: 'GET',
       headers: {
         Authorization: 'Bot ' + process.env.token

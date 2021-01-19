@@ -1,57 +1,33 @@
 'use strict';
 
-let lists = require('../functions/lists');
+const Eris = require('eris'),
+  lists = require('../functions/lists'),
+  webhookUtils = require('../functions/webhookUtils');
 
 module.exports = {
   name: 'embarrass',
 
-  exec: (client, msg, args) => {
-    msg.channel.createMessage(
-      'This command is currently disabled until AlekEagle can fix the command and make it not violate ratelimits (it caused the bot to crash)'
-    );
-    return;
-    var user;
-    if (
-      args[0] &&
-      msg.channel.guild.members.get(args[0].replace(/(<@!?|>)/g, '')) !==
-        undefined
-    ) {
-      args[0] = args[0].replace(/(<@!?|>)/g, '');
-      user = msg.channel.guild.members.get(args[0]);
-    } else {
-      user = msg.member;
-    }
-    var avatarURL = client.users
-      .get(user.id)
-      .dynamicAvatarURL('png', 2048)
-      .split('?')[0];
+  exec: async (client, msg, args) => {
     if (msg.channel.permissionsOf(client.user.id).has('manageWebhooks')) {
-      var embarrassingThing =
-        lists.embarrassingThings[
-          Math.floor(Math.random() * lists.embarrassingThings.length)
-        ];
-      if (
-        lists.embarrassingThings[0] === embarrassingThing ||
-        lists.embarrassingThings[1] === embarrassingThing
-      ) {
-        msg.channel.createMessage(`<@${user.id}> ${embarrassingThing}`);
+      let random = Math.floor(Math.random() * lists.embarrassingThings.length),
+        user = msg.member;
+      if (msg.mentions[0] instanceof Eris.ExtendedUser) {
+        user = msg.channel.guild.members.get(msg.mentions[0].id);
+      }
+      if (random > 1) {
+        let dadhook = await webhookUtils.getGuildDadhook(msg.channel.guild);
+
+        (await dadhook.changeChannel(msg.channel.id)).send({
+          content: lists.embarrassingThings[random],
+          avatarURL: user.user.dynamicAvatarURL('png', 2048),
+          username:
+            user.nickname && user.nickname.length > 1
+              ? user.nickname
+              : user.username
+        });
       } else {
-        msg.channel.createWebhook({ name: user.username }).then(
-          thing => {
-            setTimeout(() => {
-              client
-                .executeWebhook(thing.id, thing.token, {
-                  content: embarrassingThing,
-                  avatarURL: avatarURL,
-                  username: user.nick ? user.nick : user.username
-                })
-                .catch(() => {});
-              setTimeout(() => {
-                client.deleteWebhook(thing.id);
-              }, 5000);
-            }, 100);
-          },
-          () => {}
+        msg.channel.createMessage(
+          `${user.mention} ${lists.embarrassingThings[random]}`
         );
       }
     } else
