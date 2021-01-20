@@ -21,9 +21,7 @@ module.exports = {
           content: lists.embarrassingThings[random],
           avatarURL: user.user.dynamicAvatarURL('png', 2048),
           username:
-            user.nickname && user.nickname.length > 1
-              ? user.nickname
-              : user.username
+            user.nick && user.nick.length > 1 ? user.nick : user.username
         });
       } else {
         msg.channel.createMessage(
