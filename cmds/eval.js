@@ -1,8 +1,10 @@
 'use strict';
 
-const owners = require('../functions/getOwners');
-const util = require('util');
-const AsyncFunction = Object.getPrototypeOf(async function () {}).constructor;
+const owners = require('../functions/getOwners'),
+  util = require('util'),
+  AsyncFunction = Object.getPrototypeOf(async function () {}).constructor,
+  fetch = require('node-fetch'),
+  formdata = require('form-data');
 
 function evaluateSafe(code, args) {
   const emitter = new (require('events'))();
@@ -72,10 +74,21 @@ module.exports = {
               "The output is too big for a file! You're outta' luck!"
             );
           } else {
-            msg.channel.createMessage(
-              "The output is too big to fit in a message, here's a file instead!",
-              { name: 'output.txt', file: buffer }
-            );
+            let fileFormData = new formdata();
+            fileFormData.append('file', buffer, 'eval output.txt');
+            fetch('https://alekeagle.me/api/upload', {
+              method: 'POST',
+              body: fileFormData,
+              headers: {
+                Authorization: process.env.alekeagleMEToken
+              }
+            })
+              .then(res => res.text())
+              .then(url => {
+                msg.channel.createMessage(
+                  `The output is too big to fit in a message, here's a file instead! ${url}`
+                );
+              });
           }
         } else {
           msg.channel
@@ -85,10 +98,21 @@ module.exports = {
               }\`\`\`js\n${result}\n\`\`\``
             )
             .catch(() => {
-              msg.channel.createMessage(
-                "The output is too big to fit in a message, here's a file instead!",
-                { name: 'output.txt', file: buffer }
-              );
+              let fileFormData = new formdata();
+              fileFormData.append('file', buffer, 'eval output.txt');
+              fetch('https://alekeagle.me/api/upload', {
+                method: 'POST',
+                body: fileFormData,
+                headers: {
+                  Authorization: process.env.alekeagleMEToken
+                }
+              })
+                .then(res => res.text())
+                .then(url => {
+                  msg.channel.createMessage(
+                    `The output is too big to fit in a message, here's a file instead! ${url}`
+                  );
+                });
             });
         }
       });
@@ -99,26 +123,42 @@ module.exports = {
           Date.now() - evaledAt >= 10000 ? `${msg.author.mention}! ` : '';
         const buffer = Buffer.from(error);
         if (error.length > 1900) {
-          if (buffer.length > 8388608) {
-            msg.channel.createMessage(
-              `${extra} There was an error in ${type} but it was too big for a file! You\'re outta\' luck, although I did clear the ${type} for you to prevent any more errors.`
-            );
-          } else {
-            msg.channel.createMessage(
-              `${extra} There was an error in ${type} but it was too big to fit in a message, here\'s a file instead! I've also cleared the ${type} for you to prevent any more errors.`,
-              { name: 'output.txt', file: buffer }
-            );
-          }
+          let fileFormData = new formdata();
+          fileFormData.append('file', buffer, 'eval output.txt');
+          fetch('https://alekeagle.me/api/upload', {
+            method: 'POST',
+            body: fileFormData,
+            headers: {
+              Authorization: process.env.alekeagleMEToken
+            }
+          })
+            .then(res => res.text())
+            .then(url => {
+              msg.channel.createMessage(
+                `${extra} There was an error in ${type} but it was too big to fit in a message, here\'s a file instead! ${url} I've also cleared the ${type} for you to prevent any more errors.`
+              );
+            });
         } else {
           msg.channel
             .createMessage(
               `${extra} Error in ${type}: \`\`\`js\n${error}\n\`\`\`\nI've cleared the ${type} for you to prevent any more errors.`
             )
             .catch(() => {
-              msg.channel.createMessage(
-                `${extra} There was an error in ${type} but it was too big to fit in a message, here\'s a file instead! I've also cleared the ${type} for you to prevent any more errors.`,
-                { name: 'output.txt', file: buffer }
-              );
+              let fileFormData = new formdata();
+              fileFormData.append('file', buffer, 'eval output.txt');
+              fetch('https://alekeagle.me/api/upload', {
+                method: 'POST',
+                body: fileFormData,
+                headers: {
+                  Authorization: process.env.alekeagleMEToken
+                }
+              })
+                .then(res => res.text())
+                .then(url => {
+                  msg.channel.createMessage(
+                    `${extra} There was an error in ${type} but it was too big to fit in a message, here\'s a file instead! ${url} I've also cleared the ${type} for you to prevent any more errors.`
+                  );
+                });
             });
         }
       });
