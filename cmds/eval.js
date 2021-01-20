@@ -69,27 +69,21 @@ module.exports = {
         result = typeof result !== 'string' ? util.inspect(result) : result;
         const buffer = Buffer.from(result);
         if (result.length > 1900) {
-          if (buffer.length > 8388608) {
-            msg.channel.createMessage(
-              "The output is too big for a file! You're outta' luck!"
-            );
-          } else {
-            let fileFormData = new formdata();
-            fileFormData.append('file', buffer, 'eval output.txt');
-            fetch('https://alekeagle.me/api/upload', {
-              method: 'POST',
-              body: fileFormData,
-              headers: {
-                Authorization: process.env.alekeagleMEToken
-              }
-            })
-              .then(res => res.text())
-              .then(url => {
-                msg.channel.createMessage(
-                  `The output is too big to fit in a message, here's a file instead! ${url}`
-                );
-              });
-          }
+          let fileFormData = new formdata();
+          fileFormData.append('file', buffer, 'eval output.txt');
+          fetch('https://alekeagle.me/api/upload', {
+            method: 'POST',
+            body: fileFormData,
+            headers: {
+              Authorization: process.env.alekeagleMEToken
+            }
+          })
+            .then(res => res.text())
+            .then(url => {
+              msg.channel.createMessage(
+                `The output is too big to fit in a message, here's a file instead! ${url}`
+              );
+            });
         } else {
           msg.channel
             .createMessage(
