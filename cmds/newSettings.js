@@ -98,7 +98,7 @@ module.exports = {
                 return {
                   name: `${selection === o ? '> ' : ''}${i}`,
                   value: `is currently set to \`${
-                    settings.getFlags(setngs.flags).includes(i)
+                    settings.toFlagsArray(setngs.flags).includes(i)
                       ? 'ENABLED'
                       : 'DISABLED'
                   }\``
@@ -128,15 +128,17 @@ module.exports = {
     });
     menu.addEmoji('serversettings', '⏺', async () => {
       let newSettings = await settings.getValueByID(msg.channel.guild.id);
-      let newFlags = settings.getFlags(newSettings.flags);
+      let newFlags = settings.toFlagsArray(newSettings.flags);
       if (
-        settings.getFlags(newSettings.flags).includes(settings.flags[selection])
+        settings
+          .toFlagsArray(newSettings.flags)
+          .includes(settings.flags[selection])
       ) {
         delete newFlags[newFlags.indexOf(settings.flags[selection])];
       } else {
         newFlags.push(settings.flags[selection]);
       }
-      newSettings.flags = settings.toFlags(newFlags);
+      newSettings.flags = settings.toFlagsInt(newFlags);
       await settings.updateValue({
         id: newSettings.id,
         flags: newSettings.flags,
@@ -205,7 +207,7 @@ module.exports = {
                 return {
                   name: `${selection === o ? '> ' : ''}${i}`,
                   value: `is currently set to \`${
-                    settings.getFlags(setngs.flags).includes(i)
+                    settings.toFlagsArray(setngs.flags).includes(i)
                       ? 'ENABLED'
                       : 'DISABLED'
                   }\``
@@ -235,15 +237,17 @@ module.exports = {
     });
     menu.addEmoji('channelsettings', '⏺', async () => {
       let newSettings = await settings.getValueByID(channelSelection);
-      let newFlags = settings.getFlags(newSettings.flags);
+      let newFlags = settings.toFlagsArray(newSettings.flags);
       if (
-        settings.getFlags(newSettings.flags).includes(settings.flags[selection])
+        settings
+          .toFlagsArray(newSettings.flags)
+          .includes(settings.flags[selection])
       ) {
         delete newFlags[newFlags.indexOf(settings.flags[selection])];
       } else {
         newFlags.push(settings.flags[selection]);
       }
-      newSettings.flags = settings.toFlags(newFlags);
+      newSettings.flags = settings.toFlagsInt(newFlags);
       await settings.updateValue({
         id: newSettings.id,
         flags: newSettings.flags,
@@ -309,7 +313,7 @@ module.exports = {
                 return {
                   name: `${selection === o ? '> ' : ''}${i}`,
                   value: `is currently set to \`${
-                    settings.getFlags(setngs.flags).includes(i)
+                    settings.toFlagsArray(setngs.flags).includes(i)
                       ? 'ENABLED'
                       : 'DISABLED'
                   }\``
@@ -333,15 +337,17 @@ module.exports = {
     });
     menu.addEmoji('usersettings', '⏺', async () => {
       let newSettings = await settings.getValueByID(msg.author.id);
-      let newFlags = settings.getFlags(newSettings.flags);
+      let newFlags = settings.toFlagsArray(newSettings.flags);
       if (
-        settings.getFlags(newSettings.flags).includes(settings.flags[selection])
+        settings
+          .toFlagsArray(newSettings.flags)
+          .includes(settings.flags[selection])
       ) {
         delete newFlags[newFlags.indexOf(settings.flags[selection])];
       } else {
         newFlags.push(settings.flags[selection]);
       }
-      newSettings.flags = settings.toFlags(newFlags);
+      newSettings.flags = settings.toFlagsInt(newFlags);
       await settings.updateValue({
         id: newSettings.id,
         flags: newSettings.flags,

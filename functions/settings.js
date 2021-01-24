@@ -37,14 +37,14 @@ Options.findAll().then(settings => {
 });
 
 module.exports = {
-  getFlags: flags => {
+  toFlagsArray: flags => {
     let flagArray = [];
     for (let i in flagNames) {
       if (((flags >> i) & 1) == 1) flagArray.push(flagNames[i]);
     }
     return flagArray;
   },
-  toFlags: flagArray => {
+  toFlagsInt: flagArray => {
     let flags = 0;
     flagArray.forEach(it => {
       flags += 1 << flagNames.indexOf(it);
@@ -63,7 +63,7 @@ module.exports = {
         cache[id] = {
           id,
 
-          flags: module.exports.toFlags([
+          flags: module.exports.toFlagsInt([
             'IM_RESPONSES',
 
             'KYS_RESPONSES',
@@ -75,7 +75,7 @@ module.exports = {
         };
         resolve({
           id,
-          flags: module.exports.toFlags([
+          flags: module.exports.toFlagsInt([
             'IM_RESPONSES',
             'KYS_RESPONSES',
             'SHUT_UP_RESPONSES',
@@ -91,7 +91,7 @@ module.exports = {
   updateValue: async options => {
     if (
       options.flags ===
-      module.exports.toFlags([
+      module.exports.toFlagsInt([
         'IM_RESPONSES',
         'KYS_RESPONSES',
         'SHUT_UP_RESPONSES',

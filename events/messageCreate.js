@@ -10,18 +10,19 @@ module.exports = {
 
   exec: (client, msg) => {
     ++nums.msgsRead;
-    try {
+    /* try {
       var u = msg.member;
       if (!u) return;
       settings.getValueByID(msg.channel.guild.id).then(chanStat => {
         settings.getValueByID(msg.channel.id).then(stat => {
           if (
-            !settings.getFlags(stat.flags).includes('PASTA_MODE') &&
-            !settings.getFlags(chanStat.flags).includes('PASTA_MODE')
+            !settings.toFlagsArray(stat.flags).includes('PASTA_MODE') &&
+            !settings.toFlagsArray(chanStat.flags).includes('PASTA_MODE')
           )
             return;
           settings.getValueByID(msg.author.id).then(stat => {
-            if (settings.getFlags(stat.flags).includes('PASTA_MODE')) return;
+            if (settings.toFlagsArray(stat.flags).includes('PASTA_MODE'))
+              return;
             globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
               if (stat) return;
               globalBlacklist.getValueByID(msg.channel.id).then(stat => {
@@ -40,7 +41,7 @@ module.exports = {
           });
         });
       });
-    } catch (err) {}
+    } catch (err) {} */
     if (msg.author.bot) return;
     if (!msg.channel.guild) {
       return;
@@ -66,54 +67,55 @@ module.exports = {
       return;
     }
     settings.getValueByID(msg.channel.guild.id).then(stat => {
-      if (!settings.getFlags(stat.flags).includes('IM_RESPONSES')) return;
+      if (!settings.toFlagsArray(stat.flags).includes('IM_RESPONSES')) return;
       if (
         msg.content.match(/\bplaying\b/i) &&
-        settings.getFlags(stat.flags).includes('WINNING_RESPONSES')
+        settings.toFlagsArray(stat.flags).includes('WINNING_RESPONSES')
       )
         return;
       if (
         msg.content.match(/\bplayed\b/i) &&
-        settings.getFlags(stat.flags).includes('WINNING_RESPONSES')
+        settings.toFlagsArray(stat.flags).includes('WINNING_RESPONSES')
       )
         return;
       if (
         msg.content.match(/\bplay\b/i) &&
-        settings.getFlags(stat.flags).includes('WINNING_RESPONSES')
+        settings.toFlagsArray(stat.flags).includes('WINNING_RESPONSES')
       )
         return;
       settings.getValueByID(msg.channel.id).then(stat => {
-        if (!settings.getFlags(stat.flags).includes('IM_RESPONSES')) return;
+        if (!settings.toFlagsArray(stat.flags).includes('IM_RESPONSES')) return;
         if (
           msg.content.match(/\bplaying\b/i) &&
-          settings.getFlags(stat.flags).includes('WINNING_RESPONSES')
+          settings.toFlagsArray(stat.flags).includes('WINNING_RESPONSES')
         )
           return;
         if (
           msg.content.match(/\bplayed\b/i) &&
-          settings.getFlags(stat.flags).includes('WINNING_RESPONSES')
+          settings.toFlagsArray(stat.flags).includes('WINNING_RESPONSES')
         )
           return;
         if (
           msg.content.match(/\bplay\b/i) &&
-          settings.getFlags(stat.flags).includes('WINNING_RESPONSES')
+          settings.toFlagsArray(stat.flags).includes('WINNING_RESPONSES')
         )
           return;
         settings.getValueByID(msg.author.id).then(stat => {
-          if (!settings.getFlags(stat.flags).includes('IM_RESPONSES')) return;
+          if (!settings.toFlagsArray(stat.flags).includes('IM_RESPONSES'))
+            return;
           if (
             msg.content.match(/\bplaying\b/i) &&
-            settings.getFlags(stat.flags).includes('WINNING_RESPONSES')
+            settings.toFlagsArray(stat.flags).includes('WINNING_RESPONSES')
           )
             return;
           if (
             msg.content.match(/\bplayed\b/i) &&
-            settings.getFlags(stat.flags).includes('WINNING_RESPONSES')
+            settings.toFlagsArray(stat.flags).includes('WINNING_RESPONSES')
           )
             return;
           if (
             msg.content.match(/\bplay\b/i) &&
-            settings.getFlags(stat.flags).includes('WINNING_RESPONSES')
+            settings.toFlagsArray(stat.flags).includes('WINNING_RESPONSES')
           )
             return;
           globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
@@ -198,11 +200,13 @@ module.exports = {
     });
 
     settings.getValueByID(msg.channel.guild.id).then(stat => {
-      if (!settings.getFlags(stat.flags).includes('KYS_RESPONSES')) return;
+      if (!settings.toFlagsArray(stat.flags).includes('KYS_RESPONSES')) return;
       settings.getValueByID(msg.channel.id).then(stat => {
-        if (!settings.getFlags(stat.flags).includes('KYS_RESPONSES')) return;
+        if (!settings.toFlagsArray(stat.flags).includes('KYS_RESPONSES'))
+          return;
         settings.getValueByID(msg.author.id).then(stat => {
-          if (!settings.getFlags(stat.flags).includes('KYS_RESPONSES')) return;
+          if (!settings.toFlagsArray(stat.flags).includes('KYS_RESPONSES'))
+            return;
           globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
             if (stat) return;
             globalBlacklist.getValueByID(msg.channel.id).then(stat => {
@@ -232,12 +236,13 @@ module.exports = {
     });
 
     settings.getValueByID(msg.channel.guild.id).then(stat => {
-      if (!settings.getFlags(stat.flags).includes('SHUT_UP_RESPONSES')) return;
+      if (!settings.toFlagsArray(stat.flags).includes('SHUT_UP_RESPONSES'))
+        return;
       settings.getValueByID(msg.channel.id).then(stat => {
-        if (!settings.getFlags(stat.flags).includes('SHUT_UP_RESPONSES'))
+        if (!settings.toFlagsArray(stat.flags).includes('SHUT_UP_RESPONSES'))
           return;
         settings.getValueByID(msg.author.id).then(stat => {
-          if (!settings.getFlags(stat.flags).includes('SHUT_UP_RESPONSES'))
+          if (!settings.toFlagsArray(stat.flags).includes('SHUT_UP_RESPONSES'))
             return;
           globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
             if (stat) return;
@@ -273,12 +278,13 @@ module.exports = {
     });
 
     settings.getValueByID(msg.channel.guild.id).then(stat => {
-      if (!settings.getFlags(stat.flags).includes('WINNING_RESPONSES')) return;
+      if (!settings.toFlagsArray(stat.flags).includes('WINNING_RESPONSES'))
+        return;
       settings.getValueByID(msg.channel.id).then(stat => {
-        if (!settings.getFlags(stat.flags).includes('WINNING_RESPONSES'))
+        if (!settings.toFlagsArray(stat.flags).includes('WINNING_RESPONSES'))
           return;
         settings.getValueByID(msg.author.id).then(stat => {
-          if (!settings.getFlags(stat.flags).includes('WINNING_RESPONSES'))
+          if (!settings.toFlagsArray(stat.flags).includes('WINNING_RESPONSES'))
             return;
           globalBlacklist.getValueByID(msg.channel.guild.id).then(stat => {
             if (stat) return;
