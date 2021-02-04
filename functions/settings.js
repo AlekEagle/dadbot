@@ -25,7 +25,6 @@ const flagNames = [
     'IM_RESPONSES',
     'KYS_RESPONSES',
     'SHUT_UP_RESPONSES',
-    'PASTA_MODE',
     'WINNING_RESPONSES'
   ],
   cache = {};

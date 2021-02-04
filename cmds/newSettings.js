@@ -297,7 +297,7 @@ module.exports = {
           embed: {
             title: 'User Settings',
             description:
-              'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use ⏹ to go back to the main menu. PASTA_MODE in this menu means pasta mode Immunity.',
+              'Use ⬆️ and ⬇️ to select what to change and use ⏺ to toggle your selection! Use ⏹ to go back to the main menu.',
             thumbnail: {
               url: msg.author.dynamicAvatarURL(
                 msg.author.avatar
