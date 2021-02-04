@@ -37,6 +37,7 @@ Options.findAll().then(settings => {
 });
 
 module.exports = {
+  Options,
   toFlagsArray: flags => {
     let flagArray = [];
     for (let i in flagNames) {
