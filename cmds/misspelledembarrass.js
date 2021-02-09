@@ -11,11 +11,11 @@ module.exports = {
 
       (await dadhook.changeChannel(msg.channel.id)).send({
         content: `I don't know how to spell \`embarrass\` properly.`,
-        avatarURL: user.user.dynamicAvatarURL('png', 2048),
+        avatarURL: msg.member.user.dynamicAvatarURL('png', 2048),
         username:
-          user.nickname && user.nickname.length > 1
-            ? user.nickname
-            : user.username
+          msg.member.nickname && msg.member.nickname.length > 1
+            ? msg.member.nickname
+            : msg.member.username
       });
     }
   },
