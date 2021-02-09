@@ -13,8 +13,8 @@ module.exports = {
         content: `I don't know how to spell \`embarrass\` properly.`,
         avatarURL: msg.member.user.dynamicAvatarURL('png', 2048),
         username:
-          msg.member.nickname && msg.member.nickname.length > 1
-            ? msg.member.nickname
+          msg.member.nick && msg.member.nick.length > 1
+            ? msg.member.nick
             : msg.member.username
       });
     }
