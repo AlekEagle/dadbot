@@ -48,7 +48,6 @@ module.exports = {
     }
 
     if (
-      msg.channel.guild.id === '456542159210807307' &&
       msg.content.match(
         /[\s\S]*?\b([i|l|\|]'?’?m|[i|l|\|] am)\b[\s\S]*?@(everyone|here)[\s\S]*/i
       )
