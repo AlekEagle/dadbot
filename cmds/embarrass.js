@@ -39,6 +39,8 @@ module.exports = {
     fullDescription:
       'it just embarrasses you, what else do you need help with?',
     guildOnly: true,
-    usage: '[user mention|userID]'
+    usage: '[user mention|userID]',
+    cooldown: 10000,
+    cooldownMessage: "It's really hard doing impressions, give me a little bit, okay?"
   }
 };
