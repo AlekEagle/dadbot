@@ -187,7 +187,7 @@ module.exports = {
       'embarax',
       'embarac'
     ],
-    hidden: true,,
+    hidden: true,
     cooldown: 10000,
     cooldownMessage: ""
   }
