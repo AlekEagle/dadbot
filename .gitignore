@@ -12,3 +12,4 @@ deploy.sh
 .env
 debug.log
 websocket.log
+functions/Sentry.js

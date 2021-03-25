@@ -1,5 +1,6 @@
 'use strict';
 
+require('./functions/Sentry');
 require('dotenv').config();
 const fetch = require('node-fetch'),
   CommandClient = require('eris-command-handler'),
@@ -19,7 +20,6 @@ const getCPU = require('./functions/getCPU'),
   globalBlacklist = require('./functions/globalBlacklist'),
   stats = require('./functions/commandStatistics'),
   prefixes = require('./functions/managePrefixes'),
-  Sentry = require('@sentry/node'),
   fs = require('fs');
 
 let client;
@@ -121,10 +121,6 @@ function clusterStatusUpdate(connected) {
 }
 
 grafana.on('clusterStatusUpdate', clusterStatusUpdate);
-
-Sentry.init({
-  dsn: 'https://81fb39c6a5904886ba26a90e2a6ea8aa@sentry.io/1407724'
-});
 
 grafana.on('remoteEval', (data, callback) => {
   let evaluation;
