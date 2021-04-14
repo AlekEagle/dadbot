@@ -59,7 +59,7 @@ module.exports = {
         (await owners.isAdmin(user.id)) ||
         message.channel.guild.members
           .get(user.id)
-          .permission.has('manageServer') ||
+          .permission.has('manageGuild') ||
         message.channel.guild.members
           .get(user.id)
           .permission.has('administrator')
