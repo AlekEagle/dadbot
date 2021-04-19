@@ -85,8 +85,8 @@ module.exports = {
       let channel = guild.channels.filter(
           c =>
             c.type === Eris.Constants.ChannelTypes.GUILD_TEXT &&
-            c.permissionsOf(client.user.id).has('manageWebhooks') &&
-            c.permissionsOf(client.user.id).has('readMessages')
+            c.permissionsOf(guild._client.user.id).has('manageWebhooks') &&
+            c.permissionsOf(guild._client.user.id).has('readMessages')
         )[0],
         avatar =
           'data:image/png;base64,' +
