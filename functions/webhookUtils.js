@@ -83,7 +83,9 @@ module.exports = {
     let webhooks = await guild.getWebhooks();
     if (!webhooks.find(w => w.name === webhookName)) {
       let channel = guild.channels.filter(
-          c => c.type === Eris.Constants.ChannelTypes.GUILD_TEXT
+          c =>
+            c.type === Eris.Constants.ChannelTypes.GUILD_TEXT &&
+            c.permissionsOf(client.user.id).has('manageWebhooks')
         )[0],
         avatar =
           'data:image/png;base64,' +
