@@ -100,12 +100,9 @@ module.exports = {
         }
       ]
     });
-    setInterval(() => {
-      api.postStats({
-        serverCount: client.guilds.filter(g => g.shard.id === guild.shard.id).length,
-        shardCount: Number(process.env.totalShards)
-      })
-
-    }, 2100000);
+    api.postStats({
+      serverCount: client.guilds.filter(g => g.shard.id === guild.shard.id).length,
+      shardCount: Number(process.env.totalShards)
+    });
   }
 };
