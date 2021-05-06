@@ -47,23 +47,23 @@ module.exports = {
             .reverse()[0]
             ? Object.keys(overallShardStatus)
                 .map(k => `${k}: ${overallShardStatus[k]}`)
-                .join(', ').length < 6
+                .join(', ').length < 7
               ? ''
               : ' '.repeat(
                   Object.keys(overallShardStatus)
                     .map(k => `${k}: ${overallShardStatus[k]}`)
-                    .join(', ').length - 6
+                    .join(', ').length - 7
                 )
             : shards
                 .map(s => s.status.length)
                 .sort((a, b) => a - b)
-                .reverse()[0] < 6
+                .reverse()[0] < 7
             ? ''
             : ' '.repeat(
                 shards
                   .map(s => s.status.length)
                   .sort((a, b) => a - b)
-                  .reverse()[0] - 6
+                  .reverse()[0] - 7
               )
         }|PING     \n-----+-------+-------+------${
           Object.keys(overallShardStatus)
@@ -75,23 +75,23 @@ module.exports = {
             .reverse()[0]
             ? Object.keys(overallShardStatus)
                 .map(k => `${k}: ${overallShardStatus[k]}`)
-                .join(', ').length < 6
+                .join(', ').length < 7
               ? ''
               : '-'.repeat(
                   Object.keys(overallShardStatus)
                     .map(k => `${k}: ${overallShardStatus[k]}`)
-                    .join(', ').length - 6
+                    .join(', ').length - 7
                 )
             : shards
                 .map(s => s.status.length)
                 .sort((a, b) => a - b)
-                .reverse()[0] < 6
+                .reverse()[0] < 7
             ? ''
             : '-'.repeat(
                 shards
                   .map(s => s.status.length)
                   .sort((a, b) => a - b)
-                  .reverse()[0] - 6
+                  .reverse()[0] - 7
               )
         }+------`
       ];
@@ -120,9 +120,9 @@ module.exports = {
                 ? shards
                     .map(s => s.status.length)
                     .sort((a, b) => a - b)
-                    .reverse()[0] < 6
+                    .reverse()[0] < 7
                   ? ' '.repeat(
-                      6 -
+                      7 -
                         shards
                           .map(s => s.status.length)
                           .sort((a, b) => a - b)
@@ -135,7 +135,7 @@ module.exports = {
                         .reverse()[0] - s.status.toUpperCase().length
                     )
                 : ' '.repeat(
-                    6 -
+                    7 -
                       Object.keys(overallShardStatus)
                         .map(k => `${k}: ${overallShardStatus[k]}`)
                         .join(', ').length -
@@ -186,9 +186,9 @@ module.exports = {
           .join(', ').length
           ? Object.keys(overallShardStatus)
               .map(k => `${k}: ${overallShardStatus[k]}`)
-              .join(', ').length < 6
+              .join(', ').length < 7
             ? ' '.repeat(
-                6 -
+                7 -
                   Object.keys(overallShardStatus)
                     .map(k => `${k}: ${overallShardStatus[k]}`)
                     .join(', ').length
