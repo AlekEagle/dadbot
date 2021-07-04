@@ -1,7 +1,7 @@
 'use strict';
 
 let DBL = require('@top-gg/sdk');
-const api = new DBL.Api(process.env.dblToken)
+const api = new DBL.Api(process.env.dblToken);
 
 module.exports = {
   name: 'guildDelete',
@@ -25,36 +25,38 @@ module.exports = {
             )
           },
           author: {
-            name: `${client.users.get(guild.ownerID)
-              ? client.users.get(guild.ownerID).username
-              : 'Not Cached'
-              }#${client.users.get(guild.ownerID)
+            name: `${
+              client.users.get(guild.ownerID)
+                ? client.users.get(guild.ownerID).username
+                : 'Not Cached'
+            }#${
+              client.users.get(guild.ownerID)
                 ? client.users.get(guild.ownerID).discriminator
                 : '0000'
-              }`,
+            }`,
             icon_url: client.users.get(guild.ownerID)
               ? client.users
-                .get(guild.ownerID)
-                .dynamicAvatarURL(
-                  client.users.get(guild.ownerID).avatar
-                    ? client.users.get(guild.ownerID).avatar.startsWith('a_')
-                      ? 'gif'
-                      : 'png'
-                    : 'png',
-                  256
-                )
+                  .get(guild.ownerID)
+                  .dynamicAvatarURL(
+                    client.users.get(guild.ownerID).avatar
+                      ? client.users.get(guild.ownerID).avatar.startsWith('a_')
+                        ? 'gif'
+                        : 'png'
+                      : 'png',
+                    256
+                  )
               : client.user.defaultAvatarURL,
             url: client.users.get(guild.ownerID)
               ? client.users
-                .get(guild.ownerID)
-                .dynamicAvatarURL(
-                  client.users.get(guild.ownerID).avatar
-                    ? client.users.get(guild.ownerID).avatar.startsWith('a_')
-                      ? 'gif'
-                      : 'png'
-                    : 'png',
-                  256
-                )
+                  .get(guild.ownerID)
+                  .dynamicAvatarURL(
+                    client.users.get(guild.ownerID).avatar
+                      ? client.users.get(guild.ownerID).avatar.startsWith('a_')
+                        ? 'gif'
+                        : 'png'
+                      : 'png',
+                    256
+                  )
               : client.user.defaultAvatarURL
           },
           fields: [
@@ -102,8 +104,10 @@ module.exports = {
       ]
     });
     api.postStats({
-      serverCount: client.guilds.filter(g => g.shard.id === guild.shard.id).length,
-      shardCount: Number(process.env.totalShards)
+      serverCount: client.guilds.filter(g => g.shard.id === guild.shard.id)
+        .length,
+      shardCount: Number(process.env.totalShards),
+      shardId: guild.shard.id
     });
   }
 };
