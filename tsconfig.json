@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "es5",
+    "allowJs": true,
+    "rootDir": "./src/",
+    "resolveJsonModule": true,
+    "typeRoots": ["./src/types"],
+    "alwaysStrict": true
+  }
+}
