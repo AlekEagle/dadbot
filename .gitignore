@@ -13,3 +13,4 @@ deploy.sh
 debug.log
 websocket.log
 functions/Sentry.js
+dist
