@@ -1,7 +1,20 @@
 import envConfig from './utils/dotenv';
-import {Client, Message, MessageContent, TextableChannel} from "eris";
-import { format } from 'path/posix';
-//import './utils/Sentry';
+import { Message, MessageContent, TextableChannel } from "eris";
+import ECH from 'eris-command-handler';
+import Events from './events';
+import Commands from './commands';
+import Options from './utils/DB/Options';
+
+import Logger, { Level } from './utils/Logger';
+
+global.console = new Logger(process.env.DEBUG ? Level.DEBUG : Level.WARN) as any;
+
+(async function () {
+  if (process.env.DEBUG) return;
+  await import('./utils/Sentry');
+})();
+
+envConfig();
 
 async function typeSend(channel: TextableChannel, content: MessageContent) {
   await wait(randomBoolean(0.6) ? randomRange(300, 500) : randomRange(1000, 3000));
@@ -29,9 +42,9 @@ function wait(time: number) {
 }
 
 const IM_MATCH = /(im|i'm|i\s+am)\s+([\w\W]*)/i;
-const FORMAT_MATCH = /\*\*\*([\W\w]+)\*\*\*|\*\*([\W\w]+)\*\*|\*([\W\w]+)\*|```([\W\w]+)```|`([\W\w]+)`|_([\W\w]+)_|\|\|([\W\w]+)\|\|/ig;
+const FORMAT_MATCH = /\*\*\*([\W\w]+)\*\*\*|\*\*([\W\w]+)\*\*|\*([\W\w]+)\*|```([\W\w]+)```|``([\W\w]+)``|`([\W\w]+)`|_([\W\w]+)_|__([\W\w]+)__|~~([\W\w]+)~~|\|\|([\W\w]+)\|\|/ig;
 
-let client = new Client('ODA5MTEwOTg2MTUzNjU2MzQw.YCQVUw.sTJneA52rZuAg1sWiJd4psgi7NQ');
+let client = new ECH.CommandClient(process.env.DEBUG ? process.env.otherToken : process.env.token);
 client.on('messageCreate', onMessageCreate);
 
 async function onMessageCreate(message: Message) {
@@ -76,5 +89,15 @@ function formats(raw: string): [string, Yes[]] {
   content += raw.substr(last);
   return [content, formatting];
 }
+
+Events.forEach(event => {
+  client.on(event.name, event.handler);
+});
+
+Commands.forEach(command => {
+  client.registerCommand(command.name, (msg, args) => {
+    return;
+  }, command.options);
+});
 
 client.connect();
