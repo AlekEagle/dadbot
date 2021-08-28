@@ -1,12 +1,12 @@
-import * as Chalk from 'chalk';
-import * as InternalConsole from 'node:console';
-import * as NodeUtil from 'node:util';
+import Chalk from 'chalk';
+import * as InternalConsole from 'console';
+import * as NodeUtil from 'util';
 export enum Level {
-  NONE,
-  ERROR,
-  WARN,
-  INFO,
-  DEBUG
+  NONE = 0,
+  ERROR = 1,
+  WARN = 2,
+  INFO = 3,
+  DEBUG = 4
 }
 function addZero(n: number): string {
   return n >= 0 && n < 10 ? '0' + n : n + '';
@@ -38,7 +38,7 @@ export default class Logger {
 
   constructor(logLevel: LoggerConstructor, timestamps: boolean = true) {
     this.timestamp = timestamps;
-    if (typeof logLevel !== typeof Level) {
+    if (typeof logLevel === 'string') {
       switch (logLevel as string) {
         case 'none':
           this.__logLevel = Level.NONE;
@@ -60,7 +60,7 @@ export default class Logger {
   }
 
   error(message: any, ...optionalParams: any[]) {
-    if (this.logLevel > Level.ERROR) return;
+    if (this.logLevel < Level.ERROR) return;
     InternalConsole.log(
       `${this.timestamp ? `${Chalk.bgBlue(date())} ` : ''}${Chalk.rgb(
         214,
@@ -78,7 +78,7 @@ export default class Logger {
   }
 
   warn(message: any, ...optionalParams: any[]) {
-    if (this.logLevel > Level.WARN) return;
+    if (this.logLevel < Level.WARN) return;
     InternalConsole.log(
       `${this.timestamp ? `${Chalk.bgBlue(date())} ` : ''}${Chalk.rgb(
         177,
@@ -96,7 +96,7 @@ export default class Logger {
   }
 
   log(message: any, ...optionalParams: any[]) {
-    if (this.logLevel > Level.INFO) return;
+    if (this.logLevel < Level.INFO) return;
     InternalConsole.log(
       `${this.timestamp ? `${Chalk.bgBlue(date())} ` : ''}${Chalk.rgb(
         47,
@@ -118,7 +118,7 @@ export default class Logger {
   }
 
   debug(message: any, ...optionalParams: any[]) {
-    if (this.logLevel > Level.DEBUG) return;
+    if (this.logLevel < Level.DEBUG) return;
     InternalConsole.log(
       `${this.timestamp ? `${Chalk.bgBlue(date())} ` : ''}${Chalk.rgb(
         74,
