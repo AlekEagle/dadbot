@@ -1,3 +1,4 @@
+import Eris from 'eris';
 import ECH from 'eris-command-handler';
 declare namespace NodeJS {
   export interface ProcessEnv {
@@ -14,16 +15,26 @@ declare namespace NodeJS {
   }
 }
 
- export declare interface CommandModule {
-    name: string;
+declare type CommandModuleGeneratorFunction = (
+  client: ECH.CommandClient,
+  msg: Eris.Message,
+  args: string[]
+) => ECH.GeneratorFunctionReturn;
 
-    handler: ECH.CommandGenerator;
+declare type CommandModuleGenerator =
+  | CommandModuleGeneratorFunction
+  | Eris.MessageContent;
 
-    options?: ECH.CommandOptions;
-  }
+declare interface CommandModule {
+  name: string;
 
-  export declare interface EventModule {
-    name: string;
+  handler: CommandModuleGenerator;
 
-    handler: (...args: any[]) => void;
-  }
+  options?: ECH.CommandOptions;
+}
+
+declare interface EventModule {
+  name: string;
+
+  handler: (...args: any[]) => void;
+}

@@ -1,14 +1,12 @@
 import { Sequelize } from 'sequelize';
 import dotenvConfig from '../dotenv';
 
-let __sequelize: Sequelize;
-
-export const sequelize = __sequelize;
+export let sequelize: Sequelize = null;
 
 export async function init() {
   await dotenvConfig();
-  if (!__sequelize) {
-    __sequelize = new Sequelize('alekeagle', 'alek', process.env.serverPass, {
+  if (!sequelize) {
+    sequelize = new Sequelize('alekeagle', 'alek', process.env.serverPass, {
       host: 'localhost',
       dialect: 'postgres',
       logging: false
@@ -21,7 +19,7 @@ export async function init() {
 
 export async function testConnection() {
   try {
-    await __sequelize.authenticate();
+    await sequelize.authenticate();
     return true;
   } catch (error) {
     console.error(error);
@@ -31,6 +29,6 @@ export async function testConnection() {
 
 export default {
   init,
-  sequelize: __sequelize,
+  sequelize,
   testConnection
 };

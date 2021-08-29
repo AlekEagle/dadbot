@@ -1,4 +1,4 @@
-import { EventModule } from "../types";
+import { EventModule } from '../types';
 
 const events: EventModule[] = [];
 
