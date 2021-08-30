@@ -3,7 +3,8 @@ import {
   GuildTextableChannel,
   Message,
   MessageContent,
-  User
+  User,
+  Client
 } from 'eris';
 import ECH from 'eris-command-handler';
 import ms from 'ms';
@@ -18,6 +19,8 @@ export interface ReactionMenuState {
   message: MessageContent | (() => MessageContent | Promise<MessageContent>);
 }
 
+// EmojiMap is identical to a normal map, but re-implements functions that have to do with retrieving data so that you do not have to have identical Objects for accessing values.
+// EmojiMap avoids using Object equivalence to compare keys, and instead compares the contents within the Object.
 export class EmojiMap extends Map<PartialEmoji, ReactionHandler> {
   constructor(
     entries?: readonly (readonly [PartialEmoji, ReactionHandler])[] | null
@@ -47,6 +50,10 @@ export class EmojiMap extends Map<PartialEmoji, ReactionHandler> {
   }
 }
 
+/**
+ * @name ReactionMenu
+ * @description ReactionMenu is a class that can be used to create a simple menu that can be used by users to interact with the bot in a intuitive way.
+ */
 export default class ReactionMenu {
   private client: ECH.CommandClient;
   private channel: GuildTextableChannel;
@@ -64,6 +71,13 @@ export default class ReactionMenu {
     user: User
   ) => void;
 
+  /**
+   * ReactionMenu Constructor
+   * @param {Client} client The Eris client
+   * @param {Message<GuildTextableChannel>} msg Any guild channel that can have messages sent to it.
+   * @param {ReactionMenuState} defaultState The state the ReactionMenu will initially start with.
+   * @param {string|number} [timeout=60000] The time the menu will be open for before it closes from inactivity.
+   */
   constructor(
     client: ECH.CommandClient,
     msg: Message<GuildTextableChannel>,
@@ -131,24 +145,29 @@ export default class ReactionMenu {
     if (!this.states.has(this.state))
       throw new Error(`State '${this.state}' does not exist`);
     if (
-      Array.from(this.states.get(this.state).reactions.entries()).find(
-        e => e[0].name === emoji.name && e[0].id === emoji.id
-      )
+      this.states.get(this.state).reactions.has(emoji)
     )
-      await Array.from(this.states.get(this.state).reactions.entries()).find(
-        e => e[0].name === emoji.name && e[0].id === emoji.id
-      )[1](this.message, user);
+      await this.states.get(this.state).reactions.get(emoji)(this.message, user);
     let msg = this.states.get(this.state).message;
     if (typeof msg === 'function') {
       this.message.edit(await msg());
     }
   }
 
+  /**
+   * Restarts the inactivity timer to the current timeoutDur.
+   * 
+   * @returns {void}
+   */
   public restartInactivityTimer() {
     clearTimeout(this.timeout);
     this.timeout = setTimeout(this.endMenu.bind(this, [true]), this.timeoutDur);
   }
 
+  /**
+   * Closes the ReactionMenu
+   * @param {boolean} [fromTimeout=false] Wether or not the menu ended from the menu timing out.
+   */
   public async endMenu(fromTimeout: boolean = false) {
     try {
       await this.originalMessage.delete();
@@ -186,8 +205,105 @@ export default class ReactionMenu {
     return await addReaction();
   }
 
+  /**
+   * Resends the message in the channel.
+   * 
+   * @returns {Promise<void>}
+   */
   public async resendMessage() {
     await this.message.delete();
     await this.sendMenuMessage();
+    return;
   }
+
+  /**
+   * Changes the state of the ReactionMenu to another state.
+   * @param {string} state The state to switch to.
+   * 
+   * @returns {Promise<void>}
+   * @throws {Error} Throws an error if state does not exist
+   */
+  public async setState(state: string) {
+    if (!this.states.has(state)) throw new Error(`State "${state}" does not exist.`);
+    this.ready = false;
+    this.state = state;
+    await this.message.removeReactions();
+    let stateObj = this.states.get(this.state);
+    if (typeof stateObj.message === 'function') this.message.edit(await stateObj.message());
+    else this.message.edit(stateObj.message);
+    await this.addReactions(Array.from(stateObj.reactions.keys()));
+    this.ready = true;
+    return;
+  }
+
+  /**
+   * Adds a new state to the ReactionMenu
+   * @param state Name of the new state.
+   * @param reactionMenuState The reaction menu state structure for this state.
+   * 
+   * @returns {ReactionMenu}
+   * @throws {Error} Throws an error if the state already exists.
+   */
+  public addState(state: string, reactionMenuState: ReactionMenuState): ReactionMenu {
+    if (this.states.has(state)) throw new Error(`State "${state}" already exists.`);
+    this.states.set(state, reactionMenuState);
+    return this;
+  }
+
+  /**
+   * Removes a state from the ReactionMenu
+   * @param state State to remove.
+   * @returns {ReactionMenu}
+   * @throws {Error} Throws an error if the state you are trying to remove is the current state or if the state does not exist.
+   */
+  public removeState(state: string): ReactionMenu {
+    if (this.state === state) throw new Error('This is the ReactionMenu\'s current state.');
+    if (!this.states.has(state)) throw new Error(`State "${state}" does not exist.`);
+    this.states.delete(state);
+    return this;
+  }
+
+  /**
+   * Add another reaction to the reaction state.
+   * @param state The state you want to add the reaction to.
+   * @param reaction The reaction you want to add.
+   * @param handler The handler for the reaction.
+   * @returns {ReactionMenu}
+   * @throws {Error} Throws an error when the state does not exist or if the reaction already exists on the state.
+   */
+  public addReaction(state: string, reaction: PartialEmoji, handler: ReactionHandler): ReactionMenu {
+    if (!this.states.has(state)) throw new Error(`State "${state}" does not exist.`);
+    if (this.states.get(state).reactions.has(reaction)) throw new Error(`This reaction already exists on state "${state}"`);
+    this.states.get(state).reactions.set(reaction, handler);
+    if (this.state === state) {
+      this.ready = false;
+      this.addReactions([reaction]).then(() => {
+        this.ready = true;
+      });
+    }
+
+    return this;
+  }
+
+  /**
+   * Remove reaction from the reaction state.
+   * @param state The state you want to remove the reaction from.
+   * @param reaction The reaction you want to remove.
+   * @returns {ReactionMenu}
+   * @throws {Error} Throws an error when the state does not exist or if the reaction already exists on the state.
+   */
+  public removeReaction(state: string, reaction: PartialEmoji): ReactionMenu {
+    if (!this.states.has(state)) throw new Error(`State "${state}" does not exist.`);
+    if (!this.states.get(state).reactions.has(reaction)) throw new Error(`This reaction does not exist on state "${state}"`);
+    this.states.get(state).reactions.delete(reaction);
+    if (this.state === state) {
+      this.ready = false;
+      this.message.removeReactionEmoji(reaction.id ? `${reaction.name}:${reaction.id}` : reaction.name).then(() => {
+        this.ready = true;
+      });
+    }
+    return this;
+  }
+
+
 }
