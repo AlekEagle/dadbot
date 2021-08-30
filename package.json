@@ -17,7 +17,8 @@
     "node-fetch": "^2.6.1",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.6.5"
+    "sequelize": "^6.6.5",
+    "typescript": "^4.4.2"
   },
   "scripts": {
     "start": "npx tsc; node dist/index.js"
@@ -28,8 +29,7 @@
     "@types/ms": "^0.7.31",
     "@types/node-fetch": "^2.5.12",
     "@types/validator": "^13.6.3",
-    "@types/ws": "^7.4.7",
-    "typescript": "^4.3.5"
+    "@types/ws": "^7.4.7"
   },
   "types": "src/index.d.ts"
 }

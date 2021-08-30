@@ -8,12 +8,43 @@ import {
 import ECH from 'eris-command-handler';
 import ms from 'ms';
 
+type ReactionHandler = (
+  message: Message<GuildTextableChannel>,
+  user: User
+) => void | Promise<void>;
+
 export interface ReactionMenuState {
-  reactions: Map<
-    PartialEmoji,
-    (message: Message<GuildTextableChannel>, user: User) => void | Promise<void>
-  >;
+  reactions: EmojiMap;
   message: MessageContent | (() => MessageContent | Promise<MessageContent>);
+}
+
+export class EmojiMap extends Map<PartialEmoji, ReactionHandler> {
+  constructor(
+    entries?: readonly (readonly [PartialEmoji, ReactionHandler])[] | null
+  ) {
+    super(entries);
+  }
+
+  get(key: PartialEmoji): ReactionHandler | undefined {
+    let reactions = Array.from(this.entries());
+    let value = reactions.find(
+      r => r[0].id === key.id && r[0].name === key.name
+    );
+    return value ? value[1] : undefined;
+  }
+
+  has(key: PartialEmoji): boolean {
+    let reactions = Array.from(this.keys());
+    let value = reactions.find(r => r.id === key.id && r.name === key.name);
+    return !!value;
+  }
+
+  delete(key: PartialEmoji): boolean {
+    let reactions = Array.from(this.keys());
+    let origKey = reactions.find(r => r.id === key.id && r.name === key.name);
+    if (!origKey) return false;
+    return super.delete(origKey);
+  }
 }
 
 export default class ReactionMenu {
@@ -26,7 +57,7 @@ export default class ReactionMenu {
   private states: Map<string, ReactionMenuState> = new Map();
   private message: Message<GuildTextableChannel>;
   private timeout: NodeJS.Timeout;
-  private timeoutDur: number = ms('1m');
+  private timeoutDur: number;
   private reactionHandlerInstance: (
     msg: Message<GuildTextableChannel>,
     emoji: PartialEmoji,
@@ -37,17 +68,25 @@ export default class ReactionMenu {
     client: ECH.CommandClient,
     msg: Message<GuildTextableChannel>,
     defaultState: ReactionMenuState,
-    timeout?: number
+    timeout?: number | string
   ) {
     this.client = client;
     this.originalMessage = msg;
     this.channel = this.originalMessage.channel;
+    this.timeoutDur =
+      timeout !== undefined
+        ? typeof timeout === 'number'
+          ? timeout
+          : typeof timeout === 'string'
+          ? ms(timeout)
+          : ms('1m')
+        : ms('1m');
     this.reactors.push(msg.author.id);
     if (
       !this.channel.permissionsOf(this.client.user.id).has('manageMessages')
     ) {
       this.channel.createMessage(
-        "Well, this is embarrassing, but it looks like I don't have the permission to manage messages in this channel, please check the permissions of the channel and make sure I can manage messages! (Note: I only need to be able to manage messages to: delete the message that initiated this command, bulk remove reactions on the menu, and remove other users' reactions.)"
+        "Well, that's embarrassing, but it looks like I don't have the permission to manage messages in this channel, please check the permissions of the channel and make sure I can manage messages! (Note: I only need to be able to manage messages to: delete the message that initiated this command, bulk remove reactions on the menu, and remove other users' reactions.)"
       );
       throw new Error('Missing MANAGE_MESSAGES');
     }
@@ -59,7 +98,7 @@ export default class ReactionMenu {
 
   private async sendMenuMessage() {
     let msg = this.states.get('default').message;
-    this.message = await this.originalMessage.channel.createMessage(
+    this.message = await this.channel.createMessage(
       typeof msg === 'function' ? await msg() : msg
     );
     await this.addReactions(
@@ -112,14 +151,15 @@ export default class ReactionMenu {
 
   public async endMenu(fromTimeout: boolean = false) {
     try {
-      await this.message.delete();
-    } catch (err) {}
-    try {
       await this.originalMessage.delete();
     } catch (err) {}
+    try {
+      await this.message.delete();
+    } catch (err) {}
     this.client.off('messageReactionAdd', this.reactionHandlerInstance);
+    clearTimeout(this.timeout);
     if (fromTimeout) {
-      let timeoutMessage = await this.message.channel.createMessage(
+      let timeoutMessage = await this.channel.createMessage(
         `${this.originalMessage.author.mention} menu timed-out due to inactivity!`
       );
       setTimeout(() => timeoutMessage.delete(), ms('5s'));
@@ -144,5 +184,10 @@ export default class ReactionMenu {
     };
 
     return await addReaction();
+  }
+
+  public async resendMessage() {
+    await this.message.delete();
+    await this.sendMenuMessage();
   }
 }

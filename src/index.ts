@@ -57,7 +57,8 @@ let client = new ECH.CommandClient(
     prefix: process.env.DEBUG ? 'test!' : 'd!',
     name: 'Dad Bot',
     description: 'Dad Bot v4 (TypeScript Edition)',
-    defaultHelpCommand: false
+    defaultHelpCommand: false,
+    owner: 'AlekEagle#0001'
   }
 );
 client.on('messageCreate', onMessageCreate);
@@ -118,8 +119,8 @@ Commands.forEach(command => {
         let blacklistStatus = await checkBlacklistStatus(msg);
         if (
           blacklistStatus === null ||
-          !blacklistStatus.commands.includes(command.name) ||
-          !blacklistStatus.commands.includes('all')
+          (!blacklistStatus.commands.includes(command.name) &&
+            !blacklistStatus.commands.includes('all'))
         ) {
           if (typeof command.handler !== 'function') {
             return command.handler as MessageContent;
