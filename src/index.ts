@@ -1,3 +1,9 @@
+import Logger, { Level } from './utils/Logger';
+
+global.console = new Logger(
+  process.env.DEBUG ? Level.DEBUG : Level.WARN
+) as any;
+
 import envConfig from './utils/dotenv';
 import { Message, MessageContent, TextableChannel } from 'eris';
 import ECH from 'eris-command-handler';
@@ -5,12 +11,30 @@ import Events from './events';
 import Commands from './commands';
 import Options from './utils/DB/Options';
 import { checkBlacklistStatus } from './utils/Blacklist';
+import Table, { TableDataObject } from './utils/Table';
 
-import Logger, { Level } from './utils/Logger';
-
-global.console = new Logger(
-  process.env.DEBUG ? Level.DEBUG : Level.WARN
-) as any;
+let table = new Table(
+  {
+    joe: ['mama', 'lol', 'lollllllllll'],
+    mama: ['joe', 'mamamamamma', 3828389, 'funney', 'joek']
+  },
+  {
+    totals(data: TableDataObject): string[] {
+      let finalData: string[] = [];
+      Object.entries(data).forEach(e => {
+        switch (e[0]) {
+          case 'mama':
+            finalData.push('peenids');
+            break;
+          default:
+            finalData.push('N/A');
+        }
+      });
+      return finalData;
+    }
+  }
+);
+console.log(table.text);
 
 (async function () {
   if (process.env.DEBUG) return;
