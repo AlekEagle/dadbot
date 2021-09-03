@@ -2,7 +2,7 @@ import { config } from 'dotenv';
 
 let configed = false;
 
-export default async function () {
+export default function () {
   let gotConfiged = false;
   if (!configed) {
     config();

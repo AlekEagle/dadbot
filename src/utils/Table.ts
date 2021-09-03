@@ -52,6 +52,7 @@ export default class Table {
     options?: TableConstructorOptions
   ) {
     if (options) Object.assign(this, options);
+
     if (entries) {
       for (let [key, value] of Object.entries(entries)) {
         this.entries.set(key, value);
@@ -76,6 +77,7 @@ export default class Table {
       { tableData } = this.calculateTableData(),
       maxRows = this.calculateMaxRows(this.sortedTableData(tableData)),
       calculatedTotals = !!this.totals ? this.totals(tableData) : null;
+
     Array.from(Object.entries(tableData)).forEach((entry, ind, arr) => {
       let dataStr = entry[1].map(a => a.toString()),
         colSize = this.calculateColumnWidth(
@@ -83,23 +85,28 @@ export default class Table {
           this.sortedTableData(tableData)[entry[0]] as string[]
         ),
         currentDataRow = 0;
+
       rows[0] +=
         Table.Symbols.HSeparator.repeat(colSize) +
         (ind === arr.length - 1
           ? Table.Symbols.URCorner
           : Table.Symbols.USeparator);
+
       rows[1] +=
         entry[0] +
         ' '.repeat(colSize - entry[0].length) +
         Table.Symbols.VSeparator;
+
       rows[2] +=
         Table.Symbols.HSeparator.repeat(colSize) +
         (ind === arr.length - 1
           ? Table.Symbols.RSeparator
           : Table.Symbols.CSeparator);
+
       for (let i = 0; i < maxRows; i++) {
         let e = dataStr[i] || 'N/A';
         let tE = this.ellipsisText(e);
+
         if (ind === 0)
           rows[currentDataRow++ + 3] =
             Table.Symbols.VSeparator +
@@ -110,6 +117,7 @@ export default class Table {
           rows[currentDataRow++ + 3] +=
             tE + ' '.repeat(colSize - tE.length) + Table.Symbols.VSeparator;
       }
+
       if (!this.totals) {
         if (ind === 0) {
           rows[currentDataRow + 3] =
@@ -136,7 +144,9 @@ export default class Table {
           rows[currentDataRow++ + 3] +=
             Table.Symbols.HSeparator.repeat(colSize) + Table.Symbols.CSeparator;
         }
+
         let colTotal = calculatedTotals[ind];
+
         if (ind === 0) {
           rows[currentDataRow++ + 3] =
             Table.Symbols.VSeparator +
@@ -149,6 +159,7 @@ export default class Table {
             ' '.repeat(colSize - colTotal.length) +
             Table.Symbols.VSeparator;
         }
+
         if (ind === 0) {
           rows[currentDataRow + 3] =
             Table.Symbols.DLCorner +
@@ -177,11 +188,13 @@ export default class Table {
       this.column.minWidth !== 'auto'
     )
       return this.column.minWidth;
+
     if (
       name.length >= this.column.maxWidth ||
       data[0].length >= this.column.maxWidth
     )
       return this.column.maxWidth;
+
     return Math.max(name.length, data[0].length);
   }
 
@@ -199,10 +212,13 @@ export default class Table {
         })
       ];
     });
+
     let finalData: TableDataObject = {};
+
     interData.forEach(e => {
       finalData[e[0] as string] = e[1] as TableDataEntry[];
     });
+
     return finalData;
   }
 
@@ -211,10 +227,13 @@ export default class Table {
     totals: string[] | null;
   } {
     let finalData: TableDataObject = {};
+
     Array.from(this.entries).forEach(entry => {
       let functOut = typeof entry[1] === 'function' ? entry[1]() : entry[1];
+
       finalData[entry[0]] = functOut;
     });
+
     return {
       tableData: finalData,
       totals: !!this.totals ? this.totals(finalData) : null
@@ -223,6 +242,7 @@ export default class Table {
 
   private ellipsisText(text: string | number): string {
     let workingText = typeof text === 'number' ? text.toString() : text;
+
     if (workingText.length <= this.column.maxWidth) return workingText;
     else {
       switch (this.ellipsis.side) {
@@ -237,6 +257,7 @@ export default class Table {
               workingText.length
             );
           break;
+
         case 'right':
           workingText =
             workingText.slice(

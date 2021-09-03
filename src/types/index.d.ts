@@ -1,5 +1,6 @@
 import Eris from 'eris';
 import ECH from 'eris-command-handler';
+import Logger from '../utils/Logger';
 declare namespace NodeJS {
   export interface ProcessEnv {
     token: string;
@@ -14,6 +15,8 @@ declare namespace NodeJS {
     DEBUG: string;
   }
 }
+
+declare const console: Logger;
 
 declare type CommandModuleGeneratorFunction = (
   client: ECH.CommandClient,
@@ -36,5 +39,5 @@ declare interface CommandModule {
 declare interface EventModule {
   name: string;
 
-  handler: (...args: any[]) => void;
+  handler: (client: ECH.CommandClient, ...args: any[]) => void;
 }
