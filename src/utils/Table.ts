@@ -15,6 +15,7 @@ export interface TableConstructorOptions {
   column?: {
     minWidth?: number | 'auto';
     maxWidth?: number;
+    padding?: number;
   };
   totals?: false | TotalRow;
 }
@@ -41,7 +42,8 @@ export default class Table {
   public column: {
     minWidth: number | 'auto';
     maxWidth: number;
-  } = { minWidth: 'auto', maxWidth: 10 };
+    padding: number;
+  } = { minWidth: 'auto', maxWidth: 10, padding: 0 };
 
   public totals: false | TotalRow = false;
 
@@ -187,15 +189,15 @@ export default class Table {
       data[0].length < this.column.minWidth &&
       this.column.minWidth !== 'auto'
     )
-      return this.column.minWidth;
+      return this.column.minWidth + this.column.padding;
 
     if (
       name.length >= this.column.maxWidth ||
       data[0].length >= this.column.maxWidth
     )
-      return this.column.maxWidth;
+      return this.column.maxWidth + this.column.padding;
 
-    return Math.max(name.length, data[0].length);
+    return Math.max(name.length, data[0].length) + this.column.padding;
   }
 
   private sortedTableData(data: TableDataObject): {

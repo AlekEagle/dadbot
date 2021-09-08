@@ -11,5 +11,6 @@
     "typeRoots": ["./src/types"],
     "alwaysStrict": true,
     "esModuleInterop": true
-  }
+  },
+  "include": ["./src/**/*"]
 }

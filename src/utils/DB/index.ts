@@ -8,7 +8,7 @@ export async function init() {
   if (!sequelize) {
     sequelize = new Sequelize(
       'alekeagle',
-      'alekeagle',
+      process.env.serverUsername,
       process.env.serverPass,
       {
         host: 'localhost',

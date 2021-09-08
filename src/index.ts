@@ -10,7 +10,6 @@ import ECH from 'eris-command-handler';
 import Events from './events';
 import Commands from './commands';
 import { checkBlacklistStatus } from './utils/Blacklist';
-import './utils/Owners';
 
 (async function () {
   if (process.env.DEBUG) return;

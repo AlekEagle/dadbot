@@ -9,6 +9,7 @@ declare namespace NodeJS {
     iftttToken: string;
     webhookToken: string;
     serverPass: string;
+    serverUsername: string;
     perspectiveKey: string;
     grafanaToken: string;
     alekeagleMEToken: string;

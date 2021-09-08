@@ -3,10 +3,8 @@ import fetch from 'node-fetch';
 import FormData from 'form-data';
 import Path from 'node:path';
 import SourceMapSupport from 'source-map-support';
-import { Message } from 'eris';
 import VM from 'node:vm';
-import ECH from 'eris-command-handler';
-import { addOwner, isOwner } from '../utils/Owners';
+import { isOwner } from '../utils/Owners';
 import { CommandModule } from '../types';
 import {
   CompilerOptions,
@@ -79,16 +77,20 @@ function evaluateSafe(code: string, args: any) {
   const funArgs: { [key: string]: any } = {};
   asyncFunctionArgs.forEach(a => (funArgs[a[0]] = a[1]));
   VM.createContext(funArgs);
-  const evalFn = VM.runInContext(transpiledStr.outputText, funArgs, {
-    filename: jsPath
-  });
+  let evalFn: any;
+  try {
+    evalFn = VM.runInContext(transpiledStr.outputText, funArgs, {
+      filename: jsPath
+    });
+  } catch (e) {
+    return e;
+  }
   Promise.resolve()
     .then(() => {
       let promise;
       try {
         promise = evalFn(...asyncFunctionArgs.map(arg => arg[1]));
       } catch (err) {
-        console.error(err);
         emitter.emit('complete', err, true);
       }
       return promise;
@@ -132,7 +134,7 @@ const __command: CommandModule = {
     let imports = args.join(' ').match(/^import .+$/gim);
 
     evalStr = `${
-      imports.length > 0 ? `${imports.join('\n')}\n` : ''
+      imports && imports.length > 0 ? `${imports.join('\n')}\n` : ''
     }(async function () {
       ${args
         .join(' ')
@@ -141,9 +143,11 @@ const __command: CommandModule = {
           ''
         )
         .replace(/^import .+$/gim, '')}
-      });`;
+});`;
 
-    await msg.channel.sendTyping();
+    let message = await msg.channel.createMessage(
+      'Braining... <a:loading1:470030932775272469>'
+    );
     let emitter = evaluateSafe(evalStr, {
       client,
       msg,
@@ -151,13 +155,30 @@ const __command: CommandModule = {
       require,
       exports
     });
-    emitter.once('complete', (out, err) => {
+    if (emitter instanceof EventEmitter) {
+      emitter.once('complete', (out, err) => {
+        const inspectedOut: string =
+          typeof out !== 'string' ? Utils.inspect(out) : out;
+        message.edit(
+          err
+            ? `Input: \`\`\`ts\n${evalStr}\n\`\`\`\nOutput: \`\`\`\n${inspectedOut}\n\`\`\``
+            : `\`\`\`ts\n${inspectedOut}\n\`\`\``
+        );
+      });
+      emitter.once('timeoutError', (error, cb) => {
+        const inspectedOut: string =
+          typeof error !== 'string' ? Utils.inspect(error) : error;
+        message.edit(
+          `Hmm, it seems there was an error inside a ${cb} callback, its been cleared. Here's the error:\n\`\`\`\n${inspectedOut}\n\`\`\``
+        );
+      });
+    } else {
       const inspectedOut: string =
-        typeof out !== 'string' ? Utils.inspect(out) : out;
-      msg.channel.createMessage(
-        `\`\`\`${err ? '' : 'ts'}\n${inspectedOut}\n\`\`\``
+        typeof emitter !== 'string' ? Utils.inspect(emitter) : emitter;
+      message.edit(
+        `Input: \`\`\`ts\n${evalStr}\n\`\`\`\nOutput: \`\`\`\n${inspectedOut}\n\`\`\``
       );
-    });
+    }
   },
   options: {
     removeWhitespace: true,
