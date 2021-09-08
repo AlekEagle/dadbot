@@ -6,11 +6,16 @@ export let sequelize: Sequelize = null;
 export async function init() {
   await dotenvConfig();
   if (!sequelize) {
-    sequelize = new Sequelize('alekeagle', 'alek', process.env.serverPass, {
-      host: 'localhost',
-      dialect: 'postgres',
-      logging: false
-    });
+    sequelize = new Sequelize(
+      'alekeagle',
+      'alekeagle',
+      process.env.serverPass,
+      {
+        host: 'localhost',
+        dialect: 'postgres',
+        logging: false
+      }
+    );
     if (!(await testConnection())) throw 'Connection Failed.';
     return true;
   }

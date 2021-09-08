@@ -1,11 +1,11 @@
 import { checkBlacklistStatus } from '../utils/Blacklist';
-import { EventModule, console } from '../types';
+import { EventModule } from '../types';
 import ECH from 'eris-command-handler';
 import { Message } from 'eris';
 
 const imMatch = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m|\bam))\b([\s\S]*)/i,
-  kysMatch = /\b(kys|kill\byour\b?self)\b/gi,
-  formattingMatch = /(**?*?|``?`?|__?|~~|\|\|)+/gi;
+  kysMatch = /\b(kys|kill\byour\s?self)\b/i,
+  formattingMatch = /(\*\*?\*?|``?`?|__?|~~|\|\|)+/gi;
 
 const __event: EventModule = {
   name: 'messageCreate',
