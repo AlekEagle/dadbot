@@ -158,7 +158,13 @@ async function constructMessage(
       } else return rtnStr;
     } else if (options.length === 1) {
       if (options.includes('r')) {
-        return inspectedOutput;
+        if (inspectedOutput.length > 2000) {
+          let url = await uploadOutput(inspectedOutput);
+          return (
+            'The output was too big to fit in a message, here it is in a file instead! ' +
+            url
+          );
+        } else return inspectedOutput;
       } else if (options.includes('i')) {
         let rtnStr = `Input: \`\`\`ts\n${input}\n\`\`\`Output: \`\`\`ts\n${inspectedOutput}\n\`\`\``;
         if (rtnStr.length > 2000) {
