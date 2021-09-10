@@ -311,7 +311,7 @@ const __command: CommandModule = {
           `${msg.author.mention}\nHmm, it seems there was an error inside a ${cb} callback, its been cleared. Here's the error:\n\`\`\`\n${inspectedOut}\n\`\`\`\nI've gone ahead and cleared the ${cb} to prevent further errors.`
         );
       });
-    } else if (!options.includes('q')) {
+    } else {
       message.edit(
         await constructMessage(emitter, evalStr, true, options, msg)
       );
