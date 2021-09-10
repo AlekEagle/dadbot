@@ -5,4 +5,13 @@
  */
 export default class Chair {
   public static chair = 'chair';
+  /*
+    |
+    |
+    |
+    |
+    #-----------#
+    |           |
+    |           |
+  */
 }
