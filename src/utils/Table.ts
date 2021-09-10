@@ -148,18 +148,17 @@ export default class Table {
         }
 
         let colTotal = calculatedTotals[ind];
+        let tT = this.ellipsisText(colTotal);
 
         if (ind === 0) {
           rows[currentDataRow++ + 3] =
             Table.Symbols.VSeparator +
-            colTotal +
-            ' '.repeat(colSize - colTotal.length) +
+            tT +
+            ' '.repeat(colSize - tT.length) +
             Table.Symbols.VSeparator;
         } else {
           rows[currentDataRow++ + 3] +=
-            colTotal +
-            ' '.repeat(colSize - colTotal.length) +
-            Table.Symbols.VSeparator;
+            tT + ' '.repeat(colSize - tT.length) + Table.Symbols.VSeparator;
         }
 
         if (ind === 0) {

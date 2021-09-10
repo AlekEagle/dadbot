@@ -13,6 +13,7 @@ import {
   transpileModule
 } from 'typescript';
 import EventEmitter from 'node:events';
+import { Message, MessageContent } from 'eris';
 
 const compilerOptions: CompilerOptions = {
   module: ModuleKind.CommonJS,
@@ -65,15 +66,16 @@ function evaluateSafe(code: string, args: any) {
     environment: 'node',
     retrieveFile: sourcePath => sourcePathToSource[sourcePath]
   });
-  const tsPath = Path.resolve('eval.ts');
+  const tsPath = Path.resolve('input.ts');
   let transpiledStr = transpileModule(code, {
     compilerOptions,
     fileName: tsPath,
-    moduleName: 'eval'
+    moduleName: 'input'
   });
-  const jsPath = Path.resolve('eval.js');
+  const jsPath = Path.resolve('input.js');
   sourcePathToSource[jsPath] = transpiledStr.outputText;
-  sourcePathToSource[Path.resolve('eval.js.map')] = transpiledStr.sourceMapText;
+  sourcePathToSource[Path.resolve('input.js.map')] =
+    transpiledStr.sourceMapText;
   const funArgs: { [key: string]: any } = {};
   asyncFunctionArgs.forEach(a => (funArgs[a[0]] = a[1]));
   VM.createContext(funArgs);
@@ -106,6 +108,140 @@ function evaluateSafe(code: string, args: any) {
   return emitter;
 }
 
+async function constructMessage(
+  output: any,
+  input: string,
+  isError: boolean,
+  options: string[],
+  message: Message
+): Promise<MessageContent> {
+  let inspectedOutput =
+    typeof output === 'string' ? output : Utils.inspect(output);
+
+  if (isError) {
+    if (inspectedOutput.length > 1024 || input.length > 4000) {
+      let url = await uploadOutput(
+        `Input: \n${input}\n\n\nOutput:\n${inspectedOutput}`
+      );
+      return (
+        'The output was too big to fit in a message, here it is in a file instead! ' +
+        url
+      );
+    } else
+      return {
+        content: '',
+        embed: {
+          title: 'Error',
+          color: 0xff0000,
+          author: {
+            name: message.author.username,
+            icon_url: message.author.dynamicAvatarURL('png', 128)
+          },
+          description: `Input:\n\`\`\`ts\n${input}\n\`\`\``,
+          fields: [
+            {
+              name: 'Output',
+              value: `\`\`\`\n${inspectedOutput}\n\`\`\``
+            }
+          ]
+        }
+      };
+  } else {
+    if (!options || options.length < 1) {
+      let rtnStr = `\`\`\`ts\n${inspectedOutput}\n\`\`\``;
+      if (rtnStr.length > 2000) {
+        let url = await uploadOutput(inspectedOutput);
+        return (
+          'The output was too big to fit in a message, here it is in a file instead! ' +
+          url
+        );
+      } else return rtnStr;
+    } else if (options.length === 1) {
+      if (options.includes('r')) {
+        return inspectedOutput;
+      } else if (options.includes('i')) {
+        let rtnStr = `Input: \`\`\`ts\n${input}\n\`\`\`Output: \`\`\`ts\n${inspectedOutput}\n\`\`\``;
+        if (rtnStr.length > 2000) {
+          let url = await uploadOutput(
+            `Input: \n${input}\n\n\nOutput:\n${inspectedOutput}`
+          );
+          return (
+            'The output was too big to fit in a message, here it is in a file instead! ' +
+            url
+          );
+        } else {
+          return rtnStr;
+        }
+      } else if (options.includes('e')) {
+        if (inspectedOutput.length > 4000) {
+          let url = await uploadOutput(inspectedOutput);
+          return (
+            'The output was too big to fit in a message, here it is in a file instead! ' +
+            url
+          );
+        }
+        return {
+          content: '',
+          embed: {
+            title: 'Output',
+            description: `\`\`\`ts\n${inspectedOutput}\n\`\`\``
+          }
+        };
+      } else if (options.includes('q')) {
+        return null;
+      } else {
+        if (inspectedOutput.length > 1990) {
+          let url = await uploadOutput(inspectedOutput);
+          return (
+            'The output was too big to fit in a message, here it is in a file instead! ' +
+            url
+          );
+        } else return `\`\`\`ts\n${inspectedOutput}\n\`\`\``;
+      }
+    } else if (options.length === 2) {
+      if (options.includes('i') && options.includes('e')) {
+        if (input.length > 4000 || inspectedOutput.length > 1200) {
+          let url = await uploadOutput(
+            `Input: \n${input}\n\n\nOutput:\n${inspectedOutput}`
+          );
+          return (
+            'The output was too big to fit in a message, here it is in a file instead! ' +
+            url
+          );
+        } else
+          return {
+            content: '',
+            embed: {
+              title: 'Output',
+              description: `Input:\n\`\`\`ts\n${input}\n\`\`\``,
+              fields: [
+                {
+                  name: 'Output',
+                  value: `\`\`\`ts\n${inspectedOutput}\n\`\`\``
+                }
+              ]
+            }
+          };
+      } else if (options.includes('r') && options.includes('e')) {
+        if (inspectedOutput.length > 4096) {
+          let url = await uploadOutput(inspectedOutput);
+          return (
+            'The output was too big to fit in a message, here it is in a file instead! ' +
+            url
+          );
+        }
+        return {
+          content: '',
+          embed: {
+            title: 'Output',
+            description: `${inspectedOutput}`
+          }
+        };
+      }
+    }
+  }
+}
+
 async function uploadOutput(output: string): Promise<string> {
   let data = new FormData();
   data.append('file', Buffer.from(output), 'joe.txt');
@@ -124,64 +260,65 @@ const __command: CommandModule = {
 
   async handler(client, msg, args) {
     if (!(await isOwner(msg.author.id, true))) return 'undefined';
+    args.shift();
     let options: string[] = [];
     let evalStr: string;
     if (args[0].match(/^-(\w+)$/)) {
       options = args[0].match(/^-(\w+)$/)[1].split('');
       args.shift();
+      args.shift();
     }
 
-    let imports = args.join(' ').match(/^import .+$/gim);
+    let imports = args.join('').match(/import .+\n/gi);
 
     evalStr = `${
-      imports && imports.length > 0 ? `${imports.join('\n')}\n` : ''
+      imports && imports.length > 0 ? `${imports.join('')}\n` : ''
     }(async function () {
-      ${args
-        .join(' ')
-        .replace(
-          /(?:(?:^```(?:ts|js|javascript|typescript)?\n)|(?:\n```$))/gi,
-          ''
-        )
-        .replace(/^import .+$/gim, '')}
+  ${args
+    .join('')
+    .replace(/(?:(?:```(?:ts|js|javascript|typescript)?\n)|(?:\n```))/gi, '')
+    .replace(/import .+\n/gi, '')
+    .split('\n')
+    .join('\n  ')
+    .replace('\n  ', '')}
 });`;
 
-    let message = await msg.channel.createMessage(
-      'Braining... <a:loading1:470030932775272469>'
-    );
+    let message: Message = null;
+    if (!options.includes('q'))
+      message = await msg.channel.createMessage(
+        'Braining... <a:loading1:470030932775272469>'
+      );
     let emitter = evaluateSafe(evalStr, {
       client,
       msg,
       args,
       require,
-      exports
+      exports,
+      console
     });
     if (emitter instanceof EventEmitter) {
-      emitter.once('complete', (out, err) => {
-        const inspectedOut: string =
-          typeof out !== 'string' ? Utils.inspect(out) : out;
-        message.edit(
-          err
-            ? `Input: \`\`\`ts\n${evalStr}\n\`\`\`\nOutput: \`\`\`\n${inspectedOut}\n\`\`\``
-            : `\`\`\`ts\n${inspectedOut}\n\`\`\``
-        );
+      emitter.once('complete', async (out, err) => {
+        if (!options.includes('q') || err)
+          await message.edit(
+            await constructMessage(out, evalStr, err, options, msg)
+          );
+        else msg.addReaction('✅');
       });
-      emitter.once('timeoutError', (error, cb) => {
+      emitter.once('timeoutError', async (error, cb) => {
         const inspectedOut: string =
           typeof error !== 'string' ? Utils.inspect(error) : error;
-        message.edit(
-          `Hmm, it seems there was an error inside a ${cb} callback, its been cleared. Here's the error:\n\`\`\`\n${inspectedOut}\n\`\`\``
+        msg.channel.createMessage(
+          `${msg.author.mention}\nHmm, it seems there was an error inside a ${cb} callback, its been cleared. Here's the error:\n\`\`\`\n${inspectedOut}\n\`\`\`\nI've gone ahead and cleared the ${cb} to prevent further errors.`
         );
       });
-    } else {
-      const inspectedOut: string =
-        typeof emitter !== 'string' ? Utils.inspect(emitter) : emitter;
+    } else if (!options.includes('q')) {
       message.edit(
-        `Input: \`\`\`ts\n${evalStr}\n\`\`\`\nOutput: \`\`\`\n${inspectedOut}\n\`\`\``
+        await constructMessage(emitter, evalStr, true, options, msg)
       );
     }
   },
   options: {
-    removeWhitespace: true,
+    removeWhitespace: false,
     whitespaceSeparator: /(\s(?<!\n))/g
   }
 };
