@@ -18,7 +18,7 @@ export default class Prefixes extends Model {
     }
   );
 
-  Prefixes.sync({ alter: true }).then(
+  Prefixes.sync().then(
     () => {
       console.info('Synced Prefixes successfully!');
     },

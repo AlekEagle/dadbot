@@ -18,7 +18,7 @@ export default class GlobalBlacklist extends Model {
     }
   );
 
-  GlobalBlacklist.sync({ alter: true }).then(
+  GlobalBlacklist.sync().then(
     () => {
       console.info('Synced GlobalBlacklist successfully!');
     },

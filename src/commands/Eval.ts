@@ -195,6 +195,9 @@ async function constructMessage(
         };
       } else if (options.includes('q')) {
         return null;
+      } else if (options.includes('u')) {
+        let url = await uploadOutput(inspectedOutput);
+        return `Uploaded! here's the link: ${url}`;
       } else {
         if (inspectedOutput.length > 1990) {
           let url = await uploadOutput(inspectedOutput);
@@ -243,6 +246,11 @@ async function constructMessage(
             description: `${inspectedOutput}`
           }
         };
+      } else if (options.includes('i') && options.includes('u')) {
+        let url = await uploadOutput(
+          `Input: \n${input}\n\n\nOutput:\n${inspectedOutput}`
+        );
+        return `Uploaded! here's the link: ${url}`;
       }
     }
   }
