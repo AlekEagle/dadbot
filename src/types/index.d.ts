@@ -14,6 +14,9 @@ declare namespace NodeJS {
     grafanaToken: string;
     alekeagleMEToken: string;
     DEBUG: string;
+    NODE_APP_INSTANCE: string;
+    instances: string;
+    shardCountOverride: string;
   }
 }
 
