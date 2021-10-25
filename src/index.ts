@@ -6,12 +6,26 @@ global.console = new Logger(
 
 import envConfig from './utils/dotenv';
 import { Constants, MessageContent } from 'eris';
+import FS from 'node:fs';
 import ECH from 'eris-command-handler';
 import Events from './events';
 import Commands from './commands';
 import { checkBlacklistStatus } from './utils/Blacklist';
 import fetch from 'node-fetch';
+import DadbotClusterClient from '../../dadbot-cluster-client';
 
+const Cluster = new DadbotClusterClient(
+  { name: 'ws', options: { url: 'ws://localhost:8080/manager' } },
+  process.env.grafanaToken,
+  JSON.parse(FS.readFileSync('./data/schema.json', 'utf-8')),
+  { cluster: { count: 2, id: parseInt(process.env.NODE_APP_INSTANCE) } }
+);
+
+Cluster.on('connected', () => {
+  console.log('Connected!');
+});
+
+Cluster.connect();
 (async function () {
   if (process.env.DEBUG) return;
   await import('./utils/Sentry');

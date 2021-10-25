@@ -8,7 +8,7 @@
     "allowJs": true,
     "rootDir": "./src/",
     "resolveJsonModule": true,
-    "typeRoots": ["./src/types"],
+    "typeRoots": ["./src/types", "node_modules/@types"],
     "alwaysStrict": true,
     "esModuleInterop": true
   },
