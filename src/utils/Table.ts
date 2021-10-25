@@ -41,9 +41,9 @@ export default class Table {
 
   public column: {
     minWidth: number | 'auto';
-    maxWidth: number;
+    maxWidth: number | 'auto';
     padding: number;
-  } = { minWidth: 'auto', maxWidth: 10, padding: 0 };
+  } = { minWidth: 'auto', maxWidth: 'auto', padding: 0 };
 
   public totals: false | TotalRow = false;
 
@@ -84,7 +84,8 @@ export default class Table {
       let dataStr = entry[1].map(a => a.toString()),
         colSize = this.calculateColumnWidth(
           entry[0],
-          this.sortedTableData(tableData)[entry[0]] as string[]
+          this.sortedTableData(tableData)[entry[0]].map(a => a.toString()),
+          calculatedTotals !== null ? calculatedTotals[ind] : ''
         ),
         currentDataRow = 0;
 
@@ -95,9 +96,9 @@ export default class Table {
           : Table.Symbols.USeparator);
 
       rows[1] +=
-        entry[0] +
-        ' '.repeat(colSize - entry[0].length) +
-        Table.Symbols.VSeparator;
+        (entry[0].length <= colSize
+          ? entry[0] + ' '.repeat(colSize - entry[0].length)
+          : this.ellipsisText(entry[0])) + Table.Symbols.VSeparator;
 
       rows[2] +=
         Table.Symbols.HSeparator.repeat(colSize) +
@@ -182,21 +183,31 @@ export default class Table {
     return Object.values(data).sort((a, b) => b.length - a.length)[0].length;
   }
 
-  private calculateColumnWidth(name: string, data: string[]): number {
+  private calculateColumnWidth(
+    name: string,
+    data: string[],
+    totalData: string
+  ): number {
     if (
       name.length < this.column.minWidth &&
       data[0].length < this.column.minWidth &&
+      totalData.length < this.column.minWidth &&
       this.column.minWidth !== 'auto'
     )
       return this.column.minWidth + this.column.padding;
 
     if (
-      name.length >= this.column.maxWidth ||
-      data[0].length >= this.column.maxWidth
+      (name.length >= this.column.maxWidth ||
+        totalData.length >= this.column.maxWidth ||
+        data[0].length >= this.column.maxWidth) &&
+      this.column.maxWidth !== 'auto'
     )
       return this.column.maxWidth + this.column.padding;
 
-    return Math.max(name.length, data[0].length) + this.column.padding;
+    return (
+      Math.max(name.length, data[0].length, totalData.length) +
+      this.column.padding
+    );
   }
 
   private sortedTableData(data: TableDataObject): {
@@ -242,6 +253,7 @@ export default class Table {
   }
 
   private ellipsisText(text: string | number): string {
+    if (this.column.maxWidth === 'auto') return text.toString();
     let workingText = typeof text === 'number' ? text.toString() : text;
 
     if (workingText.length <= this.column.maxWidth) return workingText;

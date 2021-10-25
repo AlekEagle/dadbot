@@ -13,19 +13,28 @@ import Commands from './commands';
 import { checkBlacklistStatus } from './utils/Blacklist';
 import fetch from 'node-fetch';
 import DadbotClusterClient from '../../dadbot-cluster-client';
+import evaluateSafe from './utils/SafeEval';
+import EventEmitter from 'node:events';
+import Utils from 'node:util';
 
 const Cluster = new DadbotClusterClient(
   { name: 'ws', options: { url: 'ws://localhost:8080/manager' } },
   process.env.grafanaToken,
   JSON.parse(FS.readFileSync('./data/schema.json', 'utf-8')),
-  { cluster: { count: 2, id: parseInt(process.env.NODE_APP_INSTANCE) } }
+  {
+    cluster: {
+      count: parseInt(process.env.instances),
+      id: parseInt(process.env.NODE_APP_INSTANCE)
+    }
+  }
 );
 
 Cluster.on('connected', () => {
-  console.log('Connected!');
+  console.log('Connected to cluster manager.');
 });
 
-Cluster.connect();
+(process as any).clusterClient = Cluster;
+
 (async function () {
   if (process.env.DEBUG) return;
   await import('./utils/Sentry');
@@ -106,6 +115,26 @@ async function calculateShardReservation() {
       owner: 'AlekEagle#0001'
     }
   );
+  Cluster.connect();
+  Cluster.on('CCCQuery', (data, cb) => {
+    console.debug('Received CCCQuery');
+    let emitter = evaluateSafe(data, {
+      require,
+      exports,
+      console,
+      client
+    });
+    if (emitter instanceof EventEmitter) {
+      emitter.once('complete', async (out, err) => {
+        cb(typeof out !== 'string' && !err ? Utils.inspect(err || out) : out);
+      });
+      emitter.once('timeoutError', error => {
+        cb(Utils.inspect(error));
+      });
+    } else {
+      cb(Utils.inspect(emitter));
+    }
+  });
 
   client.on('ready', () => {
     console.log('Ready!');
