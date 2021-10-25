@@ -78,11 +78,12 @@ async function calculateShardReservation() {
       parseInt(process.env.NODE_APP_INSTANCE) ===
       parseInt(process.env.instances) - 1
         ? totalShards - 1
-        : Math.floor(
-            (totalShards / parseInt(process.env.instances)) *
-              parseInt(process.env.NODE_APP_INSTANCE)
-          ) +
-          totalShards / parseInt(process.env.instances),
+        : Math.abs(
+            Math.floor(
+              (totalShards / parseInt(process.env.instances)) *
+                parseInt(process.env.NODE_APP_INSTANCE)
+            ) + Math.floor(totalShards / parseInt(process.env.instances))
+          ) - 1,
     total: totalShards
   };
 }

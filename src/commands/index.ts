@@ -1,8 +1,8 @@
 import { CommandModule } from '../types';
-import Joe from './Joe';
 import Help from './Help';
 import Eval from './Eval';
+import Shards from './Shards';
 
-const commands: CommandModule[] = [Help, Joe, Eval];
+const commands: CommandModule[] = [Help, Eval, Shards];
 
 export default commands;
