@@ -40,24 +40,27 @@ async function sendSuggestion<A extends keyof typeof channels>(
         },
         {
           name: 'User',
-          value: `${msg.author.username}#${msg.author.discriminator} \`${msg.author.id}\``,
+          value: `${msg.author.username}#${msg.author.discriminator} \`<${msg.author.id}>\``,
           inline: true
         },
         {
           name: 'Guild',
           value: `\`${
             (msg.channel as Eris.GuildTextableChannel).guild
-              ? (msg.channel as Eris.GuildTextableChannel).guild.name
+              ? `${(msg.channel as Eris.GuildTextableChannel).guild.name} <${
+                  (msg.channel as Eris.GuildTextableChannel).guild.id
+                }>`
               : `Private Message <N/A>`
           }\``,
           inline: true
         },
-        ,
         {
           name: 'Channel',
           value: `\`${
             (msg.channel as Eris.GuildTextableChannel).guild
-              ? (msg.channel as Eris.GuildTextableChannel).name
+              ? `${(msg.channel as Eris.GuildTextableChannel).name} <${
+                  (msg.channel as Eris.GuildTextableChannel).id
+                }>`
               : `Private Message <${msg.channel.id}>`
           }\``,
           inline: true
@@ -169,10 +172,14 @@ export default {
     }
     if (suggestion === null)
       throw new Error('Suggestion with that ID does not exist.');
-    await client.deleteMessage(
-      Object.values(channels)[suggestion.type],
-      suggestion.suggestionMsgID
-    );
+    try {
+      await client.deleteMessage(
+        Object.values(channels)[suggestion.type],
+        suggestion.suggestionMsgID
+      );
+    } catch (e) {
+      console.warn('Message probably already deleted.', e);
+    }
     await suggestion.destroy();
     return suggestion;
   }
