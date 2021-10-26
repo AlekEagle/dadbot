@@ -168,11 +168,14 @@ async function uploadOutput(output: string): Promise<string> {
   return await res.text();
 }
 
-const __command: CommandModule = {
+const Eval: CommandModule = {
   name: 'eval',
 
   async handler(client, msg, args) {
-    if (!(await isOwner(msg.author.id, true))) return 'undefined';
+    if (!(await isOwner(msg.author.id, true)))
+      return {
+        embed: { image: { url: 'https://alekeagle.me/cAPOyKp9Mm.jpg' } }
+      };
     args.shift();
     let options: string[] = [];
     if (args[0].match(/^-(\w+)$/)) {
@@ -252,4 +255,4 @@ const __command: CommandModule = {
     hidden: true
   }
 };
-export default __command;
+export default Eval;

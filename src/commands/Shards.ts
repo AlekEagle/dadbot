@@ -2,7 +2,7 @@ import Eris from 'eris';
 import { CommandModule } from '../types';
 import Table from '../utils/Table';
 
-const __command: CommandModule = {
+const Shards: CommandModule = {
   name: 'shards',
 
   async handler(client, msg, args) {
@@ -111,4 +111,4 @@ const __command: CommandModule = {
   }
 };
 
-export default __command;
+export default Shards;

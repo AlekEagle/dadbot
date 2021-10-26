@@ -8,6 +8,6 @@ const lists: {
   kumiko: string[];
   dadsDabbing: string[];
   advice: string[];
-} = JSON.parse(FS.readFileSync('../../../data/lists.json', 'utf-8'));
+} = JSON.parse(FS.readFileSync('./data/lists.json', 'utf-8'));
 
 export default lists;

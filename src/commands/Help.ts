@@ -5,7 +5,7 @@ import ms from 'ms';
 
 const cmdsPerPage = 5;
 
-const __command: CommandModule = {
+const Help: CommandModule = {
   name: 'help',
 
   async handler(client, msg, args) {
@@ -99,4 +99,4 @@ Aliases: ${cmd[1].aliases.length > 0 ? cmd[1].aliases.join(', ') : 'None'}${
   }
 };
 
-export default __command;
+export default Help;
