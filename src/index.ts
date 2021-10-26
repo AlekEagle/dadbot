@@ -106,7 +106,9 @@ async function calculateShardReservation() {
       ],
       maxShards: shards.total,
       firstShardID: shards.start,
-      lastShardID: shards.end
+      lastShardID: shards.end,
+      messageLimit: 0,
+      restMode: true
     },
     {
       prefix: process.env.DEBUG ? 'test!' : 'd!',
