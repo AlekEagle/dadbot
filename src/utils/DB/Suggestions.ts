@@ -6,14 +6,17 @@ export default class Suggestions extends Model {
   type: number;
   guildID: string;
   channelID: string;
+  messageID: string;
   content: string;
   attachments: {
     filename: string;
     url: string;
-  };
-  replies: [{ replied: string; content: string; at: Date }];
+  }[];
+  replies: { replied: string; content: string; at: Date }[];
   id: number;
   suggestionMsgID: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 (async function () {
   await initDB();

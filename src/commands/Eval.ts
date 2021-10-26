@@ -199,7 +199,8 @@ const __command: CommandModule = {
         args,
         require,
         exports,
-        console
+        console,
+        process
       }
     );
     if (emitter instanceof EventEmitter) {
@@ -247,7 +248,8 @@ const __command: CommandModule = {
   },
   options: {
     removeWhitespace: false,
-    whitespaceSeparator: /(\s(?<!\n))/g
+    whitespaceSeparator: /(\s(?<!\n))/g,
+    hidden: true
   }
 };
 export default __command;

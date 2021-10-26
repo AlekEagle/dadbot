@@ -36,7 +36,16 @@ const __command: CommandModule = {
 
         let table = new Table(
           {
-            'ID': shardsArr.map(a => a.id),
+            'Shard ID': () =>
+              shardsArr.map(
+                a =>
+                  `${
+                    a.id ===
+                    (msg.channel as Eris.GuildTextableChannel).guild.shard.id
+                      ? '> '
+                      : ''
+                  }${a.id}`
+              ),
             'Guild Count': shardsArr.map(a => a.guildCount),
             'User Count': shardsArr.map(a => a.userCount),
             'Status': shardsArr.map(a => a.status),
@@ -75,6 +84,7 @@ const __command: CommandModule = {
                           .map(a =>
                             parseInt((a as string).replace(/ [a-z]/gi, ''))
                           )
+                          .filter(a => !!a)
                           .reduce(
                             (a: number, b: number) => a + b,
                             0
@@ -82,13 +92,8 @@ const __command: CommandModule = {
                       ).toString()} ms`
                     );
                     break;
-                  case 'ID':
-                    finalData.push(
-                      `#${
-                        (msg.channel as Eris.GuildTextableChannel).guild.shard
-                          .id
-                      }`
-                    );
+                  case 'Shard ID':
+                    finalData.push('TOTAL');
                     break;
                 }
               });
