@@ -2,7 +2,7 @@ import Eris from 'eris';
 import ECH from 'eris-command-handler';
 import Suggestions from './DB/Suggestions';
 
-const channels: { [key: string]: string } = {
+const channels = {
   complaint: '690286309461196912',
   compliment: '690286380122767481',
   suggestion: '690299278702149712'
@@ -87,7 +87,8 @@ export default {
 
   async create<A extends keyof typeof channels>(
     type: A,
-    message: Eris.Message
+    message: Eris.Message,
+    content: string
   ) {
     let suggestion: Suggestions;
     try {
@@ -99,7 +100,7 @@ export default {
         guildID: (message.channel as Eris.GuildTextableChannel).guild
           ? (message.channel as Eris.GuildTextableChannel).guild.id
           : null,
-        content: message.content,
+        content,
         attachments: message.attachments.length > 0 ? message.attachments : null
       });
     } catch (error) {
@@ -113,7 +114,7 @@ export default {
     });
   },
 
-  async reply(id: string, message: Eris.Message) {
+  async reply(id: string, message: Eris.Message, content: string) {
     let suggestion: Suggestions;
     try {
       suggestion = await Suggestions.findOne({
@@ -135,9 +136,7 @@ export default {
       allowedMentions: { repliedUser: true },
       content: `Hey! Your ${
         Object.keys(channels)[suggestion.type]
-      } got a reply from the Dad Bot Crew! Here's what they said: \n\`${
-        message.content
-      }\``
+      } got a reply from the Dad Bot Crew! Here's what they said: \n\`${content}\``
     });
     return await suggestion.update({
       replies: suggestion.replies
@@ -145,14 +144,14 @@ export default {
             ...suggestion.replies,
             {
               replied: message.author.id,
-              content: message.content,
+              content,
               at: message.createdAt
             }
           ]
         : [
             {
               replied: message.author.id,
-              content: message.content,
+              content,
               at: message.createdAt
             }
           ]

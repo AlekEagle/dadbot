@@ -9,9 +9,20 @@ import Mio from './Mio';
 import Embarrass from './Embarrass';
 import Dab from './Dab';
 import MisspelledEmbarrass from './MisspelledEmbarrass';
+import Complain from './Complain';
+import Compliment from './Compliment';
+import Suggest from './Suggest';
+import Patreon from './Patreon';
+import CreatorInfo from './CreatorInfo';
+import Github from './Github';
+import Invite from './Invite';
 
 const commands: CommandModule[] = [
   Help,
+  Patreon,
+  CreatorInfo,
+  Invite,
+  Github,
   Eval,
   Shards,
   Dadjoke,
@@ -20,7 +31,10 @@ const commands: CommandModule[] = [
   Mio,
   Embarrass,
   Dab,
-  MisspelledEmbarrass
+  MisspelledEmbarrass,
+  Complain,
+  Compliment,
+  Suggest
 ];
 
 export default commands;
