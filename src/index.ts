@@ -36,8 +36,8 @@ Cluster.on('connected', () => {
 (process as any).clusterClient = Cluster;
 
 (async function () {
-  let chair = await import('./utils/Chair');
-  if (chair.default.chair !== 'chair')
+  let chair = (await import('./utils/Chair')).default;
+  if (chair.chair !== 'chair')
     throw new Error('My chair has a dent in it! How Could you!?');
   if (process.env.DEBUG) return;
   await import('./utils/Sentry');
