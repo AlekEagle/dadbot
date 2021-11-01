@@ -158,6 +158,21 @@ export default {
     });
   },
 
+  async get(id: string) {
+    let suggestion: Suggestions;
+    try {
+      suggestion = await Suggestions.findOne({
+        where: {
+          id
+        }
+      });
+    } catch (e) {
+      throw e;
+    }
+
+    return suggestion;
+  },
+
   async delete(id: string, client: ECH.CommandClient) {
     let suggestion: Suggestions;
     try {
