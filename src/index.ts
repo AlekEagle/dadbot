@@ -16,6 +16,7 @@ import DadbotClusterClient from '../../dadbot-cluster-client';
 import evaluateSafe from './utils/SafeEval';
 import EventEmitter from 'node:events';
 import Utils from 'node:util';
+import { incrementCommand, initializeCommand } from './utils/Statistics';
 
 const Cluster = new DadbotClusterClient(
   { name: 'ws', options: { url: 'ws://localhost:8080/manager' } },
@@ -128,11 +129,15 @@ async function calculateShardReservation() {
       require,
       exports,
       console,
-      client
+      client,
+      process
     });
     if (emitter instanceof EventEmitter) {
       emitter.once('complete', async (out, err) => {
-        cb(typeof out !== 'string' && !err ? Utils.inspect(err || out) : out);
+        if (err) {
+          console.error(err);
+          cb(typeof err !== 'string' ? Utils.inspect(err) : err);
+        } else cb(typeof out !== 'string' ? Utils.inspect(out) : out);
       });
       emitter.once('timeoutError', error => {
         cb(Utils.inspect(error));
@@ -154,9 +159,11 @@ async function calculateShardReservation() {
 
   Commands.forEach(command => {
     console.debug(`Loading command "${command.name}".`);
+    initializeCommand(command.name);
     client.registerCommand(
       command.name,
       async (msg, args) => {
+        incrementCommand(command.name);
         try {
           let blacklistStatus = await checkBlacklistStatus(msg);
           if (

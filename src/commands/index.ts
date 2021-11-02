@@ -16,6 +16,10 @@ import Patreon from './Patreon';
 import CreatorInfo from './CreatorInfo';
 import Github from './Github';
 import Invite from './Invite';
+import FDelete from './FDelete';
+import FReply from './FReply';
+import Info from './Info';
+import Settings from './Settings';
 
 const commands: CommandModule[] = [
   Help,
@@ -34,7 +38,11 @@ const commands: CommandModule[] = [
   MisspelledEmbarrass,
   Complain,
   Compliment,
-  Suggest
+  Suggest,
+  FDelete,
+  FReply,
+  Info,
+  Settings
 ];
 
 export default commands;
