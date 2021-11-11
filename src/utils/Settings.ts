@@ -32,7 +32,10 @@ export async function getValueByID(id: string): Promise<SettingsData> {
   return { flags: res.flags, RNG: res.RNG, id: res.id };
 }
 
-export async function setValueByID(id: string, value?: SettingsData) {
+export async function setValueByID(
+  id: string,
+  value?: SettingsData
+): Promise<SettingsData> {
   if (
     !value ||
     (value.flags === defaultSettings.flags && value.RNG === defaultSettings.RNG)
@@ -45,5 +48,31 @@ export async function setValueByID(id: string, value?: SettingsData) {
       })
     ).destroy();
     return { ...defaultSettings, id };
+  } else {
+    let res = await Options.findOne({
+      where: {
+        id
+      }
+    });
+    if (!res) {
+      let created = await Options.create({
+        id,
+        flags: value.flags,
+        RNG: value.RNG
+      });
+      return { flags: created.flags, RNG: created.RNG, id };
+    } else {
+      let updated = await res.update({ ...value });
+      return { flags: updated.flags, RNG: updated.RNG, id };
+    }
   }
+}
+
+export const StringIsNumber = (value: string) =>
+  !isNaN(Number(value)) && isFinite(Number(value));
+
+export function enumToArray(val: any): Array<string> {
+  return Object.keys(val)
+    .filter(StringIsNumber)
+    .map((k: keyof typeof val) => val[k]) as unknown as string[];
 }
