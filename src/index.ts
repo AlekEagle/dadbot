@@ -17,6 +17,7 @@ import evaluateSafe from './utils/SafeEval';
 import EventEmitter from 'node:events';
 import Utils from 'node:util';
 import { incrementCommand, initializeCommand } from './utils/Statistics';
+import { startPrefixManager, stopPrefixManager } from './utils/Prefixes';
 
 const Cluster = new DadbotClusterClient(
   { name: 'ws', options: { url: 'ws://localhost:8080/manager' } },
@@ -149,6 +150,7 @@ async function calculateShardReservation() {
 
   client.on('ready', () => {
     console.log('Ready!');
+    startPrefixManager(client);
   });
 
   Events.forEach(event => {

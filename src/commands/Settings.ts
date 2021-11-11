@@ -177,6 +177,15 @@ const Settings: CommandModule = {
     serverSettings.reactions.set({ name: '⏹️', id: null }, () =>
       menu.setState('default')
     );
+
+    serverSettings.reactions.set(
+      {
+        name: '❗',
+        id: null
+      },
+      (message, user) => {}
+    );
+
     menu.addState('serverSettings', serverSettings);
 
     let channelSettings: ReactionMenuState = {

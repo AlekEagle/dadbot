@@ -108,7 +108,9 @@ export default class ReactionMenu {
     this.states.set('default', defaultState);
     this.reactionHandlerInstance = this.reactionAddListener.bind(this);
     this.client.on('messageReactionAdd', this.reactionHandlerInstance);
-    this.sendMenuMessage();
+    this.sendMenuMessage().catch(err => {
+      throw err;
+    });
   }
 
   private async sendMenuMessage() {
@@ -116,9 +118,13 @@ export default class ReactionMenu {
     this.message = await this.channel.createMessage(
       typeof msg === 'function' ? await msg() : msg
     );
-    await this.addReactions(
-      Array.from(this.states.get(this.state).reactions.keys())
-    );
+    try {
+      await this.addReactions(
+        Array.from(this.states.get(this.state).reactions.keys())
+      );
+    } catch (err) {
+      throw err;
+    }
     this.restartInactivityTimer();
     this.ready = true;
   }
