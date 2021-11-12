@@ -60,6 +60,7 @@ export function stopPrefixManager() {
 }
 
 export async function updatePrefix(
+  client: ECH.CommandClient,
   serverID: string,
   prefix: string
 ): Promise<PrefixData> {
@@ -75,6 +76,27 @@ export async function updatePrefix(
   if (res[1]) {
     return { id: serverID, prefix };
   } else {
-    res[0];
+    if (prefix === client.commandOptions.prefix || prefix === '' || !prefix) {
+      await res[0].destroy();
+      return { id: serverID, prefix: client.commandOptions.prefix as string };
+    } else {
+      let ures = await res[0].update({ prefix });
+      return { id: ures.serverID, prefix: ures.prefix };
+    }
+  }
+}
+
+export async function removePrefix(serverID: string): Promise<void> {
+  let res = await PrefixDB.findOne({
+    where: {
+      serverID
+    }
+  });
+
+  if (!res) {
+    return;
+  } else {
+    await res.destroy();
+    return;
   }
 }

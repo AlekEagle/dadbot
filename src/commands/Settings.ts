@@ -5,6 +5,7 @@ import ReactionMenu, {
 } from '../utils/ReactionMenu';
 import { isOwner } from '../utils/Owners';
 import * as SettingsUtils from '../utils/Settings';
+import { updatePrefix } from '../utils/Prefixes';
 import Eris from 'eris';
 
 const Settings: CommandModule = {
