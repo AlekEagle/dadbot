@@ -43,6 +43,7 @@ SELECT "serverID" from "Prefixes";`
 }
 
 export async function startPrefixManager(client: ECH.CommandClient) {
+  await checkNewPrefixes(client);
   newPrefixInterval = setInterval(() => {
     checkNewPrefixes(client);
   }, 10000);
@@ -74,19 +75,25 @@ export async function updatePrefix(
     }
   });
   if (res[1]) {
+    client.guildPrefixes[serverID] = res[0].prefix;
     return { id: serverID, prefix };
   } else {
     if (prefix === client.commandOptions.prefix || prefix === '' || !prefix) {
       await res[0].destroy();
+      delete client.guildPrefixes[serverID];
       return { id: serverID, prefix: client.commandOptions.prefix as string };
     } else {
       let ures = await res[0].update({ prefix });
+      client.guildPrefixes[serverID] = ures.prefix;
       return { id: ures.serverID, prefix: ures.prefix };
     }
   }
 }
 
-export async function removePrefix(serverID: string): Promise<void> {
+export async function removePrefix(
+  client: ECH.CommandClient,
+  serverID: string
+): Promise<void> {
   let res = await PrefixDB.findOne({
     where: {
       serverID
@@ -97,6 +104,7 @@ export async function removePrefix(serverID: string): Promise<void> {
     return;
   } else {
     await res.destroy();
+    delete client.guildPrefixes[serverID];
     return;
   }
 }

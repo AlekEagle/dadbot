@@ -6,7 +6,7 @@ import ReactionMenu, {
 import { isOwner } from '../utils/Owners';
 import * as SettingsUtils from '../utils/Settings';
 import { updatePrefix, removePrefix } from '../utils/Prefixes';
-import Eris from 'eris';
+import Eris, { Message } from 'eris';
 
 const Settings: CommandModule = {
   name: 'settings',
@@ -110,6 +110,9 @@ const Settings: CommandModule = {
         RNG: prefs.RNG,
         flags: newFlags
       });
+      await new Promise((resolve, reject) => {
+        setTimeout(resolve, 500);
+      });
     });
     userSettings.reactions.set({ name: '⏹️', id: null }, () =>
       menu.setState('default')
@@ -143,7 +146,11 @@ const Settings: CommandModule = {
               ),
               {
                 name: 'Server Prefix',
-                value: client.guildPrefixes[msg.channel.guild.id] as string
+                value: `\`${
+                  client.guildPrefixes[msg.channel.guild.id]
+                    ? (client.guildPrefixes[msg.channel.guild.id] as string)
+                    : (client.commandOptions.prefix as string)
+                }\``
               }
             ]
           }
@@ -174,38 +181,100 @@ const Settings: CommandModule = {
         RNG: prefs.RNG,
         flags: newFlags
       });
+      await new Promise((resolve, reject) => {
+        setTimeout(resolve, 500);
+      });
     });
-    serverSettings.reactions.set({ name: '⏹️', id: null }, () =>
-      menu.setState('default')
-    );
-    
-    async function setPrefixHandler(mesg: Eris.Message<Eris.GuildTextableChannel>) {
-      if (mesg.author.bot || mesg.channel.id !== msg.channel.id || mesg.author.id !== msg.author.id) return;
-      console.log(mesg.content.match(/`((?!`).{1,}?)`/i));
+
+    serverSettings.reactions.set({ name: '#⃣', id: null }, () => {
+      menu.setState('channelSettings');
+    });
+
+    serverSettings.reactions.set({ name: '⏹️', id: null }, () => {
+      menu.setState('default');
+    });
+
+    let newPrefix: string;
+
+    async function setPrefixHandler(
+      mesg: Eris.Message<Eris.GuildTextableChannel>
+    ) {
+      if (
+        mesg.author.bot ||
+        mesg.channel.id !== msg.channel.id ||
+        mesg.author.id !== msg.author.id
+      )
+        return;
+      menu.restartInactivityTimer();
+      let match = mesg.content.match(/`((?!`).{1,}?)`/i);
+      if (!match) {
+        newPrefix = mesg.content;
+      } else {
+        newPrefix = match[1];
+      }
+      await mesg.delete();
       client.off('messageCreate', setPrefixHandler);
+      menu.setState('confirmPrefix');
     }
-      
+
+    let confirmPrefix: ReactionMenuState = {
+      async message() {
+        return {
+          embed: {
+            title: 'Confirm Prefix',
+            description: `Are you 100% sure you want your prefix to be \`${newPrefix}\`? This means to use dad bot you'll have to use commands like: \`${newPrefix}help\``
+          }
+        };
+      },
+      reactions: new EmojiMap()
+    };
+
+    confirmPrefix.reactions.set({ name: '✅', id: null }, async () => {
+      await updatePrefix(client, msg.channel.guild.id, newPrefix);
+      await menu.setState('serverSettings');
+    });
+
+    confirmPrefix.reactions.set({ name: '❎', id: null }, async () => {
+      await menu.setState('serverSettings');
+    });
+
+    menu.addState('confirmPrefix', confirmPrefix);
 
     serverSettings.reactions.set(
       {
         name: '❗',
         id: null
       },
-      (message, user) => {
+      async (message, user) => {
+        newPrefix = '';
         await menu.setState('setPrefix');
-        client.on('sendMessage', setPrefixHandler);
+        client.on('messageCreate', setPrefixHandler);
       }
     );
-    
+
     let setPrefix: ReactionMenuState = {
       message: {
         embed: {
           title: 'Set Prefix',
-          description: '**THIS WILL CHANGE THE PREFIX YOU USE TO CONTROL THE BOT, IF YOU DON\'T WANT THIS TO HAPPEN USE THE ⏹️ REACTION TO CANCEL.** To reset the prefix to default, use 🔄 to reset it!\n\nSend a message with the new prefix you want the bot to respond to. If you want spaces in the prefix, like: `dad help`, enclose the prefix in backticks (`), so to use a command like `dad help`, send `\`dad \``.'
+          description:
+            '**THIS WILL CHANGE THE PREFIX YOU USE TO CONTROL THE BOT, IF YOU DON\'T WANT THIS TO HAPPEN USE THE ⏹️ REACTION TO CANCEL.** To reset the prefix to default, use 🔄 to reset it!\n\nSend a message with the new prefix you want the bot to respond to. If you want spaces in the prefix, like: `dad help`, enclose the prefix in backticks (\\`), so to use a command like `dad help`, send "\\`dad \\`".'
         }
       },
       reactions: new EmojiMap()
     };
+
+    setPrefix.reactions.set({ name: '🔄', id: null }, async () => {
+      client.off('messageCreate', setPrefixHandler);
+      await removePrefix(client, msg.channel.guild.id);
+      menu.setState('serverSettings');
+    });
+
+    setPrefix.reactions.set({ name: '⏹️', id: null }, () => {
+      client.off('messageCreate', setPrefixHandler);
+      menu.setState('serverSettings');
+    });
+
+    menu.addState('setPrefix', setPrefix);
 
     menu.addState('serverSettings', serverSettings);
 
@@ -265,11 +334,72 @@ const Settings: CommandModule = {
         RNG: prefs.RNG,
         flags: newFlags
       });
+      await new Promise((resolve, reject) => {
+        setTimeout(resolve, 500);
+      });
+    });
+    channelSettings.reactions.set({ name: '#⃣', id: null }, () => {
+      menu.setState('serverSettings');
+    });
+    channelSettings.reactions.set({ name: '🔄', id: null }, () => {
+      menu.setState('changeChannel');
+      client.on('messageCreate', changeChannelHandler);
     });
     channelSettings.reactions.set({ name: '⏹️', id: null }, () =>
       menu.setState('default')
     );
     menu.addState('channelSettings', channelSettings);
+
+    let changeChannel: ReactionMenuState = {
+      message: {
+        embed: {
+          title: 'Change Channel',
+          description:
+            'Mention, send the name, or send the ID of the channel to switch to that channel. '
+        }
+      },
+      reactions: new EmojiMap()
+    };
+
+    menu.addState('changeChannel', changeChannel);
+
+    function changeChannelHandler(
+      mesg: Eris.Message<Eris.GuildTextableChannel>
+    ) {
+      if (
+        mesg.author.bot ||
+        mesg.channel.id !== msg.channel.id ||
+        mesg.author.id !== msg.author.id
+      )
+        return;
+      menu.restartInactivityTimer();
+      if (mesg.channelMentions.length < 1) {
+        let chnl = mesg.channel.guild.channels.find(
+          c => c.name === mesg.content || c.id === mesg.content
+        );
+        if (!chnl) {
+          mesg.channel.createMessage("That's not a valid channel!").then(a => {
+            setTimeout(() => {
+              a.delete();
+            }, 5000);
+          });
+        } else {
+          selectedChannelID = chnl.id;
+          menu.setState('channelSettings');
+          client.off('messageCreate', changeChannelHandler);
+        }
+      } else {
+        selectedChannelID = mesg.channelMentions[0];
+        menu.setState('channelSettings');
+        client.off('messageCreate', changeChannelHandler);
+      }
+      mesg.delete();
+    }
+
+    changeChannel.reactions.set({ name: '⏹️', id: null }, () => {
+      menu.setState('channelSettings');
+      client.off('messageCreate', changeChannelHandler);
+    });
   }
 };
 
