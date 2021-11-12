@@ -5,7 +5,7 @@ import ReactionMenu, {
 } from '../utils/ReactionMenu';
 import { isOwner } from '../utils/Owners';
 import * as SettingsUtils from '../utils/Settings';
-import { updatePrefix } from '../utils/Prefixes';
+import { updatePrefix, removePrefix } from '../utils/Prefixes';
 import Eris from 'eris';
 
 const Settings: CommandModule = {
@@ -178,14 +178,34 @@ const Settings: CommandModule = {
     serverSettings.reactions.set({ name: '⏹️', id: null }, () =>
       menu.setState('default')
     );
+    
+    async function setPrefixHandler(mesg: Eris.Message<Eris.GuildTextableChannel>) {
+      if (mesg.author.bot || mesg.channel.id !== msg.channel.id || mesg.author.id !== msg.author.id) return;
+      console.log(mesg.content.match(/`((?!`).{1,}?)`/i));
+      client.off('messageCreate', setPrefixHandler);
+    }
+      
 
     serverSettings.reactions.set(
       {
         name: '❗',
         id: null
       },
-      (message, user) => {}
+      (message, user) => {
+        await menu.setState('setPrefix');
+        client.on('sendMessage', setPrefixHandler);
+      }
     );
+    
+    let setPrefix: ReactionMenuState = {
+      message: {
+        embed: {
+          title: 'Set Prefix',
+          description: '**THIS WILL CHANGE THE PREFIX YOU USE TO CONTROL THE BOT, IF YOU DON\'T WANT THIS TO HAPPEN USE THE ⏹️ REACTION TO CANCEL.** To reset the prefix to default, use 🔄 to reset it!\n\nSend a message with the new prefix you want the bot to respond to. If you want spaces in the prefix, like: `dad help`, enclose the prefix in backticks (`), so to use a command like `dad help`, send `\`dad \``.'
+        }
+      },
+      reactions: new EmojiMap()
+    };
 
     menu.addState('serverSettings', serverSettings);
 
