@@ -176,6 +176,11 @@ function calculateShardReservation(): Promise<{
       return;
     } else {
       sendShardInfoInterval = setInterval(async () => {
+        let cpu = await CPU();
+        if (cpu === Infinity) {
+          console.error('!');
+          cpu = 100;
+        }
         Cluster.sendData(0, {
           ping: Math.round(
             client.shards
@@ -185,7 +190,7 @@ function calculateShardReservation(): Promise<{
               client.shards.map(e => e.latency).filter(a => isFinite(a)).length
           ),
           guilds: client.guilds.size,
-          cpuUsage: Math.round(await CPU()),
+          cpuUsage: Math.round(cpu),
           memoryUsage: Math.round(new Memory().raw() / 1024 / 1024)
         });
       }, 5000);
