@@ -176,7 +176,7 @@ function calculateShardReservation(): Promise<{
       return;
     } else {
       sendShardInfoInterval = setInterval(async () => {
-        Cluster.sendData(DataTypes.ClusterData, {
+        Cluster.sendData(0, {
           ping: Math.round(
             client.shards
               .map(s => s.latency)
