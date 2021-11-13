@@ -1,7 +1,7 @@
 import Logger, { Level } from './utils/Logger';
 
 global.console = new Logger(
-  process.env.DEBUG ? Level.DEBUG : Level.WARN
+  process.env.DEBUG ? Level.DEBUG : Level.INFO
 ) as any;
 
 import envConfig from './utils/dotenv';
@@ -12,12 +12,14 @@ import Events from './events';
 import Commands from './commands';
 import { checkBlacklistStatus } from './utils/Blacklist';
 import fetch from 'node-fetch';
-import DadbotClusterClient from '../../dadbot-cluster-client';
+import DadbotClusterClient, { DataTypes } from '../../dadbot-cluster-client';
 import evaluateSafe from './utils/SafeEval';
 import EventEmitter from 'node:events';
 import Utils from 'node:util';
 import { incrementCommand, initializeCommand } from './utils/Statistics';
-import { startPrefixManager, stopPrefixManager } from './utils/Prefixes';
+import { startPrefixManager } from './utils/Prefixes';
+import Memory from './utils/Memory';
+import CPU from './utils/CPU';
 
 const Cluster = new DadbotClusterClient(
   { name: 'ws', options: { url: 'ws://localhost:8080/manager' } },
@@ -30,6 +32,8 @@ const Cluster = new DadbotClusterClient(
     }
   }
 );
+
+let sendShardInfoInterval: NodeJS.Timer;
 
 Cluster.on('connected', () => {
   console.log('Connected to cluster manager.');
@@ -95,7 +99,7 @@ function calculateShardReservation(): Promise<{
                       ) - 1,
                 total: totalShards
               });
-            }, 5000 * Number(process.env.NODE_APP_INSTANCE));
+            }, 10000 * Number(process.env.NODE_APP_INSTANCE));
           });
         }
       });
@@ -161,6 +165,28 @@ function calculateShardReservation(): Promise<{
   client.on('ready', () => {
     console.log('Ready!');
     startPrefixManager(client);
+  });
+
+  Cluster.on('cluster_status', (count, connected) => {
+    if (count !== connected.length) {
+      clearInterval(sendShardInfoInterval);
+      return;
+    } else {
+      sendShardInfoInterval = setInterval(async () => {
+        Cluster.sendData(DataTypes.ClusterData, {
+          ping: Math.round(
+            client.shards
+              .map(s => s.latency)
+              .filter(a => isFinite(a))
+              .reduce((a, b) => a + b, 0) /
+              client.shards.map(e => e.latency).filter(a => isFinite(a)).length
+          ),
+          guilds: client.guilds.size,
+          cpuUsage: Math.round(await CPU()),
+          memoryUsage: Math.round(new Memory().raw() / 1024 / 1024)
+        });
+      }, 5000);
+    }
   });
 
   Events.forEach(event => {
