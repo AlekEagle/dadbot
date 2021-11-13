@@ -51,46 +51,55 @@ if (!process.env.instances || !process.env.NODE_APP_INSTANCE) {
   throw new Error('Missing required environment variables');
 }
 
-async function calculateShardReservation() {
-  let totalShards: number = process.env.shardCountOverride
-    ? parseInt(process.env.shardCountOverride)
-    : 1;
-  if (!process.env.shardCountOverride) {
-    let req = await fetch(
-      `https://discord.com/api/v${Constants.REST_VERSION}/gateway/bot`,
-      {
+function calculateShardReservation(): Promise<{
+  start: number;
+  end: number;
+  total: number;
+}> {
+  return new Promise((resolve, reject) => {
+    let totalShards: number = process.env.shardCountOverride
+      ? parseInt(process.env.shardCountOverride)
+      : 1;
+    if (!process.env.shardCountOverride) {
+      fetch(`https://discord.com/api/v${Constants.REST_VERSION}/gateway/bot`, {
         headers: {
           Authorization: `Bot ${
             process.env.DEBUG ? process.env.otherToken : process.env.token
           }`
         }
-      }
-    );
-    if (req.status === 429) {
-      console.error("I've been ratelimited!");
-      throw new Error('Ratelimited');
-    } else {
-      let json = await req.json();
-      totalShards = json.shards;
+      }).then(req => {
+        if (req.status === 429) {
+          console.error("I've been ratelimited!");
+          throw new Error('Ratelimited');
+        } else {
+          req.json().then(json => {
+            totalShards = json.shards;
+
+            resolve({
+              start: Math.floor(
+                (totalShards / parseInt(process.env.instances)) *
+                  parseInt(process.env.NODE_APP_INSTANCE)
+              ),
+              end:
+                parseInt(process.env.NODE_APP_INSTANCE) ===
+                parseInt(process.env.instances) - 1
+                  ? totalShards - 1
+                  : Math.abs(
+                      Math.floor(
+                        (totalShards / parseInt(process.env.instances)) *
+                          parseInt(process.env.NODE_APP_INSTANCE)
+                      ) +
+                        Math.floor(
+                          totalShards / parseInt(process.env.instances)
+                        )
+                    ) - 1,
+              total: totalShards
+            });
+          });
+        }
+      });
     }
-  }
-  return {
-    start: Math.floor(
-      (totalShards / parseInt(process.env.instances)) *
-        parseInt(process.env.NODE_APP_INSTANCE)
-    ),
-    end:
-      parseInt(process.env.NODE_APP_INSTANCE) ===
-      parseInt(process.env.instances) - 1
-        ? totalShards - 1
-        : Math.abs(
-            Math.floor(
-              (totalShards / parseInt(process.env.instances)) *
-                parseInt(process.env.NODE_APP_INSTANCE)
-            ) + Math.floor(totalShards / parseInt(process.env.instances))
-          ) - 1,
-    total: totalShards
-  };
+  });
 }
 (async function () {
   let shards = await calculateShardReservation();
