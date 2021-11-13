@@ -1,15 +1,4 @@
 node_modules
-.auth.json
-blacklist.blk
-gblacklist.blk
-pblacklist.blk
-stats.json
-cmdstats.json
 .vscode
-suggestions.json
-owners.json
-deploy.sh
 .env
-debug.log
-websocket.log
-functions/Sentry.js
+dist

@@ -1,0 +1,21 @@
+{
+  "503720029456695306": [
+    {
+      "match": "Have you eaten yet?",
+      "from": "605864767915294730",
+      "reponses": [
+        "No, I haven't yet."
+      ]
+    }
+  ],
+  "605864767915294730": [
+    {
+      "match": "No, I haven't yet.",
+      "from": "503720029456695306",
+      "responses": [
+        "I'm not talking to you.",
+        "Yes you did? I saw you earlier today!"
+      ]
+    }
+  ]
+}
