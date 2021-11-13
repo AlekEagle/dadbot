@@ -74,27 +74,28 @@ function calculateShardReservation(): Promise<{
         } else {
           req.json().then(json => {
             totalShards = json.shards;
-
-            resolve({
-              start: Math.floor(
-                (totalShards / parseInt(process.env.instances)) *
-                  parseInt(process.env.NODE_APP_INSTANCE)
-              ),
-              end:
-                parseInt(process.env.NODE_APP_INSTANCE) ===
-                parseInt(process.env.instances) - 1
-                  ? totalShards - 1
-                  : Math.abs(
-                      Math.floor(
-                        (totalShards / parseInt(process.env.instances)) *
-                          parseInt(process.env.NODE_APP_INSTANCE)
-                      ) +
+            setTimeout(() => {
+              resolve({
+                start: Math.floor(
+                  (totalShards / parseInt(process.env.instances)) *
+                    parseInt(process.env.NODE_APP_INSTANCE)
+                ),
+                end:
+                  parseInt(process.env.NODE_APP_INSTANCE) ===
+                  parseInt(process.env.instances) - 1
+                    ? totalShards - 1
+                    : Math.abs(
                         Math.floor(
-                          totalShards / parseInt(process.env.instances)
-                        )
-                    ) - 1,
-              total: totalShards
-            });
+                          (totalShards / parseInt(process.env.instances)) *
+                            parseInt(process.env.NODE_APP_INSTANCE)
+                        ) +
+                          Math.floor(
+                            totalShards / parseInt(process.env.instances)
+                          )
+                      ) - 1,
+                total: totalShards
+              });
+            }, 5000 * Number(process.env.NODE_APP_INSTANCE));
           });
         }
       });
