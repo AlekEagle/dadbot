@@ -45,29 +45,33 @@ const __event: EventModule = {
         !formattingMatchData ||
         formattingMatchData.index > imMatchData.index
       ) {
-        msg.channel.createMessage(
-          `Hi ${imMatchData[2]}, I'm ${
-            (msg.channel as GuildTextableChannel).guild.members.get(
-              client.user.id
-            ).nick
-              ? (msg.channel as GuildTextableChannel).guild.members.get(
-                  client.user.id
-                ).nick
-              : 'Dad'
-          }!`
-        );
+        msg.channel
+          .createMessage(
+            `Hi ${imMatchData[2]}, I'm ${
+              (msg.channel as GuildTextableChannel).guild.members.get(
+                client.user.id
+              ).nick
+                ? (msg.channel as GuildTextableChannel).guild.members.get(
+                    client.user.id
+                  ).nick
+                : 'Dad'
+            }!`
+          )
+          .catch(() => {});
       } else {
-        msg.channel.createMessage(
-          `Hi ${formattingMatchData[0]}${imMatchData[2]}, I'm ${
-            (msg.channel as GuildTextableChannel).guild.members.get(
-              client.user.id
-            ).nick
-              ? (msg.channel as GuildTextableChannel).guild.members.get(
-                  client.user.id
-                ).nick
-              : 'Dad'
-          }!`
-        );
+        msg.channel
+          .createMessage(
+            `Hi ${formattingMatchData[0]}${imMatchData[2]}, I'm ${
+              (msg.channel as GuildTextableChannel).guild.members.get(
+                client.user.id
+              ).nick
+                ? (msg.channel as GuildTextableChannel).guild.members.get(
+                    client.user.id
+                  ).nick
+                : 'Dad'
+            }!`
+          )
+          .catch(() => {});
       }
     }
     // End of I'm matcher
@@ -79,11 +83,13 @@ const __event: EventModule = {
       (guildSettings ? guildSettings.flags & Flags.KYS_RESPONSES : true)
     ) {
       incrementResponseCount();
-      msg.channel.createMessage(
-        `That was very rude ${
-          msg.member.nick ? msg.member.nick : msg.author.username
-        }, instead, take your own advice.`
-      );
+      msg.channel
+        .createMessage(
+          `That was very rude ${
+            msg.member.nick ? msg.member.nick : msg.author.username
+          }, instead, take your own advice.`
+        )
+        .catch(() => {});
     }
     // End of Kys matcher
     // Playing matcher
@@ -96,13 +102,13 @@ const __event: EventModule = {
       incrementResponseCount();
       switch (msg.content.match(PLAYING_MATCH)[0]) {
         case 'play':
-          msg.channel.createMessage('I hope ya win son!');
+          msg.channel.createMessage('I hope ya win son!').catch(() => {});
           break;
         case 'playing':
-          msg.channel.createMessage('Are ya winning son?');
+          msg.channel.createMessage('Are ya winning son?').catch(() => {});
           break;
         case 'played':
-          msg.channel.createMessage('Did ya win son?');
+          msg.channel.createMessage('Did ya win son?').catch(() => {});
       }
     }
     // End of Playing matcher
