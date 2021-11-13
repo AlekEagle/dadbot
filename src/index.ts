@@ -61,24 +61,27 @@ function calculateShardReservation(): Promise<{
   total: number;
 }> {
   return new Promise((resolve, reject) => {
-    let totalShards: number = process.env.shardCountOverride
-      ? parseInt(process.env.shardCountOverride)
-      : 1;
-    if (!process.env.shardCountOverride) {
-      fetch(`https://discord.com/api/v${Constants.REST_VERSION}/gateway/bot`, {
-        headers: {
-          Authorization: `Bot ${
-            process.env.DEBUG ? process.env.otherToken : process.env.token
-          }`
-        }
-      }).then(req => {
-        if (req.status === 429) {
-          console.error("I've been ratelimited!");
-          throw new Error('Ratelimited');
-        } else {
-          req.json().then(json => {
-            totalShards = json.shards;
-            setTimeout(() => {
+    setTimeout(() => {
+      let totalShards: number = process.env.shardCountOverride
+        ? parseInt(process.env.shardCountOverride)
+        : 1;
+      if (!process.env.shardCountOverride) {
+        fetch(
+          `https://discord.com/api/v${Constants.REST_VERSION}/gateway/bot`,
+          {
+            headers: {
+              Authorization: `Bot ${
+                process.env.DEBUG ? process.env.otherToken : process.env.token
+              }`
+            }
+          }
+        ).then(req => {
+          if (req.status === 429) {
+            console.error("I've been ratelimited!");
+            throw new Error('Ratelimited');
+          } else {
+            req.json().then(json => {
+              totalShards = json.shards;
               resolve({
                 start: Math.floor(
                   (totalShards / parseInt(process.env.instances)) *
@@ -99,11 +102,11 @@ function calculateShardReservation(): Promise<{
                       ) - 1,
                 total: totalShards
               });
-            }, 10000 * Number(process.env.NODE_APP_INSTANCE));
-          });
-        }
-      });
-    }
+            });
+          }
+        });
+      }
+    }, 10000 * Number(process.env.NODE_APP_INSTANCE));
   });
 }
 (async function () {
