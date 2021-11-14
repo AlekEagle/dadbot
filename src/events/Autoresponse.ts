@@ -8,7 +8,8 @@ import { incrementMsgCount, incrementResponseCount } from '../utils/Statistics';
 const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
   KYS_MATCH = /\b(kys|kill\byour\s?self)\b/i,
   FORMAT_MATCH = /(\*\*?\*?|``?`?|__?|~~|\|\|)+/i,
-  PLAYING_MATCH = /\b(?:play|played|playing)\b/i;
+  PLAYING_MATCH = /\b(?:play|played|playing)\b/i,
+  SHUT_UP_MATCH = /\b(stfu|shut\s(?:the\s)?(?:fuck\s)?up)\b/i;
 
 const __event: EventModule = {
   name: 'messageCreate',
@@ -112,6 +113,22 @@ const __event: EventModule = {
       }
     }
     // End of Playing matcher
+    // Shut up matcher
+    if (
+      msg.content.match(SHUT_UP_MATCH) &&
+      usrSettings.flags & Flags.SHUT_UP_RESPONSES &&
+      channelSettings.flags & Flags.SHUT_UP_RESPONSES &&
+      (guildSettings ? guildSettings.flags & Flags.SHUT_UP_RESPONSES : true)
+    ) {
+      incrementResponseCount();
+      msg.channel
+        .createMessage(
+          `Listen here ${
+            msg.member.nick ? msg.member.nick : msg.member.username
+          }, I will not tolerate you saying the words that consist of the letters 's h u t  u p' being said in this server, so take your own advice and close thine mouth in the name of the christian minecraft server owner.`
+        )
+        .catch(() => {});
+    }
   }
 };
 

@@ -1,5 +1,7 @@
 import Eris from 'eris';
 import { CommandModule } from '../types';
+import CPU from '../utils/CPU';
+import Memory from '../utils/Memory';
 import ReadableTime from '../utils/ReadableTime';
 
 const Info: CommandModule = {
@@ -33,6 +35,7 @@ return JSON.stringify(
       )
     ).data.map((a: string) => JSON.parse(a));
     let time = new ReadableTime(process.uptime() * 1000);
+    let cpu = await CPU();
     return {
       embed: {
         title: 'Dad Bot Info',
@@ -42,6 +45,16 @@ return JSON.stringify(
           {
             name: 'Uptime',
             value: time.toShorthand(),
+            inline: true
+          },
+          {
+            name: 'Memory Usage',
+            value: new Memory().stringify(),
+            inline: true
+          },
+          {
+            name: 'CPU Usage',
+            value: `${isFinite(cpu) ? cpu : 100}%`,
             inline: true
           },
           {
