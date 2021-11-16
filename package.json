@@ -22,7 +22,8 @@
     "typescript": "^4.4.2"
   },
   "scripts": {
-    "start": "npx tsc; node dist/index.js"
+    "start": "npx tsc; node dist/index.js",
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/collections": "^5.1.2",
