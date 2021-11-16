@@ -27,8 +27,8 @@ const Cluster = new DadbotClusterClient(
   JSON.parse(FS.readFileSync('./data/schema.json', 'utf-8')),
   {
     cluster: {
-      count: parseInt(process.env.instances),
-      id: parseInt(process.env.NODE_APP_INSTANCE)
+      count: Number(process.env.instances),
+      id: Number(process.env.NODE_APP_INSTANCE)
     }
   }
 );
@@ -63,7 +63,7 @@ function calculateShardReservation(): Promise<{
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       let totalShards: number = process.env.shardCountOverride
-        ? parseInt(process.env.shardCountOverride)
+        ? Number(process.env.shardCountOverride)
         : 1;
       if (!process.env.shardCountOverride) {
         fetch(
@@ -84,26 +84,44 @@ function calculateShardReservation(): Promise<{
               totalShards = json.shards;
               resolve({
                 start: Math.floor(
-                  (totalShards / parseInt(process.env.instances)) *
-                    parseInt(process.env.NODE_APP_INSTANCE)
+                  (totalShards / Number(process.env.instances)) *
+                    Number(process.env.NODE_APP_INSTANCE)
                 ),
                 end:
-                  parseInt(process.env.NODE_APP_INSTANCE) ===
-                  parseInt(process.env.instances) - 1
+                  Number(process.env.NODE_APP_INSTANCE) ===
+                  Number(process.env.instances) - 1
                     ? totalShards - 1
                     : Math.abs(
                         Math.floor(
-                          (totalShards / parseInt(process.env.instances)) *
-                            parseInt(process.env.NODE_APP_INSTANCE)
+                          (totalShards / Number(process.env.instances)) *
+                            Number(process.env.NODE_APP_INSTANCE)
                         ) +
                           Math.floor(
-                            totalShards / parseInt(process.env.instances)
+                            totalShards / Number(process.env.instances)
                           )
                       ) - 1,
                 total: totalShards
               });
             });
           }
+        });
+      } else {
+        resolve({
+          start: Math.floor(
+            (totalShards / Number(process.env.instances)) *
+              Number(process.env.NODE_APP_INSTANCE)
+          ),
+          end:
+            Number(process.env.NODE_APP_INSTANCE) ===
+            Number(process.env.instances) - 1
+              ? totalShards - 1
+              : Math.abs(
+                  Math.floor(
+                    (totalShards / Number(process.env.instances)) *
+                      Number(process.env.NODE_APP_INSTANCE)
+                  ) + Math.floor(totalShards / Number(process.env.instances))
+                ) - 1,
+          total: totalShards
         });
       }
     }, 10000 * Number(process.env.NODE_APP_INSTANCE));
@@ -140,6 +158,7 @@ function calculateShardReservation(): Promise<{
       owner: 'AlekEagle#0001'
     }
   );
+  client.editStatus('dnd', { name: 'myself start up!', type: 3 });
   Cluster.connect();
   Cluster.on('CCCQuery', (data, cb) => {
     console.debug('Received CCCQuery');
@@ -167,6 +186,10 @@ function calculateShardReservation(): Promise<{
 
   client.on('ready', () => {
     console.log('Ready!');
+    client.editStatus('online', {
+      name: 'Join the Discord server for the latest news!',
+      type: 0
+    });
     startPrefixManager(client);
   });
 

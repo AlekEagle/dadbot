@@ -101,7 +101,20 @@ const Shards: CommandModule = {
             }
           }
         );
-        msg.channel.createMessage(`\`\`\`${table.text}\`\`\``);
+        let outMessages: string[] = [],
+          rowInd = 0;
+        table.rows.forEach(row => {
+          if (outMessages[rowInd] === undefined) {
+            outMessages[rowInd] = row;
+          } else {
+            if ((outMessages[rowInd] + `\n${row}`).length + 8 > 2000) {
+              outMessages[++rowInd] = row;
+            } else outMessages[rowInd] += `\n${row}`;
+          }
+        });
+        outMessages.forEach(a => {
+          msg.channel.createMessage(`\`\`\`${a}\`\`\``);
+        });
       });
   },
 

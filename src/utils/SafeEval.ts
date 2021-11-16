@@ -10,28 +10,25 @@ import {
 import EventEmitter from 'node:events';
 
 const compilerOptions: CompilerOptions = {
-  module: ModuleKind.CommonJS,
-  target: ScriptTarget.ES2020,
-  esModuleInterop: true,
-  sourceMap: true,
-  inlineSources: true,
-  noImplicitAny: true,
-  allowJs: true,
-  alwaysStrict: true,
-  resolveJsonModule: true
-};
+    module: ModuleKind.CommonJS,
+    target: ScriptTarget.ES2020,
+    esModuleInterop: true,
+    sourceMap: true,
+    inlineSources: true,
+    noImplicitAny: true,
+    allowJs: true,
+    alwaysStrict: true,
+    resolveJsonModule: true
+  },
+  IMPORT_REGEX = /(?:\n|^)import .+?;/gi;
 
 export default function evaluateSafe(code: string, args: any) {
   let evalStr: string;
-  let imports = code.match(/import .+\n/gi);
+  let imports = code.match(IMPORT_REGEX);
   evalStr = `${
     imports && imports.length > 0 ? `${imports.join('')}\n` : ''
   }(async function () {
-  ${code
-    .replace(/import .+\n/gi, '')
-    .split('\n')
-    .join('\n  ')
-    .replace('\n  ', '')}
+  ${code.replace(IMPORT_REGEX, '').split('\n').join('\n  ').replace('\n  ', '')}
 });`;
   const emitter = new EventEmitter();
 
