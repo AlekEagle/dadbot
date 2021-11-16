@@ -153,7 +153,7 @@ function calculateShardReservation(): Promise<{
     if (emitter instanceof EventEmitter) {
       emitter.once('complete', async (out, err) => {
         if (err) {
-          console.error(err);
+          console.error(err, out);
           cb(typeof err !== 'string' ? Utils.inspect(err) : err);
         } else cb(typeof out !== 'string' ? Utils.inspect(out) : out);
       });
