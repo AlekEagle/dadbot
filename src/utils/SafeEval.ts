@@ -20,16 +20,29 @@ const compilerOptions: CompilerOptions = {
     alwaysStrict: true,
     resolveJsonModule: true
   },
-  IMPORT_REGEX = /(?:\n|^)import .+?;/gi;
+  IMPORT_REGEX = /^import .+?;$/i;
 
 export default function evaluateSafe(code: string, args: any) {
-  let evalStr: string;
-  let imports = code.match(IMPORT_REGEX);
+  let evalStr: string,
+    codeSplit = code.split('\n'),
+    imports: string[] = [],
+    beginLine = 0;
+
+  for (;;) {
+    if (codeSplit[beginLine].match(IMPORT_REGEX)) {
+      imports.push(codeSplit[beginLine]);
+      beginLine++;
+    } else {
+      break;
+    }
+  }
+
+  let endStr = codeSplit.slice(beginLine).join('\n');
   evalStr = `${
-    imports && imports.length > 0 ? `${imports.join('')}\n` : ''
+    imports && imports.length > 0 ? `${imports.join('\n')}\n\n` : ''
   }(async function () {
-  ${code.replace(IMPORT_REGEX, '').split('\n').join('\n  ').replace('\n  ', '')}
-});`;
+  ${endStr}
+})`;
   const emitter = new EventEmitter();
 
   function safeWrapSetter(
