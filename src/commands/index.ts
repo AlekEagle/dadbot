@@ -20,6 +20,7 @@ import FDelete from './FDelete';
 import FReply from './FReply';
 import Info from './Info';
 import Settings from './Settings';
+import Barbecue from './Barbecue';
 
 const commands: CommandModule[] = [
   Help,
@@ -42,7 +43,8 @@ const commands: CommandModule[] = [
   FDelete,
   FReply,
   Info,
-  Settings
+  Settings,
+  Barbecue
 ];
 
 export default commands;

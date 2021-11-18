@@ -2,10 +2,12 @@ const simpleStats: {
     msgCount: number;
     responseCount: number;
     commandCount: number;
+    barbecuesServed: number;
   } = {
     msgCount: 0,
     responseCount: 0,
-    commandCount: 0
+    commandCount: 0,
+    barbecuesServed: 0
   },
   commandStats: Map<string, number> = new Map<string, number>();
 
@@ -15,6 +17,10 @@ export function incrementMsgCount() {
 
 export function incrementResponseCount() {
   return ++simpleStats.responseCount;
+}
+
+export function incrementBarbecuesServed() {
+  return ++simpleStats.barbecuesServed;
 }
 
 export function initializeCommand(name: string) {
@@ -38,7 +44,8 @@ export function getData() {
   return {
     msgCount: simpleStats.msgCount,
     responseCount: simpleStats.responseCount,
-    commandCount: simpleStats.commandCount
+    commandCount: simpleStats.commandCount,
+    barbecuesServed: simpleStats.barbecuesServed
   };
 }
 
@@ -54,6 +61,7 @@ export default {
   incrementCommand,
   incrementMsgCount,
   incrementResponseCount,
+  incrementBarbecuesServed,
   initializeCommand,
   getData,
   getCommands

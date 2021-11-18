@@ -17,6 +17,7 @@ const Info: CommandModule = {
       msgCount: number;
       responseCount: number;
       commandCount: number;
+      barbecuesServed: number;
     }[] = [];
     clusterData = (
       await (process as any).clusterClient.startCCC(
@@ -82,9 +83,17 @@ return JSON.stringify(
             inline: true
           },
           {
-            name: 'Auto responses',
+            name: 'Auto responses Issued',
             value: clusterData
               .map(v => v.responseCount)
+              .reduce((a, b) => a + b, 0)
+              .toLocaleString(),
+            inline: true
+          },
+          {
+            name: 'Barbecues Served',
+            value: clusterData
+              .map(v => v.barbecuesServed)
               .reduce((a, b) => a + b, 0)
               .toLocaleString(),
             inline: true
