@@ -106,11 +106,15 @@ export default class ReactionMenu {
       throw new Error('Missing MANAGE_MESSAGES');
     }
     this.states.set('default', defaultState);
-    this.reactionHandlerInstance = this.reactionAddListener.bind(this);
-    this.client.on('messageReactionAdd', this.reactionHandlerInstance);
-    this.sendMenuMessage().catch(err => {
-      throw err;
-    });
+    this.sendMenuMessage().then(
+      () => {
+        this.reactionHandlerInstance = this.reactionAddListener.bind(this);
+        this.client.on('messageReactionAdd', this.reactionHandlerInstance);
+      },
+      err => {
+        throw err;
+      }
+    );
   }
 
   private async sendMenuMessage() {
@@ -134,17 +138,22 @@ export default class ReactionMenu {
     emoji: PartialEmoji,
     user: User
   ) {
-    if (msg.id === this.message.id && user.id !== this.client.user.id)
-      this.message.removeReaction(
-        emoji.id ? `${emoji.name}:${emoji.id}` : emoji.name,
-        user.id
-      );
-    if (
-      msg.id === this.message.id &&
-      this.reactors.includes(user.id) &&
-      this.ready
-    )
-      this.handleReaction(emoji, user);
+    try {
+      if (msg.id === this.message.id && user.id !== this.client.user.id)
+        this.message.removeReaction(
+          emoji.id ? `${emoji.name}:${emoji.id}` : emoji.name,
+          user.id
+        );
+      if (
+        msg.id === this.message.id &&
+        this.reactors.includes(user.id) &&
+        this.ready
+      )
+        this.handleReaction(emoji, user);
+    } catch (error) {
+      console.error(error);
+      console.log(this.message, this.originalMessage);
+    }
   }
 
   private async handleReaction(emoji: PartialEmoji, user: User) {
