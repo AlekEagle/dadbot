@@ -7,7 +7,7 @@ export default function CPU(): Promise<number> {
       else {
         let line = stdout
           .split('\n')
-          .filter(a => a.match(new RegExp(`${process.pid}.*\\?.*Ss?l`)))[0];
+          .filter(a => a.match(new RegExp(`${process.pid}.*\\?`)))[0];
         resolve(Number(line.split(/\s/g).filter(a => a !== '')[2]));
       }
     });
