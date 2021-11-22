@@ -12,7 +12,7 @@ import Events from './events';
 import Commands from './commands';
 import { checkBlacklistStatus } from './utils/Blacklist';
 import fetch from 'node-fetch';
-import DadbotClusterClient, { DataTypes } from '../../dadbot-cluster-client';
+import DadbotClusterClient from '../../dadbot-cluster-client';
 import evaluateSafe from './utils/SafeEval';
 import EventEmitter from 'node:events';
 import Utils from 'node:util';
@@ -60,7 +60,7 @@ function calculateShardReservation(): Promise<{
   end: number;
   total: number;
 }> {
-  return new Promise((resolve, reject) => {
+  return new Promise(resolve => {
     setTimeout(() => {
       let totalShards: number = process.env.shardCountOverride
         ? Number(process.env.shardCountOverride)
