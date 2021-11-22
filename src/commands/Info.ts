@@ -55,7 +55,7 @@ return JSON.stringify(
           },
           {
             name: 'CPU Usage',
-            value: `${isFinite(cpu) ? cpu : 100}%`,
+            value: `${cpu}%`,
             inline: true
           },
           {

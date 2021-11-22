@@ -15,6 +15,35 @@ export async function getValueByID(id: string) {
   return res;
 }
 
+export async function setValueByID(id: string, cmds: string[]) {
+  try {
+    let res = await GBlacklist.findOne({
+      where: {
+        id
+      }
+    });
+
+    if (!res) {
+      if (cmds.length < 1) {
+        return null;
+      } else {
+        await GBlacklist.create({ id, cmds });
+        return { id, cmds };
+      }
+    } else {
+      if (cmds.length < 1) {
+        await res.destroy();
+        return null;
+      } else {
+        await res.update({ cmds });
+        return { id, cmds };
+      }
+    }
+  } catch (err) {
+    throw err;
+  }
+}
+
 export async function checkBlacklistStatus(
   msg: Message<TextableChannel>
 ): Promise<null | BlacklistData> {
