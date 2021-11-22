@@ -209,7 +209,7 @@ function calculateShardReservation(): Promise<{
               client.shards.map(e => e.latency).filter(a => isFinite(a)).length
           ),
           guilds: client.guilds.size,
-          cpuUsage: Math.round(cpu),
+          cpuUsage: cpu,
           memoryUsage: Math.round(new Memory().raw() / 1024 / 1024)
         });
       }, 5000);
