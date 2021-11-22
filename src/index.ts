@@ -200,9 +200,6 @@ function calculateShardReservation(): Promise<{
     } else {
       sendShardInfoInterval = setInterval(async () => {
         let cpu = await CPU();
-        if (cpu === Infinity) {
-          cpu = 100;
-        }
         Cluster.sendData(0, {
           ping: Math.round(
             client.shards
