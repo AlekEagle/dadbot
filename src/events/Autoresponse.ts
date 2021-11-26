@@ -1,15 +1,30 @@
 import { checkBlacklistStatus } from '../utils/Blacklist';
 import { EventModule } from '../types';
 import ECH from 'eris-command-handler';
-import { getValueByID, Flags } from '../utils/Settings';
+import {
+  getValueByID,
+  setValueByID,
+  Flags,
+  SettingsDataRtnValue
+} from '../utils/Settings';
 import { GuildTextableChannel, Message } from 'eris';
 import { incrementMsgCount, incrementResponseCount } from '../utils/Statistics';
+import { checkPremiumStatus } from '../utils/PremiumUtils';
 
 const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
   KYS_MATCH = /\b(kys|kill\byour\s?self)\b/i,
   FORMAT_MATCH = /(\*\*?\*?|``?`?|__?|~~|\|\|)+/i,
   PLAYING_MATCH = /\b(?:play|played|playing)\b/i,
-  SHUT_UP_MATCH = /\b(stfu|shut\s(?:the\s)?(?:fuck\s)?up)\b/i;
+  SHUT_UP_MATCH = /\b(stfu|shut\s(?:the\s)?(?:fuck\s)?up)\b/i,
+  premiumUserMap: Map<string, number> = new Map();
+
+function doRandom(stuff: SettingsDataRtnValue) {
+  if (stuff.RNG === null) return true;
+  let r = Math.random();
+
+  if (r <= stuff.RNG) return true;
+  return false;
+}
 
 const __event: EventModule = {
   name: 'messageCreate',
@@ -37,6 +52,29 @@ const __event: EventModule = {
       channelSettings.flags & Flags.IM_RESPONSES &&
       (guildSettings ? guildSettings.flags & Flags.IM_RESPONSES : true)
     ) {
+      if (usrSettings.RNG === null) {
+        if (!doRandom(guildSettings) || !doRandom(channelSettings)) return;
+      } else {
+        if (premiumUserMap.has(msg.author.id)) {
+          let count = premiumUserMap.get(msg.author.id);
+          if (count >= 50) {
+            premiumUserMap.delete(msg.author.id);
+            let isPremium = await checkPremiumStatus(client, msg.author.id);
+            if (isPremium === undefined || isPremium === false) {
+              await setValueByID(msg.author.id, {
+                flags: usrSettings.flags,
+                RNG: null
+              });
+            }
+          } else {
+            premiumUserMap.delete(msg.author.id);
+            premiumUserMap.set(msg.author.id, count + 1);
+          }
+        } else {
+          premiumUserMap.set(msg.author.id, 0);
+        }
+        if (!doRandom(usrSettings)) return;
+      }
       incrementResponseCount();
       // I'm matcher
       let imMatchData = msg.content.match(IM_MATCH),

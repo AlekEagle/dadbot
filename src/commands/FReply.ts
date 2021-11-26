@@ -6,10 +6,10 @@ const FReply: CommandModule = {
   name: 'freply',
 
   async handler(client, msg, args) {
-    if (!(await Suggestions.get(args[0])))
-      return "That suggestion doesn't exist!";
     if (!(await isOwner(msg.author.id)))
       return "You don't have the permission to reply to suggestions!";
+    if (!(await Suggestions.get(args[0])))
+      return "That suggestion doesn't exist!";
     await Suggestions.reply(args.shift(), msg, args.join(' '));
     return 'Done!';
   },
