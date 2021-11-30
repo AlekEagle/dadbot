@@ -36,7 +36,7 @@ const Compliment: CommandModule = {
 
   options: {
     description:
-      "Compliment anything and send it to the Dad Bot crew! We don't care if its a joke or if its a genuine compliment, we read all of them!",
+      "Compliment anything and send it to the Dad Bot crew! We don't care if its a joke or if its a genuine compliment, we read all of them! We use Google's Perspective API to determine if its truly a compliment or not, if you don't want Google to see it, come to the support server and say it there.",
     cooldown: 60000,
     cooldownMessage:
       'Hold your horses, as much as we love to hear from you, give us time to read it and maybe even respond!',

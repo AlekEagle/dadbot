@@ -40,7 +40,7 @@ const Suggest: CommandModule = {
 
   options: {
     description:
-      'Suggest something to the Dad Bot crew! Please limit suggestions to actual suggestions, if you fail to do so you may be restricted from sending more.',
+      "Suggest something to the Dad Bot crew! We use Google's Perspective API to determine if its truly a suggestion or not, if you don't want Google to see it, come to the support server and say it there. Please limit suggestions to actual suggestions, if you fail to do so you may be restricted from sending more.",
     cooldown: 60000,
     cooldownMessage:
       'Hold your horses, as much as we love to hear from you, give us time to read it and maybe even respond!',
