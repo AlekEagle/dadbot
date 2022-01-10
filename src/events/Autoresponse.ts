@@ -133,9 +133,7 @@ const __event: EventModule = {
       incrementResponseCount();
       msg.channel
         .createMessage(
-          `That was very rude ${
-            msg.member.nick ? msg.member.nick : msg.author.username
-          }, instead, take your own advice.`
+          `You better mean Kissing Your Self!`
         )
         .catch(() => { });
       return;
