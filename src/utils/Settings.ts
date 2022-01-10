@@ -4,7 +4,10 @@ export enum Flags {
   IM_RESPONSES = 1 << 0,
   KYS_RESPONSES = 1 << 1,
   SHUT_UP_RESPONSES = 1 << 2,
-  WINNING_RESPONSES = 1 << 3
+  WINNING_RESPONSES = 1 << 3,
+  GOODBYE_RESPONSES = 1 << 4,
+  THANKS_RESPONSES = 1 << 5,
+  SHOUTING_RESPONSES = 1 << 6
 }
 
 export interface SettingsDataRtnValue {
@@ -23,7 +26,10 @@ const defaultSettings: SettingsDataSetValue = {
     Flags.IM_RESPONSES |
     Flags.KYS_RESPONSES |
     Flags.SHUT_UP_RESPONSES |
-    Flags.WINNING_RESPONSES,
+    Flags.WINNING_RESPONSES | 
+    Flags.GOODBYE_RESPONSES |
+    Flags.THANKS_RESPONSES |
+    Flags.SHOUTING_RESPONSES,
   RNG: null
 };
 

@@ -16,7 +16,15 @@ const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
   FORMAT_MATCH = /(\*\*?\*?|``?`?|__?|~~|\|\|)+/i,
   PLAYING_MATCH = /\b(?:play|played|playing)\b/i,
   SHUT_UP_MATCH = /\b(stfu|shut\s(?:the\s)?(?:fuck\s)?up)\b/i,
+  GOODBYE_MATCH = /\b(?:good)? ?bye\b/i,
+  THANKS_MATCH = /\b(?:thank you|thanks) dad\b/i,
   premiumUserMap: Map<string, number> = new Map();
+
+function volumeDown(msg: string): boolean {
+  let splitMsg = msg.split('').filter(a => !a.match(/\s/));
+  let upCase = splitMsg.filter(a => a.match(/[A-Z]/)).length;
+  return (upCase / splitMsg.length) >= 0.6;
+}
 
 function doRandom(stuff: SettingsDataRtnValue) {
   if (stuff.RNG === null) return true;
@@ -45,6 +53,7 @@ const __event: EventModule = {
         blStatus.commands.includes('responses'))
     )
       return;
+      // I'm matcher
     if (
       !msg.content.match(PLAYING_MATCH) &&
       msg.content.match(IM_MATCH) &&
@@ -76,7 +85,6 @@ const __event: EventModule = {
         if (!doRandom(usrSettings)) return;
       }
       incrementResponseCount();
-      // I'm matcher
       let imMatchData = msg.content.match(IM_MATCH),
         formattingMatchData = msg.content.match(FORMAT_MATCH);
 
@@ -112,6 +120,7 @@ const __event: EventModule = {
           )
           .catch(() => {});
       }
+      return;
     }
     // End of I'm matcher
     // Kys matcher
@@ -128,7 +137,8 @@ const __event: EventModule = {
             msg.member.nick ? msg.member.nick : msg.author.username
           }, instead, take your own advice.`
         )
-        .catch(() => {});
+        .catch(() => { });
+      return;
     }
     // End of Kys matcher
     // Playing matcher
@@ -149,6 +159,7 @@ const __event: EventModule = {
         case 'played':
           msg.channel.createMessage('Did ya win son?').catch(() => {});
       }
+      return;
     }
     // End of Playing matcher
     // Shut up matcher
@@ -166,7 +177,42 @@ const __event: EventModule = {
           }, I will not tolerate you saying the words that consist of the letters 's h u t  u p' being said in this server, so take your own advice and close thine mouth in the name of the christian minecraft server owner.`
         )
         .catch(() => {});
+      return;
     }
+    // End of Shut up matcher
+    // Goodbye matcher
+    if (msg.content.match(GOODBYE_MATCH) &&
+      usrSettings.flags & Flags.GOODBYE_RESPONSES &&
+      channelSettings.flags & Flags.GOODBYE_RESPONSES &&
+      (guildSettings ? guildSettings.flags & Flags.GOODBYE_RESPONSES : true)
+    ) {
+      incrementResponseCount();
+      let possibleGoodbyes = ['Bye!', 'Bye, have fun!', 'Bye, don\'t get in trouble!', 'Stay out of trouble!', 'Be home before 8!', 'Later champ!'];
+      msg.channel.createMessage(possibleGoodbyes[Math.floor(Math.random() * possibleGoodbyes.length)]).catch(() => { });
+      return;
+    }
+    // End of Goodbye matcher
+    // Thanks matcher
+    if (msg.content.match(THANKS_MATCH) &&
+      usrSettings.flags & Flags.THANKS_RESPONSES &&
+      channelSettings.flags & Flags.THANKS_RESPONSES &&
+      (guildSettings ? guildSettings.flags & Flags.THANKS_RESPONSES : true)) {
+      incrementResponseCount();
+      let possibleResponses = ['That\'s what I\'m here for.', 'Don\'t mention it champ.', 'Next time just ask.', 'Oh, uh, you\'re welcome I guess?'];
+      msg.channel.createMessage(possibleResponses[Math.floor(Math.random() * possibleResponses.length)]).catch(() => { });
+      return;
+    }
+    // End of Thanks matcher
+    // Caps matcher
+    if (volumeDown(msg.content) &&
+      usrSettings.flags & Flags.SHOUTING_RESPONSES &&
+      channelSettings.flags & Flags.SHOUTING_RESPONSES &&
+      (guildSettings ? guildSettings.flags & Flags.SHOUTING_RESPONSES : true)) {
+      incrementResponseCount();
+      msg.channel.createMessage('Keep your voice down!').catch(() => {});
+      return;
+    }
+    // End of Caps matcher
   }
 };
 
