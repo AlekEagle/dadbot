@@ -1,6 +1,5 @@
 import Utils from 'node:util';
-import fetch from 'node-fetch';
-import FormData from 'form-data';
+import { Client } from 'cumulonimbus-wrapper';
 import { isOwner } from '../utils/Owners';
 import { CommandModule } from '../types';
 import EventEmitter from 'node:events';
@@ -156,16 +155,9 @@ async function constructMessage(
 }
 
 async function uploadOutput(output: string): Promise<string> {
-  let data = new FormData();
-  data.append('file', Buffer.from(output), 'joe.txt');
-  let res = await fetch('https://alekeagle.me/api/upload/', {
-    method: 'POST',
-    body: data,
-    headers: {
-      Authorization: process.env.alekeagleMEToken
-    }
-  });
-  return await res.text();
+  const cumClient = new Client(process.env.alekeagleMEToken);
+  let res = await cumClient.uploadData(Buffer.from(output));
+  return res.url;
 }
 
 const Eval: CommandModule = {
