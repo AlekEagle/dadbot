@@ -9,7 +9,7 @@
     "@top-gg/sdk": "^3.1.2",
     "chalk": "^4.1.2",
     "collections": "^5.1.12",
-    "cumulonimbus-wrapper": "^1.0.2",
+    "cumulonimbus-wrapper": "^1.0.3",
     "dotenv": "^10.0.0",
     "eris": "^0.15.1",
     "eris-command-handler": "^1.2.1",
