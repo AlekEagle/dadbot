@@ -23,11 +23,11 @@ const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
 function volumeDown(msg: string): boolean {
   let splitMsg = msg.split('').filter(a => !a.match(/\s/));
   let upCase = splitMsg.filter(a => a.match(/[A-Z]/)).length;
-  return (upCase / splitMsg.length) >= 0.6;
+  return upCase / splitMsg.length >= 0.6;
 }
 
 function doRandom(stuff: SettingsDataRtnValue) {
-  if (stuff.RNG === null) return true;
+  if (!stuff || stuff.RNG === null) return true;
   let r = Math.random();
 
   if (r <= stuff.RNG) return true;
@@ -53,7 +53,7 @@ const __event: EventModule = {
         blStatus.commands.includes('responses'))
     )
       return;
-      // I'm matcher
+    // I'm matcher
     if (
       !msg.content.match(PLAYING_MATCH) &&
       msg.content.match(IM_MATCH) &&
@@ -132,10 +132,8 @@ const __event: EventModule = {
     ) {
       incrementResponseCount();
       msg.channel
-        .createMessage(
-          `You better mean Kissing Your Self!`
-        )
-        .catch(() => { });
+        .createMessage(`You better mean Kissing Your Self!`)
+        .catch(() => {});
       return;
     }
     // End of Kys matcher
@@ -179,33 +177,60 @@ const __event: EventModule = {
     }
     // End of Shut up matcher
     // Goodbye matcher
-    if (msg.content.match(GOODBYE_MATCH) &&
+    if (
+      msg.content.match(GOODBYE_MATCH) &&
       usrSettings.flags & Flags.GOODBYE_RESPONSES &&
       channelSettings.flags & Flags.GOODBYE_RESPONSES &&
       (guildSettings ? guildSettings.flags & Flags.GOODBYE_RESPONSES : true)
     ) {
       incrementResponseCount();
-      let possibleGoodbyes = ['Bye!', 'Bye, have fun!', 'Bye, don\'t get in trouble!', 'Stay out of trouble!', 'Be home before 8!', 'Later champ!'];
-      msg.channel.createMessage(possibleGoodbyes[Math.floor(Math.random() * possibleGoodbyes.length)]).catch(() => { });
+      let possibleGoodbyes = [
+        'Bye!',
+        'Bye, have fun!',
+        "Bye, don't get in trouble!",
+        'Stay out of trouble!',
+        'Be home before 8!',
+        'Later champ!'
+      ];
+      msg.channel
+        .createMessage(
+          possibleGoodbyes[Math.floor(Math.random() * possibleGoodbyes.length)]
+        )
+        .catch(() => {});
       return;
     }
     // End of Goodbye matcher
     // Thanks matcher
-    if (msg.content.match(THANKS_MATCH) &&
+    if (
+      msg.content.match(THANKS_MATCH) &&
       usrSettings.flags & Flags.THANKS_RESPONSES &&
       channelSettings.flags & Flags.THANKS_RESPONSES &&
-      (guildSettings ? guildSettings.flags & Flags.THANKS_RESPONSES : true)) {
+      (guildSettings ? guildSettings.flags & Flags.THANKS_RESPONSES : true)
+    ) {
       incrementResponseCount();
-      let possibleResponses = ['That\'s what I\'m here for.', 'Don\'t mention it champ.', 'Next time just ask.', 'Oh, uh, you\'re welcome I guess?'];
-      msg.channel.createMessage(possibleResponses[Math.floor(Math.random() * possibleResponses.length)]).catch(() => { });
+      let possibleResponses = [
+        "That's what I'm here for.",
+        "Don't mention it champ.",
+        'Next time just ask.',
+        "Oh, uh, you're welcome I guess?"
+      ];
+      msg.channel
+        .createMessage(
+          possibleResponses[
+            Math.floor(Math.random() * possibleResponses.length)
+          ]
+        )
+        .catch(() => {});
       return;
     }
     // End of Thanks matcher
     // Caps matcher
-    if (volumeDown(msg.content) &&
+    if (
+      volumeDown(msg.content) &&
       usrSettings.flags & Flags.SHOUTING_RESPONSES &&
       channelSettings.flags & Flags.SHOUTING_RESPONSES &&
-      (guildSettings ? guildSettings.flags & Flags.SHOUTING_RESPONSES : true)) {
+      (guildSettings ? guildSettings.flags & Flags.SHOUTING_RESPONSES : true)
+    ) {
       incrementResponseCount();
       msg.channel.createMessage('Keep your voice down!').catch(() => {});
       return;

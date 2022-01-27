@@ -1,6 +1,8 @@
 import Chalk from 'chalk';
 import * as InternalConsole from 'console';
 import * as NodeUtil from 'util';
+import ECH from 'eris-command-handler';
+import DadbotClusterClient from '../../../dadbot-cluster-client';
 export enum Level {
   NONE = 0,
   ERROR = 1,
@@ -61,6 +63,25 @@ export default class Logger {
 
   error(message: any, ...optionalParams: any[]) {
     if (this.logLevel < Level.ERROR) return;
+    if ((process as any).clusterClient) {
+      (
+        (process as any).clusterClient as DadbotClusterClient<
+          'ws',
+          { url: 'ws://localhost:8080/manager' }
+        >
+      )
+        .sendData(
+          2,
+          message +
+            '\n' +
+            (optionalParams.length > 0
+              ? optionalParams
+                  .map(p => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
+                  .join(' ')
+              : '')
+        )
+        .catch(() => {});
+    }
     InternalConsole.log(
       `${this.timestamp ? `${Chalk.bgBlue(date())} ` : ''}${Chalk.rgb(
         214,
@@ -79,6 +100,25 @@ export default class Logger {
 
   warn(message: any, ...optionalParams: any[]) {
     if (this.logLevel < Level.WARN) return;
+    if ((process as any).clusterClient) {
+      (
+        (process as any).clusterClient as DadbotClusterClient<
+          'ws',
+          { url: 'ws://localhost:8080/manager' }
+        >
+      )
+        .sendData(
+          1,
+          message +
+            '\n' +
+            (optionalParams.length > 0
+              ? optionalParams
+                  .map(p => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
+                  .join(' ')
+              : '')
+        )
+        .catch(() => {});
+    }
     InternalConsole.log(
       `${this.timestamp ? `${Chalk.bgBlue(date())} ` : ''}${Chalk.rgb(
         177,
@@ -97,6 +137,25 @@ export default class Logger {
 
   log(message: any, ...optionalParams: any[]) {
     if (this.logLevel < Level.INFO) return;
+    if ((process as any).clusterClient) {
+      (
+        (process as any).clusterClient as DadbotClusterClient<
+          'ws',
+          { url: 'ws://localhost:8080/manager' }
+        >
+      )
+        .sendData(
+          1,
+          message +
+            '\n' +
+            (optionalParams.length > 0
+              ? optionalParams
+                  .map(p => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
+                  .join(' ')
+              : '')
+        )
+        .catch(() => {});
+    }
     InternalConsole.log(
       `${this.timestamp ? `${Chalk.bgBlue(date())} ` : ''}${Chalk.rgb(
         47,
@@ -119,6 +178,25 @@ export default class Logger {
 
   debug(message: any, ...optionalParams: any[]) {
     if (this.logLevel < Level.DEBUG) return;
+    if ((process as any).clusterClient) {
+      (
+        (process as any).clusterClient as DadbotClusterClient<
+          'ws',
+          { url: 'ws://localhost:8080/manager' }
+        >
+      )
+        .sendData(
+          1,
+          message +
+            '\n' +
+            (optionalParams.length > 0
+              ? optionalParams
+                  .map(p => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
+                  .join(' ')
+              : '')
+        )
+        .catch(() => {});
+    }
     InternalConsole.log(
       `${this.timestamp ? `${Chalk.bgBlue(date())} ` : ''}${Chalk.rgb(
         74,
@@ -137,6 +215,25 @@ export default class Logger {
 
   trace(message: any, ...optionalParams: any[]) {
     if (this.logLevel > Level.DEBUG) return;
+    if ((process as any).clusterClient) {
+      (
+        (process as any).clusterClient as DadbotClusterClient<
+          'ws',
+          { url: 'ws://localhost:8080/manager' }
+        >
+      )
+        .sendData(
+          1,
+          message +
+            '\n' +
+            (optionalParams.length > 0
+              ? optionalParams
+                  .map(p => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
+                  .join(' ')
+              : '')
+        )
+        .catch(() => {});
+    }
     InternalConsole.trace(
       `${this.timestamp ? `${Chalk.bgBlue(date())} ` : ''}${Chalk.rgb(
         30,

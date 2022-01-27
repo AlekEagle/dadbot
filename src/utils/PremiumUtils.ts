@@ -11,7 +11,7 @@ export async function checkPremiumStatus(
   client: ECH.CommandClient,
   id: string
 ): Promise<PremiumStatus> {
-  // if (await isOwner(id)) return true;
+  if (await isOwner(id)) return true;
 
   if (cache.has(id)) {
     let rtnVal = cache.get(id);
