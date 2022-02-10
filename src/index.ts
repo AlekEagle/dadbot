@@ -219,7 +219,6 @@ function calculateShardReservation(): Promise<{
             .reduce((a, b) => a + b, 0) /
             client.shards.map(e => e.latency).filter(a => isFinite(a)).length
         );
-        console.log(ping);
         Cluster.sendData(0, {
           ping: isNaN(ping) ? 0 : !isFinite(ping) ? 0 : ping,
           guilds: client.guilds.size,
