@@ -193,11 +193,23 @@ function calculateShardReservation(): Promise<{
     startPrefixManager(client);
   });
 
+  function clearSendShardInfoInterval() {
+    if (sendShardInfoInterval) {
+      clearInterval(sendShardInfoInterval);
+      sendShardInfoInterval = null;
+    }
+  }
+
+  Cluster.on('disconnected', err => {
+    clearSendShardInfoInterval();
+  });
+
   Cluster.on('cluster_status', (count, connected) => {
     if (count !== connected.length) {
-      clearInterval(sendShardInfoInterval);
+      clearSendShardInfoInterval();
       return;
     } else {
+      if (sendShardInfoInterval) return;
       sendShardInfoInterval = setInterval(async () => {
         let cpu = await CPU();
         let ping = Math.round(
