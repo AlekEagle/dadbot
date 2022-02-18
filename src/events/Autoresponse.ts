@@ -112,6 +112,7 @@ const __event: EventModule = {
         },
         content: `Hi ${hiContent}, I'm ${imContent}!`
       })
+      .catch(() => {});
       return;
     }
     // End of I'm matcher
