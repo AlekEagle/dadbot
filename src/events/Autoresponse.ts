@@ -86,40 +86,31 @@ const __event: EventModule = {
       }
       incrementResponseCount();
       let imMatchData = msg.content.match(IM_MATCH),
-        formattingMatchData = msg.content.match(FORMAT_MATCH);
+        formattingMatchData = msg.content.match(FORMAT_MATCH),
+        nick = (msg.channel as GuildTextableChannel).guild.members.get(
+          client.user.id
+        ).nick,
+        hiContent = !formattingMatchData ||
+          formattingMatchData.index > imMatchData.index ?
+            `${imMatchData[2]}` :
+            `${formattingMatchData[0]}${imMatchData[2]}`,
+        imContent = nick ? nick : 'Dad';
 
-      if (
-        !formattingMatchData ||
-        formattingMatchData.index > imMatchData.index
-      ) {
-        msg.channel
-          .createMessage(
-            `Hi ${imMatchData[2]}, I'm ${
-              (msg.channel as GuildTextableChannel).guild.members.get(
-                client.user.id
-              ).nick
-                ? (msg.channel as GuildTextableChannel).guild.members.get(
-                    client.user.id
-                  ).nick
-                : 'Dad'
-            }!`
-          )
-          .catch(() => {});
-      } else {
-        msg.channel
-          .createMessage(
-            `Hi ${formattingMatchData[0]}${imMatchData[2]}, I'm ${
-              (msg.channel as GuildTextableChannel).guild.members.get(
-                client.user.id
-              ).nick
-                ? (msg.channel as GuildTextableChannel).guild.members.get(
-                    client.user.id
-                  ).nick
-                : 'Dad'
-            }!`
-          )
-          .catch(() => {});
-      }
+      msg.channel.createMessage({
+        allowedMentions: {
+          everyone: msg.mentionEveryone,
+          roles: msg.roleMentions
+            .map(roleId =>
+              (msg.channel as GuildTextableChannel).guild.roles.get(roleId)
+            )
+            .filter(role =>
+              role.mentionable ||
+              msg.member?.permissions.has("mentionEveryone")
+            )
+            .map(role => role.id),
+          users: msg.mentions.slice(0, 2).map(user => user.id)
+        }
+      })
       return;
     }
     // End of I'm matcher
