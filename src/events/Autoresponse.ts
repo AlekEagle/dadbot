@@ -109,7 +109,8 @@ const __event: EventModule = {
             )
             .map(role => role.id),
           users: msg.mentions.slice(0, 2).map(user => user.id)
-        }
+        },
+        content: `Hi ${hiContent}, I'm ${imContent}!`
       })
       return;
     }
