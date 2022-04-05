@@ -2,11 +2,6 @@ import { CommandModule } from "../types";
 import { isOwner } from "../utils/Owners";
 import DadbotClusterClient from "../../../dadbot-cluster-client";
 
-const clusterClient = (process as any).clusterClient as DadbotClusterClient<
-  "ws",
-  { url: "ws://localhost:8080/manager" }
->;
-
 const GameTypes: { [key: string]: number } = {
   playing: 0,
   streaming: 1,
@@ -79,7 +74,12 @@ const SetPlayingStatus: CommandModule = {
     }
 
     if (args.length === 1) {
-      await clusterClient.startCCC("all", `client.editStatus('${status}')`);
+      await (
+        (process as any).clusterClient as DadbotClusterClient<
+          "ws",
+          { url: "ws://localhost:8080/manager" }
+        >
+      ).startCCC("all", `client.editStatus('${status}')`);
     }
 
     statusObj.type = GameTypes[args[1].toLowerCase()];
@@ -103,7 +103,12 @@ const SetPlayingStatus: CommandModule = {
       return "You must provide a game string";
     }
 
-    await clusterClient.startCCC(
+    await (
+      (process as any).clusterClient as DadbotClusterClient<
+        "ws",
+        { url: "ws://localhost:8080/manager" }
+      >
+    ).startCCC(
       "all",
       `client.editStatus("${status}", ${JSON.stringify(statusObj)})`
     );
