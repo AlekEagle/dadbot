@@ -80,9 +80,10 @@ const SetPlayingStatus: CommandModule = {
           { url: "ws://localhost:8080/manager" }
         >
       ).startCCC("all", `client.editStatus('${status}')`);
+      return;
     }
 
-    statusObj.type = GameTypes[args[0].toLowerCase()];
+    statusObj.type = GameTypes[args[1].toLowerCase()];
 
     if (statusObj.type === undefined) {
       return "You must provide a valid game type (playing, streaming, listening, watching, custom, competing)";
