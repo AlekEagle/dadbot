@@ -82,7 +82,7 @@ const SetPlayingStatus: CommandModule = {
       ).startCCC("all", `client.editStatus('${status}')`);
     }
 
-    statusObj.type = GameTypes[args[1].toLowerCase()];
+    statusObj.type = GameTypes[args[0].toLowerCase()];
 
     if (statusObj.type === undefined) {
       return "You must provide a valid game type (playing, streaming, listening, watching, custom, competing)";
