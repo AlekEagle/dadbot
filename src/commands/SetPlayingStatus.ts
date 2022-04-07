@@ -17,7 +17,7 @@ function response(
   gameStr?: string | null,
   url?: string | null
 ): string {
-  if (gameType && !gameStr) {
+  if (!gameType && !gameStr) {
     return `I'm now simply **__${status}__**.`;
   } else {
     let gameTypeStr = "";
@@ -74,6 +74,16 @@ const SetPlayingStatus: CommandModule = {
     }
 
     if (args.length === 1) {
+      await (
+        (process as any).clusterClient as DadbotClusterClient<
+          "ws",
+          { url: "ws://localhost:8080/manager" }
+        >
+      ).startCCC("all", `client.editStatus('${status}', null)`);
+      return response(status);
+    }
+
+    if (args.length === 2 && args[1].toLowerCase() === "preserve") {
       await (
         (process as any).clusterClient as DadbotClusterClient<
           "ws",
