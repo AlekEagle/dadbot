@@ -80,7 +80,7 @@ const SetPlayingStatus: CommandModule = {
           { url: "ws://localhost:8080/manager" }
         >
       ).startCCC("all", `client.editStatus('${status}')`);
-      return;
+      return response(status);
     }
 
     statusObj.type = GameTypes[args[1].toLowerCase()];
