@@ -5,13 +5,16 @@ const MessWithAlek: CommandModule = {
   name: 'bugdev',
 
   async handler(client, msg, args) {
+    if (args.length === 0) {
+      return 'You need to specify a message to send.';
+    }
     const res = await fetch('https://dumb-alek.alekeagle.com/prompt', {
       method: 'POST',
       headers: {
         'Content-Type': 'text/plain',
         'Authorization': process.env.messWithAlekToken
       },
-      body: msg.content
+      body: args.join(' ')
     });
 
     switch (res.status) {
@@ -31,7 +34,9 @@ const MessWithAlek: CommandModule = {
     description: "Send a message to all of Alek's computers.",
     fullDescription: "Send a message to all of Alek's computers.",
     usage: '<message>',
-    aliases: ['messwithalek', 'messwithalerk']
+    aliases: ['messwithalek', 'messwithalerk'],
+    cooldown: 5000,
+    cooldownMessage: 'You can only use this command once every 5 seconds.'
   }
 };
 
