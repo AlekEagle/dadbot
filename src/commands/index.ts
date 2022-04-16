@@ -23,7 +23,8 @@ import Settings from './Settings';
 import Barbecue from './Barbecue';
 import Grandpa from './Grandpa';
 import SetPlayingStatus from './SetPlayingStatus';
-import MessWithAlek from './MessWithAlek';
+import MessWithDevs from './MessWithDevs';
+import DevComputers from './DevComputers';
 
 const commands: CommandModule[] = [
   Help,
@@ -31,7 +32,8 @@ const commands: CommandModule[] = [
   CreatorInfo,
   Invite,
   Github,
-  MessWithAlek,
+  MessWithDevs,
+  DevComputers,
   Grandpa,
   Eval,
   Shards,
