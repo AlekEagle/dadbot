@@ -38,10 +38,7 @@ const MessWithDevs: CommandModule = {
   options: {
     description: "Send a message to all of Alek's computers.",
     fullDescription: "Send a message to all of Alek's computers.",
-    usage: '<message>',
-    aliases: ['messwithalek', 'messwithalerk'],
-    cooldown: 5000,
-    cooldownMessage: 'You can only use this command once every 5 seconds.'
+    usage: '<message>'
   }
 };
 
