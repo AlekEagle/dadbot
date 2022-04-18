@@ -35,5 +35,6 @@
     "@types/validator": "^13.6.3",
     "@types/ws": "^7.4.7"
   },
-  "types": "src/index.d.ts"
+  "types": "src/index.d.ts",
+  "license": "AGPL"
 }
