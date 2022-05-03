@@ -20,6 +20,7 @@ import { incrementCommand, initializeCommand } from './utils/Statistics';
 import { startPrefixManager } from './utils/Prefixes';
 import Memory from './utils/Memory';
 import CPU from './utils/CPU';
+import j from './utils/a';
 
 const Cluster = new DadbotClusterClient(
   { name: 'ws', options: { url: 'ws://localhost:8080/manager' } },
@@ -43,7 +44,13 @@ Cluster.on('connected', () => {
 
 (async function () {
   let chair = (await import('./utils/Chair')).default;
-  if (chair.chair !== 'chair')
+  if (
+    !chair ||
+    !chair.chair ||
+    !chair.ascii ||
+    (j as Function)(chair.chair) !== '25acc7a27b' ||
+    (j as Function)(chair.ascii) !== 'feedb74662'
+  )
     throw new Error('My chair has a dent in it! How Could you!?');
   if (process.env.DEBUG) return;
   await import('./utils/Sentry');
