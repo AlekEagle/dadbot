@@ -22,6 +22,7 @@ const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
 
 function volumeDown(msg: string): boolean {
   let splitMsg = msg.split('').filter(a => !a.match(/\s/));
+  if (msg.indexOf(' ') === -1) return false;
   let upCase = splitMsg.filter(a => a.match(/[A-Z]/)).length;
   return upCase / splitMsg.length >= 0.6;
 }
