@@ -62,7 +62,7 @@ const Settings: CommandModule = {
 
     let userSettings: ReactionMenuState = {
       async message() {
-        let prefs = await SettingsUtils.getValueByID(msg.author.id),
+        let prefs = await SettingsUtils.getUserSettings(msg.author.id),
           frac = SettingsUtils.decimalToFraction(prefs.RNG || 1),
           premiumStatus = await checkPremiumStatus(client, msg.author.id);
         return {
@@ -71,8 +71,11 @@ const Settings: CommandModule = {
             thumbnail: {
               url: msg.author.dynamicAvatarURL()
             },
-            description:
-              'Use 🔼 and 🔽 to select what setting you want to modify, ⏺️ to toggle your selection, 〰️ to change your RNG for auto responses (Premium Only!), and ⏹️ to go back to the previous menu!',
+            description: `Use 🔼 and 🔽 to select what setting you want to modify, ⏺️ to toggle your selection, 〰️ to change your RNG for auto responses (Premium Only!), and ⏹️ to go back to the previous menu!${
+              prefs.default
+                ? '\n\nThese are currently set to default, so the channel, server, and default settings will be used.'
+                : ''
+            }`,
             fields: [
               ...SettingsUtils.enumToArray(SettingsUtils.Flags).map(
                 (k: string, i) => {
@@ -116,7 +119,7 @@ const Settings: CommandModule = {
         cursorPos = 0;
     });
     userSettings.reactions.set({ name: '⏺️', id: null }, async () => {
-      let prefs = await SettingsUtils.getValueByID(msg.author.id);
+      let prefs = await SettingsUtils.getUserSettings(msg.author.id);
       let curFlag = SettingsUtils.enumToArray(SettingsUtils.Flags)[
         cursorPos
       ] as keyof typeof SettingsUtils.Flags;
@@ -124,10 +127,7 @@ const Settings: CommandModule = {
         prefs.flags & SettingsUtils.Flags[curFlag]
           ? prefs.flags & ~SettingsUtils.Flags[curFlag]
           : prefs.flags | SettingsUtils.Flags[curFlag];
-      await SettingsUtils.setValueByID(msg.author.id, {
-        RNG: prefs.RNG,
-        flags: newFlags
-      });
+      await SettingsUtils.setUserSettings(msg.author.id, newFlags);
       await new Promise((resolve, reject) => {
         setTimeout(resolve, 500);
       });
@@ -150,7 +150,9 @@ const Settings: CommandModule = {
       menu.setState('default')
     );
 
-    function setUserRNGHandler(mesg: Eris.Message<Eris.GuildTextableChannel>) {
+    async function setUserRNGHandler(
+      mesg: Eris.Message<Eris.GuildTextableChannel>
+    ) {
       if (
         mesg.author.bot ||
         mesg.channel.id !== msg.channel.id ||
@@ -174,15 +176,19 @@ const Settings: CommandModule = {
                 setTimeout(() => aaa.delete(), 5000);
               });
           } else {
-            SettingsUtils.getValueByID(msg.author.id).then(data => {
-              SettingsUtils.setValueByID(msg.author.id, {
-                RNG: float,
-                flags: data.flags
-              }).then(() => {
-                menu.setState('userSettings');
-                client.off('messageCreate', setUserRNGHandler);
+            await SettingsUtils.setUserSettings(
+              msg.author.id,
+              undefined,
+              float === 1 ? null : float
+            );
+            mesg.channel
+              .createMessage(`Your RNG has been set to ${float}!`)
+              .then(aaa => {
+                setTimeout(() => aaa.delete(), 5000);
               });
-            });
+
+            menu.setState('userSettings');
+            client.off('messageCreate', setUserRNGHandler);
           }
         }
       } else {
@@ -195,7 +201,7 @@ const Settings: CommandModule = {
 
     let setUserRNG: ReactionMenuState = {
       message: async () => {
-        let prefs = await SettingsUtils.getValueByID(msg.author.id),
+        let prefs = await SettingsUtils.getUserSettings(msg.author.id),
           frac = SettingsUtils.decimalToFraction(prefs.RNG || 1);
         return {
           embed: {
@@ -219,15 +225,10 @@ const Settings: CommandModule = {
       client.off('messageCreate', setUserRNGHandler);
     });
 
-    setUserRNG.reactions.set({ name: '🔄', id: null }, () => {
-      SettingsUtils.getValueByID(msg.author.id).then(prefs => {
-        SettingsUtils.setValueByID(msg.author.id, {
-          RNG: 1,
-          flags: prefs.flags
-        });
-        menu.setState('userSettings');
-        client.off('messageCreate', setUserRNGHandler);
-      });
+    setUserRNG.reactions.set({ name: '🔄', id: null }, async () => {
+      await SettingsUtils.setUserSettings(msg.author.id, undefined, null);
+      menu.setState('userSettings');
+      client.off('messageCreate', setUserRNGHandler);
     });
 
     menu.addState('setUserRNG', setUserRNG);
@@ -236,7 +237,7 @@ const Settings: CommandModule = {
 
     let serverSettings: ReactionMenuState = {
       async message() {
-        let prefs = await SettingsUtils.getValueByID(msg.channel.guild.id),
+        let prefs = await SettingsUtils.getGuildSettings(msg.author.id),
           frac = SettingsUtils.decimalToFraction(prefs.RNG || 1);
         return {
           embed: {
@@ -244,8 +245,11 @@ const Settings: CommandModule = {
             thumbnail: {
               url: msg.channel.guild.dynamicIconURL()
             },
-            description:
-              "Use 🔼 and 🔽 to select what setting you want to modify, ⏺️ to toggle your selection, #⃣ to switch between server and channel mode, 〰️ to change the servers's RNG for auto responses, ❗ to change the server prefix, and use ⏹️ to go back to the previous menu!",
+            description: `Use 🔼 and 🔽 to select what setting you want to modify, ⏺️ to toggle your selection, #⃣ to switch between server and channel mode, 〰️ to change the servers's RNG for auto responses, ❗ to change the server prefix, and use ⏹️ to go back to the previous menu!${
+              prefs.default
+                ? '\n\nThese are currently set to default, so the default settings will be used.'
+                : ''
+            }`,
             fields: [
               ...SettingsUtils.enumToArray(SettingsUtils.Flags).map(
                 (k: string, i) => {
@@ -289,7 +293,7 @@ const Settings: CommandModule = {
     });
 
     serverSettings.reactions.set({ name: '⏺️', id: null }, async () => {
-      let prefs = await SettingsUtils.getValueByID(msg.channel.guild.id);
+      let prefs = await SettingsUtils.getGuildSettings(msg.channel.guild.id);
       let curFlag = SettingsUtils.enumToArray(SettingsUtils.Flags)[
         cursorPos
       ] as keyof typeof SettingsUtils.Flags;
@@ -297,10 +301,7 @@ const Settings: CommandModule = {
         prefs.flags & SettingsUtils.Flags[curFlag]
           ? prefs.flags & ~SettingsUtils.Flags[curFlag]
           : prefs.flags | SettingsUtils.Flags[curFlag];
-      await SettingsUtils.setValueByID(msg.channel.guild.id, {
-        RNG: prefs.RNG,
-        flags: newFlags
-      });
+      await SettingsUtils.setGuildSettings(msg.channel.guild.id, newFlags);
       await new Promise((resolve, reject) => {
         setTimeout(resolve, 500);
       });
@@ -399,7 +400,7 @@ const Settings: CommandModule = {
       menu.setState('serverSettings');
     });
 
-    function setServerRNGHandler(
+    async function setServerRNGHandler(
       mesg: Eris.Message<Eris.GuildTextableChannel>
     ) {
       if (
@@ -425,15 +426,19 @@ const Settings: CommandModule = {
                 setTimeout(() => aaa.delete(), 5000);
               });
           } else {
-            SettingsUtils.getValueByID(msg.channel.guild.id).then(data => {
-              SettingsUtils.setValueByID(msg.channel.guild.id, {
-                RNG: float,
-                flags: data.flags
-              }).then(() => {
-                menu.setState('serverSettings');
-                client.off('messageCreate', setServerRNGHandler);
+            await SettingsUtils.setGuildSettings(
+              msg.channel.guild.id,
+              undefined,
+              float === 1 ? null : float
+            );
+            mesg.channel
+              .createMessage(`Your RNG has been set to ${float}!`)
+              .then(aaa => {
+                setTimeout(() => aaa.delete(), 5000);
               });
-            });
+
+            menu.setState('serverSettings');
+            client.off('messageCreate', setServerRNGHandler);
           }
         }
       } else {
@@ -446,7 +451,7 @@ const Settings: CommandModule = {
 
     let setServerRNG: ReactionMenuState = {
       message: async () => {
-        let prefs = await SettingsUtils.getValueByID(msg.channel.guild.id),
+        let prefs = await SettingsUtils.getGuildSettings(msg.channel.guild.id),
           frac = SettingsUtils.decimalToFraction(prefs.RNG || 1);
         return {
           embed: {
@@ -470,15 +475,14 @@ const Settings: CommandModule = {
       client.off('messageCreate', setServerRNGHandler);
     });
 
-    setServerRNG.reactions.set({ name: '🔄', id: null }, () => {
-      SettingsUtils.getValueByID(msg.channel.guild.id).then(prefs => {
-        SettingsUtils.setValueByID(msg.channel.guild.id, {
-          RNG: 1,
-          flags: prefs.flags
-        });
-        menu.setState('serverSettings');
-        client.off('messageCreate', setServerRNGHandler);
-      });
+    setServerRNG.reactions.set({ name: '🔄', id: null }, async () => {
+      await SettingsUtils.setGuildSettings(
+        msg.channel.guild.id,
+        undefined,
+        null
+      );
+      menu.setState('serverSettings');
+      client.off('messageCreate', setServerRNGHandler);
     });
 
     menu.addState('setServerRNG', setServerRNG);
@@ -489,7 +493,7 @@ const Settings: CommandModule = {
 
     let channelSettings: ReactionMenuState = {
       async message() {
-        let prefs = await SettingsUtils.getValueByID(selectedChannelID),
+        let prefs = await SettingsUtils.getChannelSettings(selectedChannelID),
           frac = SettingsUtils.decimalToFraction(prefs.RNG || 1);
         return {
           embed: {
@@ -499,8 +503,11 @@ const Settings: CommandModule = {
             thumbnail: {
               url: msg.channel.guild.dynamicIconURL()
             },
-            description:
-              "Use 🔼 and 🔽 to select what setting you want to modify, ⏺️ to toggle your selection, #⃣ to switch between server and channel mode, 🔄 to change what channel you're managing, 〰️ to change the channel's RNG for auto responses, and ⏹️ to go back to the previous menu!",
+            description: `Use 🔼 and 🔽 to select what setting you want to modify, ⏺️ to toggle your selection, #⃣ to switch between server and channel mode, 🔄 to change what channel you're managing, 〰️ to change the channel's RNG for auto responses, and ⏹️ to go back to the previous menu!${
+              prefs.default
+                ? '\n\nThese are currently set to default, so the server and default settings will be used.'
+                : ''
+            }`,
             fields: [
               ...SettingsUtils.enumToArray(SettingsUtils.Flags).map(
                 (k: string, i) => {
@@ -536,7 +543,7 @@ const Settings: CommandModule = {
     });
 
     channelSettings.reactions.set({ name: '⏺️', id: null }, async () => {
-      let prefs = await SettingsUtils.getValueByID(selectedChannelID);
+      let prefs = await SettingsUtils.getChannelSettings(selectedChannelID);
       let curFlag = SettingsUtils.enumToArray(SettingsUtils.Flags)[
         cursorPos
       ] as keyof typeof SettingsUtils.Flags;
@@ -544,10 +551,7 @@ const Settings: CommandModule = {
         prefs.flags & SettingsUtils.Flags[curFlag]
           ? prefs.flags & ~SettingsUtils.Flags[curFlag]
           : prefs.flags | SettingsUtils.Flags[curFlag];
-      await SettingsUtils.setValueByID(selectedChannelID, {
-        RNG: prefs.RNG,
-        flags: newFlags
-      });
+      await SettingsUtils.setChannelSettings(selectedChannelID, newFlags);
       await new Promise((resolve, reject) => {
         setTimeout(resolve, 500);
       });
@@ -619,7 +623,7 @@ const Settings: CommandModule = {
       client.off('messageCreate', changeChannelHandler);
     });
 
-    function setChannelRNGHandler(
+    async function setChannelRNGHandler(
       mesg: Eris.Message<Eris.GuildTextableChannel>
     ) {
       if (
@@ -645,15 +649,19 @@ const Settings: CommandModule = {
                 setTimeout(() => aaa.delete(), 5000);
               });
           } else {
-            SettingsUtils.getValueByID(selectedChannelID).then(data => {
-              SettingsUtils.setValueByID(selectedChannelID, {
-                RNG: float,
-                flags: data.flags
-              }).then(() => {
-                menu.setState('channelSettings');
-                client.off('messageCreate', setChannelRNGHandler);
+            await SettingsUtils.setChannelSettings(
+              selectedChannelID,
+              undefined,
+              float
+            );
+            mesg.channel
+              .createMessage(`Your RNG has been set to ${float}!`)
+              .then(aaa => {
+                setTimeout(() => aaa.delete(), 5000);
               });
-            });
+
+            menu.setState('channelSettings');
+            client.off('messageCreate', setChannelRNGHandler);
           }
         }
       } else {
@@ -666,7 +674,7 @@ const Settings: CommandModule = {
 
     let setChannelRNG: ReactionMenuState = {
       message: async () => {
-        let prefs = await SettingsUtils.getValueByID(selectedChannelID),
+        let prefs = await SettingsUtils.getChannelSettings(selectedChannelID),
           frac = SettingsUtils.decimalToFraction(prefs.RNG || 1);
         return {
           embed: {
@@ -692,15 +700,14 @@ const Settings: CommandModule = {
       client.off('messageCreate', setChannelRNGHandler);
     });
 
-    setChannelRNG.reactions.set({ name: '🔄', id: null }, () => {
-      SettingsUtils.getValueByID(selectedChannelID).then(prefs => {
-        SettingsUtils.setValueByID(selectedChannelID, {
-          RNG: 1,
-          flags: prefs.flags
-        });
-        menu.setState('channelSettings');
-        client.off('messageCreate', setChannelRNGHandler);
-      });
+    setChannelRNG.reactions.set({ name: '🔄', id: null }, async () => {
+      await SettingsUtils.setChannelSettings(
+        selectedChannelID,
+        undefined,
+        null
+      );
+      menu.setState('channelSettings');
+      client.off('messageCreate', setChannelRNGHandler);
     });
 
     menu.addState('setChannelRNG', setChannelRNG);

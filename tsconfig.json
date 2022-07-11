@@ -9,8 +9,7 @@
     "resolveJsonModule": true,
     "typeRoots": ["./src/types", "node_modules/@types"],
     "alwaysStrict": true,
-    "esModuleInterop": true,
-    "allowJs": true
+    "esModuleInterop": true
   },
   "include": ["./src/**/*"]
 }

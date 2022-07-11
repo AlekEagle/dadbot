@@ -2,10 +2,10 @@ import { checkBlacklistStatus } from '../utils/Blacklist';
 import { EventModule } from '../types';
 import ECH from 'eris-command-handler';
 import {
-  getValueByID,
-  setValueByID,
   Flags,
-  SettingsDataRtnValue
+  SettingsConfigObject,
+  getComputedSettings,
+  setUserSettings
 } from '../utils/Settings';
 import { GuildTextableChannel, Message } from 'eris';
 import { incrementMsgCount, incrementResponseCount } from '../utils/Statistics';
@@ -14,7 +14,7 @@ import { checkPremiumStatus } from '../utils/PremiumUtils';
 const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
   KYS_MATCH = /\b(kys|kill\byour\s?self)\b/i,
   FORMAT_MATCH = /(\*\*?\*?|``?`?|__?|~~|\|\|)+/i,
-  PLAYING_MATCH = /\b(?:play|played|playing)\b/i,
+  WINNING_MATCH = /\b(?:play|played|playing)\b/i,
   SHUT_UP_MATCH = /\b(stfu|shut\s(?:the\s)?(?:fuck\s)?up)\b/i,
   GOODBYE_MATCH = /\b(?:good)? ?bye\b/i,
   THANKS_MATCH = /\b(?:thank you|thanks) dad\b/i,
@@ -27,7 +27,7 @@ function volumeDown(msg: string): boolean {
   return upCase / splitMsg.length >= 0.6;
 }
 
-function doRandom(stuff: SettingsDataRtnValue) {
+function doRandom(stuff: SettingsConfigObject) {
   if (!stuff || stuff.RNG === null) return true;
   let r = Math.random();
 
@@ -41,11 +41,7 @@ const __event: EventModule = {
   handler: async (client: ECH.CommandClient, msg: Message) => {
     if (msg.author.bot) return;
     incrementMsgCount();
-    let usrSettings = await getValueByID(msg.author.id),
-      channelSettings = await getValueByID(msg.channel.id),
-      guildSettings = (msg.channel as GuildTextableChannel).guild
-        ? await getValueByID((msg.channel as GuildTextableChannel).guild.id)
-        : null,
+    let settings = await getComputedSettings(msg),
       blStatus = await checkBlacklistStatus(msg);
 
     if (
@@ -56,14 +52,12 @@ const __event: EventModule = {
       return;
     // I'm matcher
     if (
-      !msg.content.match(PLAYING_MATCH) &&
+      !msg.content.match(WINNING_MATCH) &&
       msg.content.match(IM_MATCH) &&
-      usrSettings.flags & Flags.IM_RESPONSES &&
-      channelSettings.flags & Flags.IM_RESPONSES &&
-      (guildSettings ? guildSettings.flags & Flags.IM_RESPONSES : true)
+      settings.value.flags & Flags.IM_RESPONSES
     ) {
-      if (usrSettings.RNG === null) {
-        if (!doRandom(guildSettings) || !doRandom(channelSettings)) return;
+      if (settings.inheritedFrom.RNG !== 'user') {
+        if (!doRandom(settings.value)) return;
       } else {
         if (premiumUserMap.has(msg.author.id)) {
           let count = premiumUserMap.get(msg.author.id);
@@ -71,10 +65,7 @@ const __event: EventModule = {
             premiumUserMap.delete(msg.author.id);
             let isPremium = await checkPremiumStatus(client, msg.author.id);
             if (isPremium === undefined || isPremium === false) {
-              await setValueByID(msg.author.id, {
-                flags: usrSettings.flags,
-                RNG: null
-              });
+              await setUserSettings(msg.author.id, undefined, null);
             }
           } else {
             premiumUserMap.delete(msg.author.id);
@@ -83,7 +74,7 @@ const __event: EventModule = {
         } else {
           premiumUserMap.set(msg.author.id, 0);
         }
-        if (!doRandom(usrSettings)) return;
+        if (!doRandom(settings.value)) return;
       }
       incrementResponseCount();
       let imMatchData = msg.content.match(IM_MATCH),
@@ -91,38 +82,38 @@ const __event: EventModule = {
         nick = (msg.channel as GuildTextableChannel).guild.members.get(
           client.user.id
         ).nick,
-        hiContent = !formattingMatchData ||
-          formattingMatchData.index > imMatchData.index ?
-            `${imMatchData[2]}` :
-            `${formattingMatchData[0]}${imMatchData[2]}`,
+        hiContent =
+          !formattingMatchData || formattingMatchData.index > imMatchData.index
+            ? `${imMatchData[2]}`
+            : `${formattingMatchData[0]}${imMatchData[2]}`,
         imContent = nick ? nick : 'Dad';
 
-      msg.channel.createMessage({
-        allowedMentions: {
-          everyone: msg.mentionEveryone,
-          roles: msg.roleMentions
-            .map(roleId =>
-              (msg.channel as GuildTextableChannel).guild.roles.get(roleId)
-            )
-            .filter(role =>
-              role.mentionable ||
-              msg.member?.permissions.has("mentionEveryone")
-            )
-            .map(role => role.id),
-          users: msg.mentions.slice(0, 2).map(user => user.id)
-        },
-        content: `Hi ${hiContent}, I'm ${imContent}!`
-      })
-      .catch(() => {});
+      msg.channel
+        .createMessage({
+          allowedMentions: {
+            everyone: msg.mentionEveryone,
+            roles: msg.roleMentions
+              .map(roleId =>
+                (msg.channel as GuildTextableChannel).guild.roles.get(roleId)
+              )
+              .filter(
+                role =>
+                  role.mentionable ||
+                  msg.member?.permissions.has('mentionEveryone')
+              )
+              .map(role => role.id),
+            users: msg.mentions.slice(0, 2).map(user => user.id)
+          },
+          content: `Hi ${hiContent}, I'm ${imContent}!`
+        })
+        .catch(() => {});
       return;
     }
     // End of I'm matcher
     // Kys matcher
     if (
       msg.content.match(KYS_MATCH) &&
-      usrSettings.flags & Flags.KYS_RESPONSES &&
-      channelSettings.flags & Flags.KYS_RESPONSES &&
-      (guildSettings ? guildSettings.flags & Flags.KYS_RESPONSES : true)
+      settings.value.flags & Flags.KYS_RESPONSES
     ) {
       incrementResponseCount();
       msg.channel
@@ -133,13 +124,11 @@ const __event: EventModule = {
     // End of Kys matcher
     // Playing matcher
     if (
-      msg.content.match(PLAYING_MATCH) &&
-      usrSettings.flags & Flags.WINNING_RESPONSES &&
-      channelSettings.flags & Flags.WINNING_RESPONSES &&
-      (guildSettings ? guildSettings.flags & Flags.WINNING_RESPONSES : true)
+      msg.content.match(WINNING_MATCH) &&
+      settings.value.flags & Flags.WINNING_RESPONSES
     ) {
       incrementResponseCount();
-      switch (msg.content.match(PLAYING_MATCH)[0]) {
+      switch (msg.content.match(WINNING_MATCH)[0]) {
         case 'play':
           msg.channel.createMessage('I hope ya win son!').catch(() => {});
           break;
@@ -155,9 +144,7 @@ const __event: EventModule = {
     // Shut up matcher
     if (
       msg.content.match(SHUT_UP_MATCH) &&
-      usrSettings.flags & Flags.SHUT_UP_RESPONSES &&
-      channelSettings.flags & Flags.SHUT_UP_RESPONSES &&
-      (guildSettings ? guildSettings.flags & Flags.SHUT_UP_RESPONSES : true)
+      settings.value.flags & Flags.SHUT_UP_RESPONSES
     ) {
       incrementResponseCount();
       msg.channel
@@ -173,9 +160,7 @@ const __event: EventModule = {
     // Goodbye matcher
     if (
       msg.content.match(GOODBYE_MATCH) &&
-      usrSettings.flags & Flags.GOODBYE_RESPONSES &&
-      channelSettings.flags & Flags.GOODBYE_RESPONSES &&
-      (guildSettings ? guildSettings.flags & Flags.GOODBYE_RESPONSES : true)
+      settings.value.flags & Flags.GOODBYE_RESPONSES
     ) {
       incrementResponseCount();
       let possibleGoodbyes = [
@@ -197,9 +182,7 @@ const __event: EventModule = {
     // Thanks matcher
     if (
       msg.content.match(THANKS_MATCH) &&
-      usrSettings.flags & Flags.THANKS_RESPONSES &&
-      channelSettings.flags & Flags.THANKS_RESPONSES &&
-      (guildSettings ? guildSettings.flags & Flags.THANKS_RESPONSES : true)
+      settings.value.flags & Flags.THANKS_RESPONSES
     ) {
       incrementResponseCount();
       let possibleResponses = [
@@ -221,9 +204,7 @@ const __event: EventModule = {
     // Caps matcher
     if (
       volumeDown(msg.content) &&
-      usrSettings.flags & Flags.SHOUTING_RESPONSES &&
-      channelSettings.flags & Flags.SHOUTING_RESPONSES &&
-      (guildSettings ? guildSettings.flags & Flags.SHOUTING_RESPONSES : true)
+      settings.value.flags & Flags.SHOUTING_RESPONSES
     ) {
       incrementResponseCount();
       msg.channel.createMessage('Keep your voice down!').catch(() => {});
