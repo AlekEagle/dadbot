@@ -7,7 +7,7 @@ import {
   getComputedSettings,
   setUserSettings
 } from '../utils/Settings';
-import { GuildTextableChannel, Message } from 'eris';
+import { GuildChannel, GuildTextableChannel, Message } from 'eris';
 import { incrementMsgCount, incrementResponseCount } from '../utils/Statistics';
 import { checkPremiumStatus } from '../utils/PremiumUtils';
 
@@ -79,9 +79,12 @@ const __event: EventModule = {
       incrementResponseCount();
       let imMatchData = msg.content.match(IM_MATCH),
         formattingMatchData = msg.content.match(FORMAT_MATCH),
-        nick = (msg.channel as GuildTextableChannel).guild.members.get(
-          client.user.id
-        ).nick,
+        nick =
+          msg.channel instanceof GuildChannel
+            ? (msg.channel as GuildTextableChannel).guild.members.get(
+                client.user.id
+              ).nick
+            : null,
         hiContent =
           !formattingMatchData || formattingMatchData.index > imMatchData.index
             ? `${imMatchData[2]}`
@@ -150,7 +153,9 @@ const __event: EventModule = {
       msg.channel
         .createMessage(
           `Listen here ${
-            msg.member.nick ? msg.member.nick : msg.member.username
+            msg.member && msg.member.nick
+              ? msg.member.nick
+              : msg.member.username
           }, I will not tolerate you saying the words that consist of the letters 's h u t  u p' being said in this server, so take your own advice and close thine mouth in the name of the christian minecraft server owner.`
         )
         .catch(() => {});

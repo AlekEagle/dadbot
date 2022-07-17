@@ -186,7 +186,7 @@ function calculateShardReservation(): Promise<{
   client.on('ready', () => {
     console.log('Ready!');
     client.editStatus('online', {
-      name: 'Join the Discord server for the latest news!',
+      name: 'Thank you gabe_the_dragon_boy for supporting on Patreon!',
       type: 0
     });
     startPrefixManager(client);
