@@ -143,7 +143,7 @@ export async function getComputedSettings(
     ? user.flags
     : !channel.default
     ? channel.flags
-    : !guild?.default
+    : !!guild && !guild?.default
     ? guild.flags
     : defaultSettings.flags;
   const value = {
