@@ -237,7 +237,7 @@ const Settings: CommandModule = {
 
     let serverSettings: ReactionMenuState = {
       async message() {
-        let prefs = await SettingsUtils.getGuildSettings(msg.author.id),
+        let prefs = await SettingsUtils.getGuildSettings(msg.channel.guild.id),
           frac = SettingsUtils.decimalToFraction(prefs.RNG || 1);
         return {
           embed: {
