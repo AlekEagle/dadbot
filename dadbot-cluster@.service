@@ -1,0 +1,15 @@
+[Unit]
+Description=Dad Bot Cluster %i
+Requires=dadbot-cluster-manager.service
+After=dadbot-cluster-manager.service
+
+[Service]
+# TO BE FILLED BY OEM
+WorkingDirectory=/path/to/dadbot
+User=dadbot
+#end of TO BE FILLED BY OEM
+Restart=always
+ExecStart=./start-dadbot %i
+
+[Install]
+WantedBy=multi-user.target

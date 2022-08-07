@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# read in .env file
+source .env
+# get argument (this will be cluster ID zero indexed)
+CLUSTER_ID=$1
+
+# calculate memory size in MB from GB_MEM environment variable
+MEM=$(($GB_MEM * 1024))
+
+# if no argument, exit
+if [ -z $CLUSTER_ID ]; then
+    echo "No cluster ID provided"
+    exit 1
+fi
+
+# if the cluster ID is not a number, exit
+if [[ $CLUSTER_ID =~ ^[0-9]+$ ]]; then
+    echo "Cluster ID is not a number"
+    exit 1
+fi
+
+# if the cluster ID is equal to or greater than the number of clusters (the instances environment variable), exit
+if [ $CLUSTER_ID -ge $INSTANCES ]; then
+    echo "Cluster ID is greater than the number of clusters"
+    exit 1
+fi
+
+# if the cluster ID is less than zero, exit
+if [ $CLUSTER_ID -lt 0 ]; then
+    echo "Cluster ID is less than zero"
+    exit 1
+fi
+
+NODE_APP_INSTANCE=$CLUSTER_ID node --max-old-space-size=$MEM .
+# exit with the exit code of the node process
+exit $?
