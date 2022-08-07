@@ -15,13 +15,13 @@ if [ -z $CLUSTER_ID ]; then
 fi
 
 # if the cluster ID is not a number, exit
-if [[ $CLUSTER_ID =~ ^[0-9]+$ ]]; then
+if ! [[ $CLUSTER_ID =~ ^[0-9]+$ ]]; then
     echo "Cluster ID is not a number"
     exit 1
 fi
 
 # if the cluster ID is equal to or greater than the number of clusters (the instances environment variable), exit
-if [ $CLUSTER_ID -ge $INSTANCES ]; then
+if [[ $CLUSTER_ID -ge $instances ]]; then
     echo "Cluster ID is greater than the number of clusters"
     exit 1
 fi
