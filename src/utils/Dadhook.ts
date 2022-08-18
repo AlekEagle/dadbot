@@ -50,20 +50,25 @@ export default class Dadhook {
       currentChannelPerms = this.client.guilds
         .get(this.guild_id)
         .channels.get(this.channel_id)
+        .permissionsOf(this.client.user.id),
+      destinationChannelPerms = this.client.guilds
+        .get(this.guild_id)
+        .channels.get(channel.id)
         .permissionsOf(this.client.user.id);
 
     let res;
     if (
       permsOfBot.has('manageWebhooks') &&
-      permsOfBot.has('readMessages') &&
       currentChannelPerms.has('manageWebhooks') &&
-      currentChannelPerms.has('readMessages')
+      destinationChannelPerms.has('manageWebhooks')
     ) {
       try {
         res = await this.client.editWebhook(this.id, { channelID: channel.id });
       } catch (err) {
         throw err;
       }
+    } else {
+      throw new Error(`Missing manage webhook permissions somewhere.`);
     }
     Object.assign(this, res);
     return this;
