@@ -133,14 +133,14 @@ export default class ReactionMenu {
     this.ready = true;
   }
 
-  private reactionAddListener(
+  private async reactionAddListener(
     msg: Message<GuildTextableChannel>,
     emoji: PartialEmoji,
     user: User
   ) {
     try {
       if (msg.id === this.message.id && user.id !== this.client.user.id)
-        this.message.removeReaction(
+        await this.message.removeReaction(
           emoji.id ? `${emoji.name}:${emoji.id}` : emoji.name,
           user.id
         );
@@ -149,10 +149,9 @@ export default class ReactionMenu {
         this.reactors.includes(user.id) &&
         this.ready
       )
-        this.handleReaction(emoji, user);
+        await this.handleReaction(emoji, user);
     } catch (error) {
       console.error(error);
-      console.log(this.message, this.originalMessage);
     }
   }
 
