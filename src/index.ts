@@ -336,11 +336,19 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   client.connect();
 })();
 
-process.on('exit', () => {
+function deathCroak() {
   client.disconnect({ reconnect: false });
   cluster.disconnect();
-  // Dad screams at the user that he is going down.
-  console.error(
-    chalk.red('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
-  );
-});
+  // Dad screams at the user that he is dying.
+  console.error(chalk.red('A'.repeat(Math.floor(Math.random() * 100000) + 1)));
+}
+
+process.on('exit', deathCroak);
+
+// If the process is killed, disconnect the client.
+process.on('SIGINT', deathCroak);
+process.on('SIGTERM', deathCroak);
+process.on('SIGQUIT', deathCroak);
+process.on('SIGHUP', deathCroak);
+process.on('SIGBREAK', deathCroak);
+process.on('SIGABRT', deathCroak);
