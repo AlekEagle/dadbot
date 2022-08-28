@@ -1,11 +1,11 @@
-import { CommandModule } from '../types';
+import { client } from '..';
 import { isOwner } from '../utils/Owners';
 import Suggestions from '../utils/Suggestions';
 
 const FDelete: CommandModule = {
   name: 'fdelete',
 
-  async handler(client, msg, args) {
+  async handler(msg, args) {
     let suggestion = await Suggestions.get(args[0]);
     if (suggestion === null) return "That suggestion doesn't exist!";
     if (suggestion.userID !== msg.author.id) {

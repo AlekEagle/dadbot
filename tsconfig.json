@@ -7,9 +7,10 @@
     "target": "es2020",
     "rootDir": "./src/",
     "resolveJsonModule": true,
-    "typeRoots": ["./src/types", "node_modules/@types"],
+    "typeRoots": ["node_modules/@types"],
     "alwaysStrict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "isolatedModules": true
   },
   "include": ["./src/**/*"]
 }

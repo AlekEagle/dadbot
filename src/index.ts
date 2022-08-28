@@ -1,135 +1,159 @@
 import Logger, { Level } from './utils/Logger';
-
-global.console = new Logger(
-  process.env.DEBUG ? Level.DEBUG : Level.INFO
-) as any;
-
 import envConfig from './utils/dotenv';
-import { Constants, MessageContent } from 'eris';
-import FS from 'node:fs';
+import Eris, { MessageContent } from 'eris';
+import { readFile } from 'node:fs/promises';
 import ECH from 'eris-command-handler';
 import Events from './events';
 import Commands from './commands';
 import { checkBlacklistStatus } from './utils/Blacklist';
-import fetch from 'node-fetch';
 import DadbotClusterClient from '../../dadbot-cluster-client';
 import evaluateSafe from './utils/SafeEval';
 import EventEmitter from 'node:events';
-import Utils from 'node:util';
+import { inspect } from 'node:util';
 import { incrementCommand, initializeCommand } from './utils/Statistics';
 import { startPrefixManager } from './utils/Prefixes';
 import Memory from './utils/Memory';
 import CPU from './utils/CPU';
 import verifyChairIntegrity from './utils/VerifyChairIntegrity';
-
-const Cluster = new DadbotClusterClient(
-  { name: 'ws', options: { url: 'ws://localhost:8080/manager' } },
-  process.env.grafanaToken,
-  JSON.parse(FS.readFileSync('./data/schema.json', 'utf-8')),
-  {
-    cluster: {
-      count: Number(process.env.instances),
-      id: Number(process.env.NODE_APP_INSTANCE)
-    }
-  }
-);
-
-let sendShardInfoInterval: NodeJS.Timer;
-
-Cluster.on('connected', () => {
-  console.log('Connected to cluster manager.');
-});
-
-(process as any).clusterClient = Cluster;
-
-(async function () {
-  await verifyChairIntegrity();
-  if (process.env.DEBUG) return;
-  await import('./utils/Sentry');
-})();
+import { getShardAllocation, ShardAllocation } from './utils/ShardAllocator';
+import chalk from 'chalk';
+import { coolDadBotASCII } from './utils/UselessStartupMessage';
+import ReadableTime from './utils/ReadableTime';
 
 envConfig();
 
-if (!process.env.instances || !process.env.NODE_APP_INSTANCE) {
+export const isDebug = process.env.DEBUG === 'true';
+export const token = !isDebug ? process.env.TOKEN : process.env.OTHER_TOKEN;
+
+export const logger = new Logger(isDebug ? Level.DEBUG : Level.INFO);
+export let cluster: DadbotClusterClient<
+  'ws',
+  { url: 'ws://localhost:8080/manager' }
+>;
+
+export let shards: ShardAllocation;
+
+export let sendShardInfoInterval: NodeJS.Timer | null;
+
+function clearSendShardInfoInterval() {
+  if (sendShardInfoInterval) {
+    clearInterval(sendShardInfoInterval);
+    sendShardInfoInterval = null;
+  }
+}
+
+export let client: ECH.CommandClient;
+
+if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   throw new Error('Missing required environment variables');
 }
 
-function calculateShardReservation(): Promise<{
-  start: number;
-  end: number;
-  total: number;
-}> {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      let totalShards: number = process.env.shardCountOverride
-        ? Number(process.env.shardCountOverride)
-        : 1;
-      if (!process.env.shardCountOverride) {
-        fetch(
-          `https://discord.com/api/v${Constants.REST_VERSION}/gateway/bot`,
-          {
-            headers: {
-              Authorization: `Bot ${
-                process.env.DEBUG ? process.env.otherToken : process.env.token
-              }`
-            }
-          }
-        ).then(req => {
-          if (req.status === 429) {
-            console.error("I've been ratelimited!");
-            throw new Error('Ratelimited');
-          } else {
-            req.json().then(json => {
-              totalShards = json.shards;
-              resolve({
-                start: Math.floor(
-                  (totalShards / Number(process.env.instances)) *
-                    Number(process.env.NODE_APP_INSTANCE)
-                ),
-                end:
-                  Number(process.env.NODE_APP_INSTANCE) ===
-                  Number(process.env.instances) - 1
-                    ? totalShards - 1
-                    : Math.abs(
-                        Math.floor(
-                          (totalShards / Number(process.env.instances)) *
-                            Number(process.env.NODE_APP_INSTANCE)
-                        ) +
-                          Math.floor(
-                            totalShards / Number(process.env.instances)
-                          )
-                      ) - 1,
-                total: totalShards
-              });
-            });
-          }
-        });
-      } else {
-        resolve({
-          start: Math.floor(
-            (totalShards / Number(process.env.instances)) *
-              Number(process.env.NODE_APP_INSTANCE)
-          ),
-          end:
-            Number(process.env.NODE_APP_INSTANCE) ===
-            Number(process.env.instances) - 1
-              ? totalShards - 1
-              : Math.abs(
-                  Math.floor(
-                    (totalShards / Number(process.env.instances)) *
-                      Number(process.env.NODE_APP_INSTANCE)
-                  ) + Math.floor(totalShards / Number(process.env.instances))
-                ) - 1,
-          total: totalShards
-        });
-      }
-    }, 10000 * Number(process.env.NODE_APP_INSTANCE));
-  });
-}
 (async function () {
-  let shards = await calculateShardReservation();
-  let client = new ECH.CommandClient(
-    process.env.DEBUG ? process.env.otherToken : process.env.token,
+  // Make sure the chair is intact.
+  await verifyChairIntegrity();
+  // If we are in debug mode, don't bother with the sentry integration.
+  if (!process.env.DEBUG) await import('./utils/Sentry');
+
+  // Initialize the cluster client.
+  cluster = new DadbotClusterClient(
+    { name: 'ws', options: { url: 'ws://localhost:8080/manager' } },
+    process.env.CLUSTER_MANAGER_TOKEN,
+    JSON.parse(await readFile('./data/schema.json', 'utf-8')),
+    {
+      cluster: {
+        count: Number(process.env.CLUSTERS),
+        id: Number(process.env.CLUSTER_ID)
+      }
+    }
+  );
+
+  cluster.on('connected', () => {
+    console.log(chalk.green(' Connected to cluster manager.'));
+  });
+
+  cluster.on('disconnected', err => {
+    console.log(chalk.red(' Disconnected from cluster manager.'));
+    console.log(chalk.red(err));
+    clearSendShardInfoInterval();
+  });
+
+  cluster.on('cluster_status', (count, connected) => {
+    if (count !== connected.length) {
+      clearSendShardInfoInterval();
+      return;
+    }
+    if (sendShardInfoInterval) return;
+    sendShardInfoInterval = setInterval(async () => {
+      let cpu = await CPU();
+      let ping = Math.round(
+        client.shards
+          .map(s => s.latency)
+          .filter(a => isFinite(a))
+          .reduce((a, b) => a + b, 0) /
+          client.shards.map(e => e.latency).filter(a => isFinite(a)).length
+      );
+      cluster.sendData(0, {
+        ping: isNaN(ping) || !isFinite(ping) ? 0 : ping,
+        guilds: client.guilds.size,
+        cpuUsage: cpu,
+        memoryUsage: Math.round(new Memory().raw() / 1024 / 1024)
+      });
+    }, 5000);
+  });
+
+  // Set up the shard allocation.
+  shards = await getShardAllocation({
+    token,
+    clusterID: Number(process.env.CLUSTER_ID),
+    clusters: Number(process.env.CLUSTERS)
+  });
+
+  // Do cool startup message.
+  console.log(chalk.green(coolDadBotASCII));
+  if (isDebug)
+    console.log(chalk.green('                           DEBUG  MODE'));
+
+  // Log some additional information.
+  console.log(
+    chalk.green(
+      ` Cluster ${Number(process.env.CLUSTER_ID) + 1} of ${
+        process.env.CLUSTERS
+      }`
+    )
+  );
+  console.log(
+    chalk.green(
+      ` Discord recommends ${shards.total} shard${
+        shards.total === 1 ? '' : 's'
+      } overall.`
+    )
+  );
+  console.log(
+    chalk.green(
+      ` This cluster will handle the shards between ${shards.thisCluster.start} and ${shards.thisCluster.end}, or ${shards.thisCluster.count} shards in total.`
+    )
+  );
+  console.log(
+    chalk.green(
+      ` Dad Bot has ${shards.remainingSessions} of ${shards.totalSessions} remaining sessions.`
+    )
+  );
+  console.log(
+    chalk.green(
+      ` The session counter will reset in ${new ReadableTime(
+        shards.resetsIn
+      ).toShorthand()}.`
+    )
+  );
+
+  if (shards.remainingSessions <= shards.total) {
+    console.error(chalk.red(' Not enough sessions remaining!'));
+    process.exit(1);
+  }
+
+  // Initialize the client.
+  client = new ECH.CommandClient(
+    token,
     {
       getAllUsers: false,
       defaultImageSize: 2048,
@@ -138,104 +162,113 @@ function calculateShardReservation(): Promise<{
         'directMessageReactions',
         'directMessageTyping',
         'directMessages',
-        'guildMessages',
-        'guildWebhooks',
         'guilds',
-        'guildMessageReactions'
+        'guildMessageReactions',
+        'guildMessageTyping',
+        'guildMessages',
+        'guildWebhooks'
       ],
       maxShards: shards.total,
-      firstShardID: shards.start,
-      lastShardID: shards.end,
+      firstShardID: shards.thisCluster.start,
+      lastShardID: shards.thisCluster.end,
       messageLimit: 0,
-      restMode: true
+      restMode: true,
+      allowedMentions: {
+        everyone: false,
+        roles: false,
+        users: false
+      }
     },
     {
-      prefix: process.env.DEBUG ? 'test!' : 'd!',
+      prefix: isDebug ? 'test!' : 'd!',
       name: 'Dad Bot',
-      description: 'Dad Bot v4 (TypeScript Edition)',
+      description: 'The father you always wanted',
       defaultHelpCommand: false,
       owner: 'AlekEagle#0001'
     }
   );
-  client.editStatus('dnd', { name: 'myself start up!', type: 3 });
-  Cluster.connect();
-  Cluster.on('CCCQuery', (data, cb) => {
-    console.debug('Received CCCQuery');
+
+  // Create an event listener that will log the status of each shard as it connects.
+  // This event listener will be removed when the ready event is emitted.
+  function logShardStatus(shard: number) {
+    console.log(
+      chalk.green(
+        ` Shard ${shard + 1} of ${shards.thisCluster.count} is ready.`
+      )
+    );
+  }
+
+  client.on('shardReady', logShardStatus);
+
+  // Set Dad's status telling everyone he is starting up.
+  client.editStatus('dnd', {
+    name: 'myself start up!',
+    type: Eris.Constants.ActivityTypes.WATCHING
+  });
+  // Connect to the cluster manager.
+  cluster.connect();
+
+  // Initialize the Cross Cluster Communication handler.
+  cluster.on('CCCQuery', (data, callback) => {
+    logger.debug('Received CCCQuery');
+    // Use evaluateSafe to "safely" evaluate whatever is requested from the cluster manager.
     let emitter = evaluateSafe(data, {
       require,
       exports,
       console,
+      process,
       client,
-      process
+      logger,
+      cluster,
+      shards
     });
+
+    // If emitter is an event emitter, then we can use it as an event emitter.
     if (emitter instanceof EventEmitter) {
       emitter.once('complete', async (out, err) => {
         if (err) {
           console.error(err, out);
-          cb(typeof err !== 'string' ? Utils.inspect(err) : err);
-        } else cb(typeof out !== 'string' ? Utils.inspect(out) : out);
+          callback(typeof err !== 'string' ? inspect(err) : err);
+        } else callback(typeof out !== 'string' ? inspect(out) : out);
       });
       emitter.once('timeoutError', error => {
-        cb(Utils.inspect(error));
+        callback(inspect(error));
       });
     } else {
-      cb(Utils.inspect(emitter));
+      // If emitter is not an event emitter, then we just return the result.
+      callback(inspect(emitter));
     }
   });
 
-  client.on('ready', () => {
-    console.log('Ready!');
+  // Create an event listener for the client ready event
+  client.once('ready', () => {
+    console.log(chalk.green(' All shards connected!'));
+    client.off('shardReady', logShardStatus);
+    // Thank the newest patron
     client.editStatus('online', {
       name: 'Thank you MissingWerewolf for supporting on Patreon!',
       type: 0
     });
+    // Start the prefix manager
     startPrefixManager(client);
   });
 
-  function clearSendShardInfoInterval() {
-    if (sendShardInfoInterval) {
-      clearInterval(sendShardInfoInterval);
-      sendShardInfoInterval = null;
-    }
-  }
-
-  Cluster.on('disconnected', err => {
-    clearSendShardInfoInterval();
+  // Set up the error event module
+  client.on('error', error => {
+    logger.error(error);
   });
 
-  Cluster.on('cluster_status', (count, connected) => {
-    if (count !== connected.length) {
-      clearSendShardInfoInterval();
-      return;
-    } else {
-      if (sendShardInfoInterval) return;
-      sendShardInfoInterval = setInterval(async () => {
-        let cpu = await CPU();
-        let ping = Math.round(
-          client.shards
-            .map(s => s.latency)
-            .filter(a => isFinite(a))
-            .reduce((a, b) => a + b, 0) /
-            client.shards.map(e => e.latency).filter(a => isFinite(a)).length
-        );
-        Cluster.sendData(0, {
-          ping: isNaN(ping) ? 0 : !isFinite(ping) ? 0 : ping,
-          guilds: client.guilds.size,
-          cpuUsage: cpu,
-          memoryUsage: Math.round(new Memory().raw() / 1024 / 1024)
-        });
-      }, 5000);
-    }
-  });
-
+  // Set up event modules for the client
   Events.forEach(event => {
+    // Create the event listener on the client
     client.on(event.name, (...args) => {
-      event.handler(client, ...args);
+      // Execute the event listener
+      event.handler(...args);
     });
   });
 
+  // Set up the command modules for the client
   Commands.forEach(command => {
-    console.debug(`Loading command "${command.name}".`);
     initializeCommand(command.name);
     client.registerCommand(
       command.name,
@@ -248,11 +281,9 @@ function calculateShardReservation(): Promise<{
             (!blacklistStatus.commands.includes(command.name) &&
               !blacklistStatus.commands.includes('all'))
           ) {
-            if (typeof command.handler !== 'function') {
+            if (typeof command.handler !== 'function')
               return command.handler as MessageContent;
-            } else {
-              return (await command.handler(client, msg, args)) as any;
-            }
+            else return (await command.handler(msg, args)) as any;
           } else {
             switch (blacklistStatus.type) {
               case 0:
@@ -301,5 +332,6 @@ function calculateShardReservation(): Promise<{
     );
   });
 
+  // Finally, tell the client to connect to Discord.
   client.connect();
 })();

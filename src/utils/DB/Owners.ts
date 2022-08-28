@@ -19,9 +19,7 @@ export default class Owners extends Model {
   );
 
   Owners.sync().then(
-    () => {
-      console.info('Synced Owners successfully!');
-    },
+    () => {},
     err => {
       console.error('Unable to sync Owners! Error: ', err);
     }

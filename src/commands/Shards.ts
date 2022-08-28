@@ -1,11 +1,10 @@
 import Eris from 'eris';
-import { CommandModule } from '../types';
 import Table from '../utils/Table';
 
 const Shards: CommandModule = {
   name: 'shards',
 
-  async handler(client, msg, args) {
+  async handler(msg, args) {
     let shardsArr: {
       id: number;
       guildCount: number;

@@ -8,8 +8,8 @@ export async function init() {
   if (!sequelize) {
     sequelize = new Sequelize(
       'alekeagle',
-      process.env.serverUsername,
-      process.env.serverPass,
+      process.env.DB_USER,
+      process.env.DB_PASSWORD,
       {
         host: 'localhost',
         dialect: 'postgres',

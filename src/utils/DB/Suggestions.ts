@@ -39,9 +39,7 @@ export default class Suggestions extends Model {
   );
 
   Suggestions.sync().then(
-    () => {
-      console.info('Synced Suggestions successfully!');
-    },
+    () => {},
     err => {
       console.error('Unable to sync Suggestions! Error: ', err);
     }

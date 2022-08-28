@@ -1,12 +1,12 @@
 import Eris from 'eris';
-import { CommandModule } from '../types';
+import { client } from '..';
 import Dadhook from '../utils/Dadhook';
 import Lists from '../utils/Lists';
 
 const Embarrass: CommandModule = {
   name: 'embarrass',
 
-  async handler(client, msg: Eris.Message<Eris.GuildTextableChannel>, args) {
+  async handler(msg: Eris.Message<Eris.GuildTextableChannel>, args) {
     if (!msg.channel.permissionsOf(client.user.id).has('manageWebhooks'))
       return 'No can do bub, in order for me to embarrass people I need the permission `MANAGE_WEBHOOKS`.';
     let random = Math.floor(Math.random() * Lists.embarrassingThings.length),

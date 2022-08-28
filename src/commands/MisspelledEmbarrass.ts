@@ -1,11 +1,11 @@
 import Eris from 'eris';
-import { CommandModule } from '../types';
+import { client } from '..';
 import Dadhook from '../utils/Dadhook';
 
 const MisspelledEmbarrass: CommandModule = {
   name: 'embarras',
 
-  async handler(client, msg: Eris.Message<Eris.GuildTextableChannel>, args) {
+  async handler(msg: Eris.Message<Eris.GuildTextableChannel>, args) {
     const user = msg.member;
     if (!msg.channel.permissionsOf(client.user.id).has('manageWebhooks'))
       return;

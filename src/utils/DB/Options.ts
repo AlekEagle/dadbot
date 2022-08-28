@@ -21,9 +21,7 @@ export default class Options extends Model {
   );
 
   Options.sync().then(
-    () => {
-      console.info('Synced Options successfully!');
-    },
+    () => {},
     err => {
       console.error('Unable to sync Options! Error: ', err);
     }

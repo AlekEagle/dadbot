@@ -1,5 +1,3 @@
-import { CommandModule } from '../types';
-
 const Patreon: CommandModule = {
   name: 'patreon',
 

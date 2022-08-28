@@ -1,6 +1,5 @@
-import { CommandModule } from "../types";
-import { isOwner } from "../utils/Owners";
-import DadbotClusterClient from "../../../dadbot-cluster-client";
+import { isOwner } from '../utils/Owners';
+import DadbotClusterClient from '../../../dadbot-cluster-client';
 
 const GameTypes: { [key: string]: number } = {
   playing: 0,
@@ -8,7 +7,7 @@ const GameTypes: { [key: string]: number } = {
   listening: 2,
   watching: 3,
   custom: 4, // Can't be used for bots, but here for filling in the enum
-  competing: 5,
+  competing: 5
 };
 
 function response(
@@ -20,42 +19,42 @@ function response(
   if (!gameType && !gameStr) {
     return `I'm now simply **__${status}__**.`;
   } else {
-    let gameTypeStr = "";
+    let gameTypeStr = '';
     switch (gameType) {
       case GameTypes.playing:
-        gameTypeStr = "Playing";
+        gameTypeStr = 'Playing';
         break;
       case GameTypes.streaming:
-        gameTypeStr = "Streaming";
+        gameTypeStr = 'Streaming';
         break;
       case GameTypes.listening:
-        gameTypeStr = "Listening to";
+        gameTypeStr = 'Listening to';
         break;
       case GameTypes.watching:
-        gameTypeStr = "Watching";
+        gameTypeStr = 'Watching';
         break;
       case GameTypes.custom:
         gameTypeStr = "Lol this doesn't work dumy";
         break;
       case GameTypes.competing:
-        gameTypeStr = "Competing in";
+        gameTypeStr = 'Competing in';
         break;
       default:
-        gameTypeStr = "How";
+        gameTypeStr = 'How';
     }
 
     return `I'm now **__${status}__** and **__${gameTypeStr}__** **${gameStr}**${
-      url ? ` at **${url}**` : ""
+      url ? ` at **${url}**` : ''
     }.`;
   }
 }
 
 const SetPlayingStatus: CommandModule = {
-  name: "setplaying",
+  name: 'setplaying',
 
-  async handler(client, msg, args) {
+  async handler(msg, args) {
     if (!(await isOwner(msg.author.id))) {
-      return "You do not have permission to use this command.";
+      return 'You do not have permission to use this command.';
     }
 
     let statusObj: {
@@ -65,62 +64,62 @@ const SetPlayingStatus: CommandModule = {
     } = {};
 
     if (args.length < 1) {
-      return "You must at least provide a status (online, idle, dnd, invis/invisible/offline)";
+      return 'You must at least provide a status (online, idle, dnd, invis/invisible/offline)';
     }
 
     let status = args[0].toLowerCase();
-    if (status === "invis" || status === "invisible") {
-      status = "offline";
+    if (status === 'invis' || status === 'invisible') {
+      status = 'offline';
     }
 
     if (args.length === 1) {
       await (
         (process as any).clusterClient as DadbotClusterClient<
-          "ws",
-          { url: "ws://localhost:8080/manager" }
+          'ws',
+          { url: 'ws://localhost:8080/manager' }
         >
-      ).startCCC("all", `client.editStatus('${status}', null)`);
+      ).startCCC('all', `client.editStatus('${status}', null)`);
       return response(status);
     }
 
-    if (args.length === 2 && args[1].toLowerCase() === "preserve") {
+    if (args.length === 2 && args[1].toLowerCase() === 'preserve') {
       await (
         (process as any).clusterClient as DadbotClusterClient<
-          "ws",
-          { url: "ws://localhost:8080/manager" }
+          'ws',
+          { url: 'ws://localhost:8080/manager' }
         >
-      ).startCCC("all", `client.editStatus('${status}')`);
+      ).startCCC('all', `client.editStatus('${status}')`);
       return response(status);
     }
 
     statusObj.type = GameTypes[args[1].toLowerCase()];
 
     if (statusObj.type === undefined) {
-      return "You must provide a valid game type (playing, streaming, listening, watching, custom, competing)";
+      return 'You must provide a valid game type (playing, streaming, listening, watching, custom, competing)';
     }
 
     statusObj.name =
-      (args[1].toLowerCase() === "listening" &&
-        args[2].toLowerCase() === "to") ||
-      (args[1].toLowerCase() === "competing" &&
-        args[2].toLowerCase() === "in") ||
-      args[1].toLowerCase() === "streaming"
-        ? args.slice(3).join(" ")
-        : args.slice(2).join(" ");
+      (args[1].toLowerCase() === 'listening' &&
+        args[2].toLowerCase() === 'to') ||
+      (args[1].toLowerCase() === 'competing' &&
+        args[2].toLowerCase() === 'in') ||
+      args[1].toLowerCase() === 'streaming'
+        ? args.slice(3).join(' ')
+        : args.slice(2).join(' ');
 
-    statusObj.url = args[1].toLowerCase() === "streaming" ? args[2] : undefined;
+    statusObj.url = args[1].toLowerCase() === 'streaming' ? args[2] : undefined;
 
     if (statusObj.name.length === 0) {
-      return "You must provide a game string";
+      return 'You must provide a game string';
     }
 
     await (
       (process as any).clusterClient as DadbotClusterClient<
-        "ws",
-        { url: "ws://localhost:8080/manager" }
+        'ws',
+        { url: 'ws://localhost:8080/manager' }
       >
     ).startCCC(
-      "all",
+      'all',
       `client.editStatus("${status}", ${JSON.stringify(statusObj)})`
     );
 
@@ -128,8 +127,8 @@ const SetPlayingStatus: CommandModule = {
   },
 
   options: {
-    hidden: true,
-  },
+    hidden: true
+  }
 };
 
 export default SetPlayingStatus;
