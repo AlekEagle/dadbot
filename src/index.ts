@@ -335,3 +335,12 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   // Finally, tell the client to connect to Discord.
   client.connect();
 })();
+
+process.on('exit', () => {
+  client.disconnect({ reconnect: false });
+  cluster.disconnect();
+  // Dad screams at the user that he is going down.
+  console.error(
+    chalk.red('AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA')
+  );
+});
