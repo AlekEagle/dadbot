@@ -1,6 +1,6 @@
 # Dad Bot
 
-Welcome to the GitHub repository for Dad Bot. Dad Bot has become a much larger project than I would've ever expected, and I thank everyone who uses the bot, the people who have contributed to it, people who give suggestions to improve the bot, and etc. This bot wouldn't be anywhere near where it is without the support of everyone who uses the bot.
+Welcome to the GitHub repository for Dad Bot. Based on the original Dad Bot made by [@Reaxt](https://github.com/Reaxt) that was shut down. Dad Bot has become a much larger project than I would've ever expected, and I thank everyone who uses the bot, the people who have contributed to it, people who give suggestions to improve the bot, and etc. This bot wouldn't be anywhere near where it is without the support of everyone who uses the bot.
 
 ## Contributing
 
