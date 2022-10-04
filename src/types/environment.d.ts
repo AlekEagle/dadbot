@@ -6,8 +6,6 @@ declare global {
       DEBUG: string;
       TOKEN: string;
       OTHER_TOKEN: string;
-      TOPGG_TOKEN: string;
-      WEBHOOK_TOKEN: string;
       DB_PASSWORD: string;
       DB_USER: string;
       PERSPECTIVE_API_KEY: string;
