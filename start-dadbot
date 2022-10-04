@@ -32,6 +32,6 @@ if [ $CLUSTER_ID -lt 0 ]; then
     exit 1
 fi
 
-NODE_APP_INSTANCE=$CLUSTER_ID node --max-old-space-size=$MEM .
+CLUSTER_ID=$CLUSTER_ID node --max-old-space-size=$MEM .
 # exit with the exit code of the node process
 exit $?
