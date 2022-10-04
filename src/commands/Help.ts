@@ -1,14 +1,14 @@
 import { GuildTextableChannel, Message } from 'eris';
-import { CommandModule } from '../types';
 import ReactionMenu, { EmojiMap } from '../utils/ReactionMenu';
 import ms from 'ms';
+import { client } from '..';
 
 const cmdsPerPage = 5;
 
 const Help: CommandModule = {
   name: 'help',
 
-  async handler(client, msg, args) {
+  async handler(msg, args) {
     const defaultState = new EmojiMap(),
       commands = Object.entries(client.commands).filter(c => !c[1].hidden);
     let page = 0;

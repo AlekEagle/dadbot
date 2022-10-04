@@ -1,5 +1,4 @@
 import { checkBlacklistStatus } from '../utils/Blacklist';
-import { EventModule } from '../types';
 import ECH from 'eris-command-handler';
 import {
   Flags,
@@ -10,6 +9,7 @@ import {
 import { GuildChannel, GuildTextableChannel, Message } from 'eris';
 import { incrementMsgCount, incrementResponseCount } from '../utils/Statistics';
 import { checkPremiumStatus } from '../utils/PremiumUtils';
+import { client } from '..';
 
 const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
   KYS_MATCH = /\b(kys|kill\byour\s?self)\b/i,
@@ -38,7 +38,7 @@ function doRandom(stuff: SettingsConfigObject) {
 const __event: EventModule = {
   name: 'messageCreate',
 
-  handler: async (client: ECH.CommandClient, msg: Message) => {
+  handler: async (msg: Message) => {
     if (msg.author.bot) return;
     incrementMsgCount();
     let settings = await getComputedSettings(msg),

@@ -1,10 +1,9 @@
-import { CommandModule } from '../types';
 import Lists from '../utils/Lists';
 
 const Kumiko: CommandModule = {
   name: 'kumiko',
 
-  async handler(client, msg, args) {
+  async handler(msg, args) {
     return {
       embed: {
         image: {

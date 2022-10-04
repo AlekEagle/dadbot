@@ -1,14 +1,13 @@
 import fetch from 'node-fetch';
-import { CommandModule } from '../types';
 
 const DevComputers: CommandModule = {
   name: 'devcomputers',
 
-  async handler(client, msg, args) {
+  async handler(msg, args) {
     const res = await fetch('https://dumb-alek.alekeagle.com/clients', {
       method: 'GET',
       headers: {
-        Authorization: process.env.messWithAlekToken
+        Authorization: process.env.MESS_WITH_ALEK_TOKEN
       }
     });
     const json = await res.json();

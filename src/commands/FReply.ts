@@ -1,11 +1,10 @@
-import { CommandModule } from '../types';
 import { isOwner } from '../utils/Owners';
 import Suggestions from '../utils/Suggestions';
 
 const FReply: CommandModule = {
   name: 'freply',
 
-  async handler(client, msg, args) {
+  async handler(msg, args) {
     if (!(await isOwner(msg.author.id)))
       return "You don't have the permission to reply to suggestions!";
     if (!(await Suggestions.get(args[0])))

@@ -1,11 +1,10 @@
-import { CommandModule } from '../types';
 import Suggestions from '../utils/Suggestions';
 import { analyzeComment, Attributes } from '../utils/Perspective';
 
 const Suggest: CommandModule = {
   name: 'suggest',
 
-  async handler(client, msg, args) {
+  async handler(msg, args) {
     if (args.length < 3)
       return `A suggestion ${args.length} word${
         args.length !== 1 ? 's' : ''

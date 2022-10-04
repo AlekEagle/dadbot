@@ -1,10 +1,9 @@
 import fetch from 'node-fetch';
-import { CommandModule } from '../types';
 
 const MessWithDevs: CommandModule = {
   name: 'bugdev',
 
-  async handler(client, msg, args) {
+  async handler(msg, args) {
     if (args.length === 0) {
       return 'You need to specify a message to send.';
     }
@@ -12,7 +11,7 @@ const MessWithDevs: CommandModule = {
       method: 'POST',
       headers: {
         'Content-Type': 'text/plain',
-        'Authorization': process.env.messWithAlekToken
+        'Authorization': process.env.MESS_WITH_ALEK_TOKEN
       },
       body: args.join(' ')
     });

@@ -1,4 +1,3 @@
-import { CommandModule } from '../types';
 import { incrementBarbecuesServed } from '../utils/Statistics';
 
 const Barbecue: CommandModule = {

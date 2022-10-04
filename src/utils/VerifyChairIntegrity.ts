@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { DentInChairError } from './DentInChairError';
 
 export const knownGoodTextChairHash = '25acc7a27b',
   knownGoodAsciiChairHash = 'feedb74662';
@@ -6,8 +7,7 @@ export const knownGoodTextChairHash = '25acc7a27b',
 export default async function verifyChairIntegrity() {
   try {
     const chair = (await import('./Chair')).default;
-    if (!chair || !chair.chair || !chair.ascii)
-      throw new Error('My chair has a dent in it! How Could you!?');
+    if (!chair || !chair.chair || !chair.ascii) throw new DentInChairError();
 
     const textChairHash = createHash('shake256', { outputLength: 5 })
         .update(chair.chair)
@@ -20,10 +20,10 @@ export default async function verifyChairIntegrity() {
       knownGoodAsciiChairHash !== asciiChairHash ||
       knownGoodTextChairHash !== textChairHash
     )
-      throw new Error('My chair has a dent in it! How Could you!?');
+      throw new DentInChairError();
     return;
   } catch (e) {
     console.error(e);
-    throw new Error('My chair has a dent in it! How Could you!?');
+    throw new DentInChairError();
   }
 }

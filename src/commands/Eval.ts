@@ -1,10 +1,10 @@
 import Utils from 'node:util';
 import { Client } from 'cumulonimbus-wrapper';
 import { isOwner } from '../utils/Owners';
-import { CommandModule } from '../types';
 import EventEmitter from 'node:events';
 import { Message, MessageContent } from 'eris';
 import evaluateSafe from '../utils/SafeEval';
+import { client, cluster, logger, shards } from '..';
 
 async function constructMessage(
   output: any,
@@ -155,7 +155,7 @@ async function constructMessage(
 }
 
 async function uploadOutput(output: string): Promise<string> {
-  const cumClient = new Client(process.env.alekeagleMEToken);
+  const cumClient = new Client(process.env.ALEKEAGLE_ME_TOKEN);
   let res = await cumClient.uploadData(Buffer.from(output));
   return res.url;
 }
@@ -163,7 +163,7 @@ async function uploadOutput(output: string): Promise<string> {
 const Eval: CommandModule = {
   name: 'eval',
 
-  async handler(client, msg, args) {
+  async handler(msg, args) {
     if (!(await isOwner(msg.author.id, true)))
       return {
         embed: { image: { url: 'https://alekeagle.me/cAPOyKp9Mm.jpg' } }
@@ -189,13 +189,16 @@ const Eval: CommandModule = {
           ''
         ),
       {
-        client,
-        msg,
-        args,
         require,
         exports,
         console,
-        process
+        process,
+        client,
+        logger,
+        cluster,
+        shards,
+        msg,
+        args
       }
     );
     if (emitter instanceof EventEmitter) {

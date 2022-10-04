@@ -1,5 +1,3 @@
-import { CommandModule } from '../types';
-
 const Vote: CommandModule = {
   name: 'vote',
 

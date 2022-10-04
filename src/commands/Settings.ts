@@ -1,4 +1,3 @@
-import { CommandModule } from '../types';
 import ReactionMenu, {
   EmojiMap,
   ReactionMenuState
@@ -8,11 +7,12 @@ import * as SettingsUtils from '../utils/Settings';
 import { updatePrefix, removePrefix } from '../utils/Prefixes';
 import Eris from 'eris';
 import { checkPremiumStatus } from '../utils/PremiumUtils';
+import { client } from '..';
 
 const Settings: CommandModule = {
   name: 'settings',
 
-  async handler(client, msg: Eris.Message<Eris.GuildTextableChannel>, args) {
+  async handler(msg: Eris.Message<Eris.GuildTextableChannel>, args) {
     let defaultState: ReactionMenuState = {
       async message() {
         let fields = [

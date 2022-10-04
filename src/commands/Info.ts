@@ -1,5 +1,5 @@
 import Eris from 'eris';
-import { CommandModule } from '../types';
+import { client, cluster } from '..';
 import CPU from '../utils/CPU';
 import Memory from '../utils/Memory';
 import ReadableTime from '../utils/ReadableTime';
@@ -7,7 +7,7 @@ import ReadableTime from '../utils/ReadableTime';
 const Info: CommandModule = {
   name: 'info',
 
-  async handler(client, msg, args) {
+  async handler(msg, args) {
     let clusterData: {
       id: number;
       guildCount: number;
@@ -20,9 +20,10 @@ const Info: CommandModule = {
       barbecuesServed: number;
     }[] = [];
     clusterData = (
-      await (process as any).clusterClient.startCCC(
-        'all',
-        `import { getData } from './utils/Statistics';
+      (
+        await cluster.startCCC(
+          'all',
+          `import { getData } from './utils/Statistics';
 return JSON.stringify(
   {
     id: process.env.NODE_APP_INSTANCE,
@@ -33,8 +34,9 @@ return JSON.stringify(
     ...getData()
   }
 )`
-      )
-    ).data.map((a: string) => JSON.parse(a));
+        )
+      ).data as string[]
+    ).map((a: string) => JSON.parse(a));
     let time = new ReadableTime(process.uptime() * 1000);
     let cpu = await CPU();
     return {
@@ -130,7 +132,7 @@ return JSON.stringify(
           },
           {
             name: 'Current Cluster',
-            value: process.env.NODE_APP_INSTANCE,
+            value: process.env.CLUSTER_ID,
             inline: true
           },
           {

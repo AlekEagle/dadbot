@@ -1,8 +1,7 @@
 import Chalk from 'chalk';
 import * as InternalConsole from 'console';
 import * as NodeUtil from 'util';
-import ECH from 'eris-command-handler';
-import DadbotClusterClient from '../../../dadbot-cluster-client';
+import { cluster } from '..';
 export enum Level {
   NONE = 0,
   ERROR = 1,
@@ -63,13 +62,8 @@ export default class Logger {
 
   error(message: any, ...optionalParams: any[]) {
     if (this.logLevel < Level.ERROR) return;
-    if ((process as any).clusterClient) {
-      (
-        (process as any).clusterClient as DadbotClusterClient<
-          'ws',
-          { url: 'ws://localhost:8080/manager' }
-        >
-      )
+    if (cluster) {
+      cluster
         .sendData(
           2,
           message +
@@ -100,13 +94,8 @@ export default class Logger {
 
   warn(message: any, ...optionalParams: any[]) {
     if (this.logLevel < Level.WARN) return;
-    if ((process as any).clusterClient) {
-      (
-        (process as any).clusterClient as DadbotClusterClient<
-          'ws',
-          { url: 'ws://localhost:8080/manager' }
-        >
-      )
+    if (cluster) {
+      cluster
         .sendData(
           1,
           message +
@@ -137,13 +126,8 @@ export default class Logger {
 
   log(message: any, ...optionalParams: any[]) {
     if (this.logLevel < Level.INFO) return;
-    if ((process as any).clusterClient) {
-      (
-        (process as any).clusterClient as DadbotClusterClient<
-          'ws',
-          { url: 'ws://localhost:8080/manager' }
-        >
-      )
+    if (cluster) {
+      cluster
         .sendData(
           1,
           message +
@@ -178,13 +162,8 @@ export default class Logger {
 
   debug(message: any, ...optionalParams: any[]) {
     if (this.logLevel < Level.DEBUG) return;
-    if ((process as any).clusterClient) {
-      (
-        (process as any).clusterClient as DadbotClusterClient<
-          'ws',
-          { url: 'ws://localhost:8080/manager' }
-        >
-      )
+    if (cluster) {
+      cluster
         .sendData(
           1,
           message +
@@ -215,13 +194,8 @@ export default class Logger {
 
   trace(message: any, ...optionalParams: any[]) {
     if (this.logLevel > Level.DEBUG) return;
-    if ((process as any).clusterClient) {
-      (
-        (process as any).clusterClient as DadbotClusterClient<
-          'ws',
-          { url: 'ws://localhost:8080/manager' }
-        >
-      )
+    if (cluster) {
+      cluster
         .sendData(
           1,
           message +
