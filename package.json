@@ -5,22 +5,22 @@
   "main": "dist/index.js",
   "author": "AlekEagle",
   "dependencies": {
-    "@sentry/node": "^6.11.0",
-    "@top-gg/sdk": "^3.1.2",
+    "@sentry/node": "^7.16.0",
+    "@top-gg/sdk": "^3.1.3",
     "chalk": "^4.1.2",
-    "collections": "^5.1.12",
-    "cumulonimbus-wrapper": "^1.0.3",
-    "dotenv": "^10.0.0",
+    "collections": "^5.1.13",
+    "cumulonimbus-wrapper": "^2.1.1",
+    "dotenv": "^16.0.3",
     "eris": "^0.17.1",
-    "eris-command-handler": "^1.3.8",
-    "express": "^4.17.1",
+    "eris-command-handler": "1.5.0",
+    "express": "^4.18.2",
     "ms": "^2.1.3",
-    "node-fetch": "^2.6.1",
-    "pg": "^8.7.1",
+    "node-fetch": "^3.2.10",
+    "pg": "^8.8.0",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.6.5",
-    "source-map-support": "^0.5.19",
-    "typescript": "^4.4.2"
+    "sequelize": "^6.25.3",
+    "source-map-support": "^0.5.21",
+    "typescript": "^4.8.4"
   },
   "scripts": {
     "start": "npx tsc; node dist/index.js",
@@ -28,13 +28,14 @@
   },
   "devDependencies": {
     "@types/collections": "^5.1.2",
-    "@types/express": "^4.17.13",
+    "@types/express": "^4.17.14",
     "@types/ms": "^0.7.31",
-    "@types/node-fetch": "^2.5.12",
-    "@types/source-map-support": "^0.5.4",
-    "@types/validator": "^13.6.3",
-    "@types/ws": "^7.4.7"
+    "@types/node-fetch": "^2.6.2",
+    "@types/source-map-support": "^0.5.6",
+    "@types/validator": "^13.7.9",
+    "@types/ws": "^8.5.3"
   },
   "types": "src/index.d.ts",
-  "license": "AGPL"
+  "license": "AGPL",
+  "packageManager": "yarn@3.2.4"
 }

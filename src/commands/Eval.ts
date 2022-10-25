@@ -1,5 +1,5 @@
 import Utils from 'node:util';
-import { Client } from 'cumulonimbus-wrapper';
+import Client from 'cumulonimbus-wrapper';
 import { isOwner } from '../utils/Owners';
 import EventEmitter from 'node:events';
 import { Message, MessageContent } from 'eris';
@@ -156,8 +156,8 @@ async function constructMessage(
 
 async function uploadOutput(output: string): Promise<string> {
   const cumClient = new Client(process.env.ALEKEAGLE_ME_TOKEN);
-  let res = await cumClient.uploadData(Buffer.from(output));
-  return res.url;
+  let res = await cumClient.upload(Buffer.from(output));
+  return res.result.url;
 }
 
 const Eval: CommandModule = {

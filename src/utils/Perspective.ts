@@ -88,7 +88,7 @@ export async function analyzeComment(
   });
 
   if (res.ok) {
-    let data: AnalyzeCommentResponse = await res.json();
+    let data = (await res.json()) as AnalyzeCommentResponse;
     return data;
   } else {
     throw new Error(`Error ${res.status}: ${res.statusText}`);
