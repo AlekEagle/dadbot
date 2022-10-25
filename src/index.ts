@@ -336,11 +336,17 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   client.connect();
 })();
 
-function deathCroak() {
+function deathCroak(thing: string | number) {
   client.disconnect({ reconnect: false });
   cluster.disconnect();
   // Dad screams at the user that he is dying.
   console.error(chalk.red('A'.repeat(Math.floor(Math.random() * 100000) + 1)));
+  if (typeof thing === 'string') {
+    // This is a signal eg: SIGINT
+    // Nodejs will no longer exit by default with this event handler
+    // so we need to manually exit.
+    process.exit(0);
+  }
 }
 
 process.on('exit', deathCroak);
