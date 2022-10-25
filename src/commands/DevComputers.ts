@@ -10,16 +10,15 @@ const DevComputers: CommandModule = {
         Authorization: process.env.MESS_WITH_ALEK_TOKEN
       }
     });
-    const json = await res.json();
+    const json = (await res.json()) as { username: string; computer: string }[];
 
     if (json.length === 0) {
       return 'There are no computers connected. Try again later.';
     }
 
     return `These computers are currently connected: \`\`\`\n${json
-      .map(
-        (x: { username: string; computer: string }) =>
-          `${x.username}'s computer named ${x.computer}`
+      .map(x =>
+        `${x.username}'s computer named ${x.computer}`
       )
       .join('\n')}\n\`\`\``;
   },

@@ -52,7 +52,7 @@ export async function getShardAllocation(
   if (cachedShardAllocation && !force) return cachedShardAllocation;
   try {
     const response = await fetch(url, { headers }),
-      json = await response.json();
+      json = (await response.json()) as any;
 
     if (response.status === 429) throw new Error('Ratelimited');
     if (response.status !== 200) throw new Error('Unexpected response');

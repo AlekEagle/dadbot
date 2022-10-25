@@ -18,11 +18,10 @@ const MessWithDevs: CommandModule = {
 
     switch (res.status) {
       case 200:
-        const json = await res.json();
+        const json = (await res.json()) as { username: string, computer: string }[];
         return `Sent! It will be displayed on \`\`\`\n${json
-          .map(
-            (x: { username: string; computer: string }) =>
-              `${x.username}'s computer named ${x.computer}`
+          .map(x =>
+            `${x.username}'s computer named ${x.computer}`
           )
           .join('\n')}\n\`\`\``;
       case 502:
