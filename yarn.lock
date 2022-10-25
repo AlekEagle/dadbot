@@ -399,7 +399,7 @@ __metadata:
     cumulonimbus-wrapper: ^2.1.1
     dotenv: ^16.0.3
     eris: ^0.17.1
-    eris-command-handler: 1.5.0
+    eris-command-handler: 1.5.1
     express: ^4.18.2
     ms: ^2.1.3
     node-fetch: ^2.6.7
@@ -481,12 +481,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eris-command-handler@npm:1.5.0":
-  version: 1.5.0
-  resolution: "eris-command-handler@npm:1.5.0"
+"eris-command-handler@npm:1.5.1":
+  version: 1.5.1
+  resolution: "eris-command-handler@npm:1.5.1"
   dependencies:
     eris: ^0.17.1
-  checksum: 07ab5210644c4aa47baa3fd0d1b5d5ee58c3a0da23b513d80990b4af4e8c0bd1c9df5ce0dff0e85a598b266be54ddb1c1e6721be7193788c8eb5146d463ca34d
+  checksum: 52846dac3725dc7de706a12d5a08f99916847a7b278616734d0bdc5b77d35065dd08a4e9cf375e9e7cb0aa94006277bee6c45073b94ecee861e8ec5bbe2e3bee
   languageName: node
   linkType: hard
 
