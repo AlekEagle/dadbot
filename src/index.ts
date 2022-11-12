@@ -1,34 +1,34 @@
-import Logger, { Level } from './utils/Logger';
-import envConfig from './utils/dotenv';
-import Eris, { MessageContent } from 'eris';
-import { readFile } from 'node:fs/promises';
-import ECH from 'eris-command-handler';
-import Events from './events';
-import Commands from './commands';
-import { checkBlacklistStatus } from './utils/Blacklist';
-import DadbotClusterClient from '../../dadbot-cluster-client';
-import evaluateSafe from './utils/SafeEval';
-import EventEmitter from 'node:events';
-import { inspect } from 'node:util';
-import { incrementCommand, initializeCommand } from './utils/Statistics';
-import { startPrefixManager } from './utils/Prefixes';
-import Memory from './utils/Memory';
-import CPU from './utils/CPU';
-import verifyChairIntegrity from './utils/VerifyChairIntegrity';
-import { getShardAllocation, ShardAllocation } from './utils/ShardAllocator';
-import chalk from 'chalk';
-import { coolDadBotASCII } from './utils/UselessStartupMessage';
-import ReadableTime from './utils/ReadableTime';
+import Logger, { Level } from "./utils/Logger";
+import envConfig from "./utils/dotenv";
+import Eris, { MessageContent } from "eris";
+import { readFile } from "node:fs/promises";
+import ECH from "eris-command-handler";
+import Events from "./events";
+import Commands from "./commands";
+import { checkBlacklistStatus } from "./utils/Blacklist";
+import DadbotClusterClient from "../../dadbot-cluster-client";
+import evaluateSafe from "./utils/SafeEval";
+import EventEmitter from "node:events";
+import { inspect } from "node:util";
+import { incrementCommand, initializeCommand } from "./utils/Statistics";
+import { startPrefixManager } from "./utils/Prefixes";
+import Memory from "./utils/Memory";
+import CPU from "./utils/CPU";
+import verifyChairIntegrity from "./utils/VerifyChairIntegrity";
+import { getShardAllocation, ShardAllocation } from "./utils/ShardAllocator";
+import chalk from "chalk";
+import { coolDadBotASCII } from "./utils/UselessStartupMessage";
+import ReadableTime from "./utils/ReadableTime";
 
 envConfig();
 
-export const isDebug = process.env.DEBUG === 'true';
+export const isDebug = process.env.DEBUG === "true";
 export const token = !isDebug ? process.env.TOKEN : process.env.OTHER_TOKEN;
 
 export const logger = new Logger(isDebug ? Level.DEBUG : Level.INFO);
 export let cluster: DadbotClusterClient<
-  'ws',
-  { url: 'ws://localhost:8080/manager' }
+  "ws",
+  { url: "ws://localhost:8080/manager" }
 >;
 
 export let shards: ShardAllocation;
@@ -45,39 +45,39 @@ function clearSendShardInfoInterval() {
 export let client: ECH.CommandClient;
 
 if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
-  throw new Error('Missing required environment variables');
+  throw new Error("Missing required environment variables");
 }
 
 (async function () {
   // Make sure the chair is intact.
   await verifyChairIntegrity();
   // If we are in debug mode, don't bother with the sentry integration.
-  if (!process.env.DEBUG) await import('./utils/Sentry');
+  if (!process.env.DEBUG) await import("./utils/Sentry");
 
   // Initialize the cluster client.
   cluster = new DadbotClusterClient(
-    { name: 'ws', options: { url: 'ws://localhost:8080/manager' } },
+    { name: "ws", options: { url: "ws://localhost:8080/manager" } },
     process.env.CLUSTER_MANAGER_TOKEN,
-    JSON.parse(await readFile('./data/schema.json', 'utf-8')),
+    JSON.parse(await readFile("./data/schema.json", "utf-8")),
     {
       cluster: {
         count: Number(process.env.CLUSTERS),
-        id: Number(process.env.CLUSTER_ID)
-      }
+        id: Number(process.env.CLUSTER_ID),
+      },
     }
   );
 
-  cluster.on('connected', () => {
-    console.log(chalk.green(' Connected to cluster manager.'));
+  cluster.on("connected", () => {
+    console.log(chalk.green(" Connected to cluster manager."));
   });
 
-  cluster.on('disconnected', err => {
-    console.log(chalk.red(' Disconnected from cluster manager.'));
+  cluster.on("disconnected", (err) => {
+    console.log(chalk.red(" Disconnected from cluster manager."));
     console.log(chalk.red(err));
     clearSendShardInfoInterval();
   });
 
-  cluster.on('cluster_status', (count, connected) => {
+  cluster.on("cluster_status", (count, connected) => {
     if (count !== connected.length) {
       clearSendShardInfoInterval();
       return;
@@ -87,16 +87,16 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
       let cpu = await CPU();
       let ping = Math.round(
         client.shards
-          .map(s => s.latency)
-          .filter(a => isFinite(a))
+          .map((s) => s.latency)
+          .filter((a) => isFinite(a))
           .reduce((a, b) => a + b, 0) /
-          client.shards.map(e => e.latency).filter(a => isFinite(a)).length
+          client.shards.map((e) => e.latency).filter((a) => isFinite(a)).length
       );
       cluster.sendData(0, {
         ping: isNaN(ping) || !isFinite(ping) ? 0 : ping,
         guilds: client.guilds.size,
         cpuUsage: cpu,
-        memoryUsage: Math.round(new Memory().raw() / 1024 / 1024)
+        memoryUsage: Math.round(new Memory().raw() / 1024 / 1024),
       });
     }, 5000);
   });
@@ -105,13 +105,13 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   shards = await getShardAllocation({
     token,
     clusterID: Number(process.env.CLUSTER_ID),
-    clusters: Number(process.env.CLUSTERS)
+    clusters: Number(process.env.CLUSTERS),
   });
 
   // Do cool startup message.
   console.log(chalk.green(coolDadBotASCII));
   if (isDebug)
-    console.log(chalk.green('                           DEBUG  MODE'));
+    console.log(chalk.green("                           DEBUG  MODE"));
 
   // Log some additional information.
   console.log(
@@ -124,7 +124,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   console.log(
     chalk.green(
       ` Discord recommends ${shards.total} shard${
-        shards.total === 1 ? '' : 's'
+        shards.total === 1 ? "" : "s"
       } overall.`
     )
   );
@@ -147,7 +147,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   );
 
   if (shards.remainingSessions <= shards.total) {
-    console.error(chalk.red(' Not enough sessions remaining!'));
+    console.error(chalk.red(" Not enough sessions remaining!"));
     process.exit(1);
   }
 
@@ -157,16 +157,16 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
     {
       getAllUsers: false,
       defaultImageSize: 2048,
-      defaultImageFormat: 'png',
+      defaultImageFormat: "png",
       intents: [
-        'directMessageReactions',
-        'directMessageTyping',
-        'directMessages',
-        'guilds',
-        'guildMessageReactions',
-        'guildMessageTyping',
-        'guildMessages',
-        'guildWebhooks'
+        "directMessageReactions",
+        "directMessageTyping",
+        "directMessages",
+        "guilds",
+        "guildMessageReactions",
+        "guildMessageTyping",
+        "guildMessages",
+        "guildWebhooks",
       ],
       maxShards: shards.total,
       firstShardID: shards.thisCluster.start,
@@ -176,15 +176,15 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
       allowedMentions: {
         everyone: false,
         roles: false,
-        users: false
-      }
+        users: false,
+      },
     },
     {
-      prefix: isDebug ? 'test!' : 'd!',
-      name: 'Dad Bot',
-      description: 'The father you always wanted',
+      prefix: isDebug ? "test!" : "d!",
+      name: "Dad Bot",
+      description: "The father you always wanted",
       defaultHelpCommand: false,
-      owner: 'AlekEagle#0001'
+      owner: "AlekEagle#0001",
     }
   );
 
@@ -198,19 +198,19 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
     );
   }
 
-  client.on('shardReady', logShardStatus);
+  client.on("shardReady", logShardStatus);
 
   // Set Dad's status telling everyone he is starting up.
-  client.editStatus('dnd', {
-    name: 'myself start up!',
-    type: Eris.Constants.ActivityTypes.WATCHING
+  client.editStatus("dnd", {
+    name: "myself start up!",
+    type: Eris.Constants.ActivityTypes.WATCHING,
   });
   // Connect to the cluster manager.
   cluster.connect();
 
   // Initialize the Cross Cluster Communication handler.
-  cluster.on('CCCQuery', (data, callback) => {
-    logger.debug('Received CCCQuery');
+  cluster.on("CCCQuery", (data, callback) => {
+    logger.debug("Received CCCQuery");
     // Use evaluateSafe to "safely" evaluate whatever is requested from the cluster manager.
     let emitter = evaluateSafe(data, {
       require,
@@ -220,18 +220,18 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
       client,
       logger,
       cluster,
-      shards
+      shards,
     });
 
     // If emitter is an event emitter, then we can use it as an event emitter.
     if (emitter instanceof EventEmitter) {
-      emitter.once('complete', async (out, err) => {
+      emitter.once("complete", async (out, err) => {
         if (err) {
           console.error(err, out);
-          callback(typeof err !== 'string' ? inspect(err) : err);
-        } else callback(typeof out !== 'string' ? inspect(out) : out);
+          callback(typeof err !== "string" ? inspect(err) : err);
+        } else callback(typeof out !== "string" ? inspect(out) : out);
       });
-      emitter.once('timeoutError', error => {
+      emitter.once("timeoutError", (error) => {
         callback(inspect(error));
       });
     } else {
@@ -241,25 +241,25 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   });
 
   // Create an event listener for the client ready event
-  client.once('ready', () => {
-    console.log(chalk.green(' All shards connected!'));
-    client.off('shardReady', logShardStatus);
+  client.once("ready", () => {
+    console.log(chalk.green(" All shards connected!"));
+    client.off("shardReady", logShardStatus);
     // Thank the newest patron
-    client.editStatus('online', {
-      name: 'Thank you cchisawesome for supporting on Patreon!',
-      type: 0
+    client.editStatus("online", {
+      name: "Thank you bald ass for supporting on Patreon!",
+      type: 0,
     });
     // Start the prefix manager
     startPrefixManager(client);
   });
 
   // Set up the error event module
-  client.on('error', error => {
+  client.on("error", (error) => {
     logger.error(error);
   });
 
   // Set up event modules for the client
-  Events.forEach(event => {
+  Events.forEach((event) => {
     // Create the event listener on the client
     client.on(event.name, (...args) => {
       // Execute the event listener
@@ -268,7 +268,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   });
 
   // Set up the command modules for the client
-  Commands.forEach(command => {
+  Commands.forEach((command) => {
     initializeCommand(command.name);
     client.registerCommand(
       command.name,
@@ -279,9 +279,9 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
           if (
             blacklistStatus === null ||
             (!blacklistStatus.commands.includes(command.name) &&
-              !blacklistStatus.commands.includes('all'))
+              !blacklistStatus.commands.includes("all"))
           ) {
-            if (typeof command.handler !== 'function')
+            if (typeof command.handler !== "function")
               return command.handler as MessageContent;
             else return (await command.handler(msg, args)) as any;
           } else {
@@ -292,7 +292,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
                   dmChannel = await msg.author.getDMChannel();
                   dmChannel.createMessage(
                     `Well that's embarrassing, it seems you've been blacklisted from the bot and these commands/features: \`${blacklistStatus.commands.join(
-                      ', '
+                      ", "
                     )}\`\nIf you'd like to appeal, visit the support server: https://alekeagle.com/d and ask any member who has the "Lil' Crew" role.`
                   );
                 } catch (error) {
@@ -300,7 +300,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
                     `Well that's embarrassing (for ${
                       msg.author.mention
                     } at least), it seems you've been blacklisted from the bot and these commands/features: \`${blacklistStatus.commands.join(
-                      ', '
+                      ", "
                     )}\`\nIf you'd like to appeal, visit the support server: https://alekeagle.com/d and ask any member who has the "Lil' Crew" role.`
                   );
                 }
@@ -308,14 +308,14 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
               case 1:
                 msg.channel.createMessage(
                   `Well that's embarrassing, it seems this channel has been blacklisted from the bot and these commands/features: \`${blacklistStatus.commands.join(
-                    ', '
+                    ", "
                   )}\`\nIf you'd like to appeal, visit the support server: https://alekeagle.com/d and ask any member who has the "Lil' Crew" role.`
                 );
                 break;
               case 2:
                 msg.channel.createMessage(
                   `Well that's embarrassing, it seems this server has been blacklisted from the bot and these commands/features: \`${blacklistStatus.commands.join(
-                    ', '
+                    ", "
                   )}\`\nIf you'd like to appeal, visit the support server: https://alekeagle.com/d and ask any member who has the "Lil' Crew" role.`
                 );
                 break;
@@ -340,8 +340,8 @@ function deathCroak(thing: string | number) {
   client.disconnect({ reconnect: false });
   cluster.disconnect();
   // Dad screams at the user that he is dying.
-  console.error(chalk.red('A'.repeat(Math.floor(Math.random() * 100000) + 1)));
-  if (typeof thing === 'string') {
+  console.error(chalk.red("A".repeat(Math.floor(Math.random() * 100000) + 1)));
+  if (typeof thing === "string") {
     // This is a signal eg: SIGINT
     // Nodejs will no longer exit by default with this event handler
     // so we need to manually exit.
@@ -349,12 +349,12 @@ function deathCroak(thing: string | number) {
   }
 }
 
-process.on('exit', deathCroak);
+process.on("exit", deathCroak);
 
 // If the process is killed, disconnect the client.
-process.on('SIGINT', deathCroak);
-process.on('SIGTERM', deathCroak);
-process.on('SIGQUIT', deathCroak);
-process.on('SIGHUP', deathCroak);
-process.on('SIGBREAK', deathCroak);
-process.on('SIGABRT', deathCroak);
+process.on("SIGINT", deathCroak);
+process.on("SIGTERM", deathCroak);
+process.on("SIGQUIT", deathCroak);
+process.on("SIGHUP", deathCroak);
+process.on("SIGBREAK", deathCroak);
+process.on("SIGABRT", deathCroak);
