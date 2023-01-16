@@ -1,26 +1,24 @@
 {
   "name": "dad_bot",
-  "version": "4.0.0",
-  "description": "Dad Bot Mega Pog edition! (now with 20% more TypeScript!)",
+  "version": "5.0.0",
+  "description": "Dad Bot Mega Pog edition! (now with 80% more TypeScript!)",
   "main": "dist/index.js",
-  "author": "AlekEagle",
+  "author": "Alek Evans (AlekEagle)",
   "dependencies": {
-    "@sentry/node": "^7.16.0",
+    "@sentry/node": "^7.31.0",
     "@top-gg/sdk": "^3.1.3",
     "chalk": "^4.1.2",
     "collections": "^5.1.13",
     "cumulonimbus-wrapper": "^2.1.1",
     "dotenv": "^16.0.3",
-    "eris": "^0.17.1",
-    "eris-command-handler": "1.5.1",
-    "express": "^4.18.2",
     "ms": "^2.1.3",
-    "node-fetch": "^2.6.7",
+    "node-fetch": "^2.6.8",
+    "oceanic.js": "dev",
     "pg": "^8.8.0",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.25.3",
+    "sequelize": "^6.28.0",
     "source-map-support": "^0.5.21",
-    "typescript": "^4.8.4"
+    "typescript": "^4.9.4"
   },
   "scripts": {
     "start": "npx tsc; node dist/index.js",
@@ -28,14 +26,13 @@
   },
   "devDependencies": {
     "@types/collections": "^5.1.2",
-    "@types/express": "^4.17.14",
     "@types/ms": "^0.7.31",
+    "@types/node": "^18.11.18",
     "@types/node-fetch": "^2.6.2",
     "@types/source-map-support": "^0.5.6",
-    "@types/validator": "^13.7.9",
-    "@types/ws": "^8.5.3"
+    "@types/validator": "^13.7.10",
+    "@types/ws": "^8.5.4"
   },
-  "types": "src/index.d.ts",
   "license": "AGPL",
   "packageManager": "yarn@3.2.4"
 }

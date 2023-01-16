@@ -1,14 +1,14 @@
-import Eris from 'eris';
-import { client } from '..';
-import Dadhook from '../utils/Dadhook';
-import Lists from '../utils/Lists';
+import Eris from "eris";
+import { client } from "../../src";
+import Dadhook from "../../src/utils/Dadhook";
+import Lists from "../../src/utils/Lists";
 
 const Embarrass: CommandModule = {
-  name: 'embarrass',
+  name: "embarrass",
 
   async handler(msg: Eris.Message<Eris.GuildTextableChannel>, args) {
-    if (!msg.channel.permissionsOf(client.user.id).has('manageWebhooks'))
-      return 'No can do bub, in order for me to embarrass people I need the permission `MANAGE_WEBHOOKS`.';
+    if (!msg.channel.permissionsOf(client.user.id).has("manageWebhooks"))
+      return "No can do bub, in order for me to embarrass people I need the permission `MANAGE_WEBHOOKS`.";
     let random = Math.floor(Math.random() * Lists.embarrassingThings.length),
       user = msg.member;
     if (msg.mentions[0])
@@ -19,8 +19,8 @@ const Embarrass: CommandModule = {
         await dadhook.changeChannel(msg.channel);
       await dadhook.send({
         content: Lists.embarrassingThings[random],
-        avatarURL: user.user.dynamicAvatarURL('png', 4096),
-        username: user.nick && user.nick.length > 1 ? user.nick : user.username
+        avatarURL: user.user.dynamicAvatarURL("png", 4096),
+        username: user.nick && user.nick.length > 1 ? user.nick : user.username,
       });
     } else {
       msg.channel.createMessage({
@@ -28,21 +28,21 @@ const Embarrass: CommandModule = {
         messageReference: {
           messageID: msg.id,
           channelID: msg.channel.id,
-          guildID: msg.channel.guild.id
+          guildID: msg.channel.guild.id,
         },
-        allowedMentions: { repliedUser: true }
+        allowedMentions: { repliedUser: true },
       });
     }
   },
 
   options: {
     guildOnly: true,
-    description: 'Embarrass yourself or friends!',
-    usage: '[@user]',
+    description: "Embarrass yourself or friends!",
+    usage: "[@user]",
     cooldown: 10000,
     cooldownMessage:
-      "It's really hard doing impressions, give me a little bit, okay?"
-  }
+      "It's really hard doing impressions, give me a little bit, okay?",
+  },
 };
 
 export default Embarrass;

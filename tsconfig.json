@@ -4,7 +4,7 @@
     "sourceMap": true,
     "noImplicitAny": true,
     "module": "commonjs",
-    "target": "es2020",
+    "target": "es6",
     "rootDir": "./src/",
     "resolveJsonModule": true,
     "typeRoots": ["node_modules/@types"],
@@ -12,5 +12,5 @@
     "esModuleInterop": true,
     "isolatedModules": true
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*", "old/DentInChairError.ts"]
 }

@@ -1,7 +1,7 @@
-import { incrementBarbecuesServed } from '../utils/Statistics';
+import { incrementBarbecuesServed } from "../../src/utils/Statistics";
 
 const Barbecue: CommandModule = {
-  name: 'barbecue',
+  name: "barbecue",
 
   handler() {
     incrementBarbecuesServed();
@@ -9,15 +9,15 @@ const Barbecue: CommandModule = {
       embed: {
         title: "Here's your hotdog",
         image: {
-          url: 'https://alekeagle.me/8YgKdGJORB.png'
-        }
-      }
+          url: "https://alekeagle.me/8YgKdGJORB.png",
+        },
+      },
     };
   },
 
   options: {
-    description: 'mmm barbecue'
-  }
+    description: "mmm barbecue",
+  },
 };
 
 export default Barbecue;

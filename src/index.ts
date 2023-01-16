@@ -1,17 +1,13 @@
 import Logger, { Level } from "./utils/Logger";
+import { Constants, Client } from "oceanic.js";
 import envConfig from "./utils/dotenv";
-import Eris, { MessageContent } from "eris";
 import { readFile } from "node:fs/promises";
-import ECH from "eris-command-handler";
-import Events from "./events";
-import Commands from "./commands";
 import { checkBlacklistStatus } from "./utils/Blacklist";
 import DadbotClusterClient from "../../dadbot-cluster-client";
 import evaluateSafe from "./utils/SafeEval";
 import EventEmitter from "node:events";
 import { inspect } from "node:util";
 import { incrementCommand, initializeCommand } from "./utils/Statistics";
-import { startPrefixManager } from "./utils/Prefixes";
 import Memory from "./utils/Memory";
 import CPU from "./utils/CPU";
 import verifyChairIntegrity from "./utils/VerifyChairIntegrity";
@@ -42,7 +38,7 @@ function clearSendShardInfoInterval() {
   }
 }
 
-export let client: ECH.CommandClient;
+export let client: Client;
 
 if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   throw new Error("Missing required environment variables");
@@ -152,41 +148,46 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   }
 
   // Initialize the client.
-  client = new ECH.CommandClient(
-    token,
-    {
-      getAllUsers: false,
-      defaultImageSize: 2048,
-      defaultImageFormat: "png",
-      intents: [
-        "directMessageReactions",
-        "directMessageTyping",
-        "directMessages",
-        "guilds",
-        "guildMessageReactions",
-        "guildMessageTyping",
-        "guildMessages",
-        "guildWebhooks",
-      ],
-      maxShards: shards.total,
+  client = new Client({
+    auth: `Bot ${token}`,
+    allowedMentions: {
+      everyone: false,
+      roles: false,
+      users: false,
+      repliedUser: true,
+    },
+    collectionLimits: {
+      messages: 0,
+    },
+    defaultImageFormat: "png",
+    defaultImageSize: 2048,
+    gateway: {
       firstShardID: shards.thisCluster.start,
       lastShardID: shards.thisCluster.end,
-      messageLimit: 0,
-      restMode: true,
-      allowedMentions: {
-        everyone: false,
-        roles: false,
-        users: false,
+      maxShards: shards.total,
+      // compress: true,6
+      presence: {
+        status: "dnd",
+        activities: [
+          {
+            name: "myself start up!",
+            type: Constants.ActivityTypes.WATCHING,
+          },
+        ],
+        afk: true,
       },
+      intents: [
+        Constants.Intents.GUILDS,
+        Constants.Intents.GUILD_WEBHOOKS,
+        Constants.Intents.GUILD_MESSAGES,
+        Constants.Intents.GUILD_MESSAGE_TYPING,
+        Constants.Intents.GUILD_MESSAGE_REACTIONS,
+        Constants.Intents.DIRECT_MESSAGES,
+        Constants.Intents.DIRECT_MESSAGE_TYPING,
+        Constants.Intents.DIRECT_MESSAGE_REACTIONS,
+      ],
     },
-    {
-      prefix: isDebug ? "test!" : "d!",
-      name: "Dad Bot",
-      description: "The father you always wanted",
-      defaultHelpCommand: false,
-      owner: "AlekEagle#0001",
-    }
-  );
+  });
 
   // Create an event listener that will log the status of each shard as it connects.
   // This event listener will be removed when the ready event is emitted.
@@ -200,11 +201,6 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
 
   client.on("shardReady", logShardStatus);
 
-  // Set Dad's status telling everyone he is starting up.
-  client.editStatus("dnd", {
-    name: "myself start up!",
-    type: Eris.Constants.ActivityTypes.WATCHING,
-  });
   // Connect to the cluster manager.
   cluster.connect();
 
@@ -245,12 +241,12 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
     console.log(chalk.green(" All shards connected!"));
     client.off("shardReady", logShardStatus);
     // Thank the newest patron
-    client.editStatus("online", {
-      name: "Thank you bald ass for supporting on Patreon!",
-      type: 0,
-    });
-    // Start the prefix manager
-    startPrefixManager(client);
+    client.editStatus("online", [
+      {
+        name: "Thank you chompus for increasing their patronage!",
+        type: Constants.ActivityTypes.GAME,
+      },
+    ]);
   });
 
   // Set up the error event module
@@ -258,7 +254,11 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
     logger.error(error);
   });
 
-  // Set up event modules for the client
+  // ========================================================
+  // TODO: Migrate Dad Bot to the new command handler (this includes the command modules and the event modules)
+  // ========================================================
+
+  /* // Set up event modules for the client
   Events.forEach((event) => {
     // Create the event listener on the client
     client.on(event.name, (...args) => {
@@ -330,14 +330,14 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
       },
       command.options
     );
-  });
+  }); */
 
   // Finally, tell the client to connect to Discord.
   client.connect();
 })();
 
 function deathCroak(thing: string | number) {
-  client.disconnect({ reconnect: false });
+  client.disconnect(false);
   cluster.disconnect();
   // Dad screams at the user that he is dying.
   console.error(chalk.red("A".repeat(Math.floor(Math.random() * 100000) + 1)));
