@@ -1,4 +1,4 @@
-import { isOwner } from "../utils/Owners";
+import { isOwner } from "../../src/utils/Owners";
 import { cluster } from "..";
 
 const GameTypes: { [key: string]: number } = {

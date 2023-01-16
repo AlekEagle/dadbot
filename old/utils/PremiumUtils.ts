@@ -1,6 +1,6 @@
-import Eris from 'eris';
-import ECH from 'eris-command-handler';
-import { isOwner } from './Owners';
+import Eris from "eris";
+import ECH from "eris-command-handler";
+import { isOwner } from "../../src/utils/Owners";
 
 export type PremiumStatus = boolean | undefined;
 
@@ -24,14 +24,14 @@ export async function checkPremiumStatus(
 
   let mem: Eris.Member;
   try {
-    mem = await client.getRESTGuildMember('456542159210807307', id);
+    mem = await client.getRESTGuildMember("456542159210807307", id);
   } catch (err) {
     cache.set(id, undefined);
     cacheAge[id] = 0;
     return undefined;
   }
 
-  cache.set(id, mem.roles.includes('788443554140913675'));
+  cache.set(id, mem.roles.includes("788443554140913675"));
   cacheAge[id] = 0;
-  return mem.roles.includes('788443554140913675');
+  return mem.roles.includes("788443554140913675");
 }

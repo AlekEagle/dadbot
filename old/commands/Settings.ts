@@ -1,60 +1,60 @@
 import ReactionMenu, {
   EmojiMap,
-  ReactionMenuState
-} from '../utils/ReactionMenu';
-import { isOwner } from '../utils/Owners';
-import * as SettingsUtils from '../utils/Settings';
-import { updatePrefix, removePrefix } from '../utils/Prefixes';
-import Eris from 'eris';
-import { checkPremiumStatus } from '../utils/PremiumUtils';
-import { client } from '..';
+  ReactionMenuState,
+} from "../utils/ReactionMenu";
+import { isOwner } from "../../src/utils/Owners";
+import * as SettingsUtils from "../utils/Settings";
+import { updatePrefix, removePrefix } from "../utils/Prefixes";
+import Eris from "eris";
+import { checkPremiumStatus } from "../utils/PremiumUtils";
+import { client } from "..";
 
 const Settings: CommandModule = {
-  name: 'settings',
+  name: "settings",
 
   async handler(msg: Eris.Message<Eris.GuildTextableChannel>, args) {
     let defaultState: ReactionMenuState = {
       async message() {
         let fields = [
           {
-            name: '👤',
-            value: 'React with this emoji to manage your personal settings!'
+            name: "👤",
+            value: "React with this emoji to manage your personal settings!",
           },
           {
-            name: '⏹️',
-            value: 'React with this emoji to exit the menu!'
-          }
+            name: "⏹️",
+            value: "React with this emoji to exit the menu!",
+          },
         ];
         if (
-          msg.member.permissions.has('administrator') ||
+          msg.member.permissions.has("administrator") ||
           (await isOwner(msg.author.id))
         )
           fields.unshift({
-            name: '🌆',
-            value: "React with this emoji to manage the server's settings!"
+            name: "🌆",
+            value: "React with this emoji to manage the server's settings!",
           });
         return {
           embed: {
-            title: 'Settings Menu',
-            description: 'Use the reactions to navigate the menu!',
-            fields
-          }
+            title: "Settings Menu",
+            description: "Use the reactions to navigate the menu!",
+            fields,
+          },
         };
       },
-      reactions: new EmojiMap()
+      reactions: new EmojiMap(),
     };
     if (
-      msg.member.permissions.has('administrator') ||
+      msg.member.permissions.has("administrator") ||
       (await isOwner(msg.author.id))
     )
-      defaultState.reactions.set({ name: '🌆', id: null }, (message, user) => {
-        menu.setState('serverSettings');
+      defaultState.reactions.set({ name: "🌆", id: null }, (message, user) => {
+        menu.setState("serverSettings");
       });
 
-    defaultState.reactions.set({ name: '👤', id: null }, () =>
-      menu.setState('userSettings')
+    defaultState.reactions.set({ name: "👤", id: null }, () =>
+      menu.setState("userSettings")
     );
-    defaultState.reactions.set({ name: '⏹️', id: null }, () => menu.endMenu());
+    defaultState.reactions.set({ name: "⏹️", id: null }, () => menu.endMenu());
     let menu = new ReactionMenu(client, msg, defaultState);
 
     let cursorPos = 0,
@@ -67,14 +67,14 @@ const Settings: CommandModule = {
           premiumStatus = await checkPremiumStatus(client, msg.author.id);
         return {
           embed: {
-            title: 'User Settings',
+            title: "User Settings",
             thumbnail: {
-              url: msg.author.dynamicAvatarURL()
+              url: msg.author.dynamicAvatarURL(),
             },
             description: `Use 🔼 and 🔽 to select what setting you want to modify, ⏺️ to toggle your selection, 〰️ to change your RNG for auto responses (Premium Only!), and ⏹️ to go back to the previous menu!${
               prefs.default
-                ? '\n\nThese are currently set to default, so the channel, server, and default settings will be used.'
-                : ''
+                ? "\n\nThese are currently set to default, so the channel, server, and default settings will be used."
+                : ""
             }`,
             fields: [
               ...SettingsUtils.enumToArray(SettingsUtils.Flags).map(
@@ -84,41 +84,41 @@ const Settings: CommandModule = {
                     value: `Is currently \`${
                       prefs.flags &
                       SettingsUtils.Flags[k as keyof typeof SettingsUtils.Flags]
-                        ? 'ENABLED'
-                        : 'DISABLED'
-                    }\``
+                        ? "ENABLED"
+                        : "DISABLED"
+                    }\``,
                   };
                 }
               ),
               {
-                name: 'Current User RNG',
-                value: `${frac[0]}:${frac[1]}`
+                name: "Current User RNG",
+                value: `${frac[0]}:${frac[1]}`,
               },
               {
-                name: 'Premium Status',
+                name: "Premium Status",
                 value:
                   premiumStatus === undefined
-                    ? 'Not in server'
+                    ? "Not in server"
                     : premiumStatus === true
-                    ? 'Yes'
-                    : 'No'
-              }
-            ]
-          }
+                    ? "Yes"
+                    : "No",
+              },
+            ],
+          },
         };
       },
-      reactions: new EmojiMap()
+      reactions: new EmojiMap(),
     };
 
-    userSettings.reactions.set({ name: '🔼', id: null }, () => {
+    userSettings.reactions.set({ name: "🔼", id: null }, () => {
       if (--cursorPos < 0)
         cursorPos = SettingsUtils.enumToArray(SettingsUtils.Flags).length - 1;
     });
-    userSettings.reactions.set({ name: '🔽', id: null }, () => {
+    userSettings.reactions.set({ name: "🔽", id: null }, () => {
       if (++cursorPos >= SettingsUtils.enumToArray(SettingsUtils.Flags).length)
         cursorPos = 0;
     });
-    userSettings.reactions.set({ name: '⏺️', id: null }, async () => {
+    userSettings.reactions.set({ name: "⏺️", id: null }, async () => {
       let prefs = await SettingsUtils.getUserSettings(msg.author.id);
       let curFlag = SettingsUtils.enumToArray(SettingsUtils.Flags)[
         cursorPos
@@ -133,21 +133,21 @@ const Settings: CommandModule = {
       });
     });
 
-    userSettings.reactions.set({ name: '〰️', id: null }, async () => {
+    userSettings.reactions.set({ name: "〰️", id: null }, async () => {
       let premiumStatus = await checkPremiumStatus(client, msg.author.id);
       if (premiumStatus === false || premiumStatus === undefined) {
         let m = await msg.channel.createMessage(
-          'To set your RNG and override the server/channel RNG, you have to be a patreon supporter of the bot, sorry! If you want to support the bot, please do so at https://patreon.com/alekagle/'
+          "To set your RNG and override the server/channel RNG, you have to be a patreon supporter of the bot, sorry! If you want to support the bot, please do so at https://patreon.com/alekagle/"
         );
         setTimeout(() => m.delete(), 15000);
         return;
       }
-      menu.setState('setUserRNG');
-      client.on('messageCreate', setUserRNGHandler);
+      menu.setState("setUserRNG");
+      client.on("messageCreate", setUserRNGHandler);
     });
 
-    userSettings.reactions.set({ name: '⏹️', id: null }, () =>
-      menu.setState('default')
+    userSettings.reactions.set({ name: "⏹️", id: null }, () =>
+      menu.setState("default")
     );
 
     async function setUserRNGHandler(
@@ -162,17 +162,19 @@ const Settings: CommandModule = {
       menu.restartInactivityTimer();
 
       if (mesg.content.match(/^\d+:\d+$/)) {
-        let ratio = mesg.content.split(':').map(a => Number(a));
-        if (!ratio.every(a => !isNaN(a))) {
-          mesg.channel.createMessage("That isn't a valid ratio!").then(aaa => {
-            setTimeout(() => aaa.delete(), 5000);
-          });
+        let ratio = mesg.content.split(":").map((a) => Number(a));
+        if (!ratio.every((a) => !isNaN(a))) {
+          mesg.channel
+            .createMessage("That isn't a valid ratio!")
+            .then((aaa) => {
+              setTimeout(() => aaa.delete(), 5000);
+            });
         } else {
           let float = ratio[0] / ratio[1];
           if (float > 1) {
             mesg.channel
               .createMessage("That isn't a valid ratio!")
-              .then(aaa => {
+              .then((aaa) => {
                 setTimeout(() => aaa.delete(), 5000);
               });
           } else {
@@ -183,16 +185,16 @@ const Settings: CommandModule = {
             );
             mesg.channel
               .createMessage(`Your RNG has been set to ${float}!`)
-              .then(aaa => {
+              .then((aaa) => {
                 setTimeout(() => aaa.delete(), 5000);
               });
 
-            menu.setState('userSettings');
-            client.off('messageCreate', setUserRNGHandler);
+            menu.setState("userSettings");
+            client.off("messageCreate", setUserRNGHandler);
           }
         }
       } else {
-        mesg.channel.createMessage("That isn't a valid ratio!").then(aaa => {
+        mesg.channel.createMessage("That isn't a valid ratio!").then((aaa) => {
           setTimeout(() => aaa.delete(), 5000);
         });
       }
@@ -207,33 +209,33 @@ const Settings: CommandModule = {
           embed: {
             title: `Set Randomness for User`,
             description:
-              'Setting the randomness will change how often the bot will respond, by default the bot responds every time the bot can, you can change it so it responds about once every 5 messages that matches auto response criteria.\n\nTo change it, send a message with a ratio that looks something like `1:4` which means the bot will roughly respond once every 4 messages that matches criteria.\n\nUse ⏹️ to cancel making a change or 🔄 to set it back to default (or send 1:1 idc).',
+              "Setting the randomness will change how often the bot will respond, by default the bot responds every time the bot can, you can change it so it responds about once every 5 messages that matches auto response criteria.\n\nTo change it, send a message with a ratio that looks something like `1:4` which means the bot will roughly respond once every 4 messages that matches criteria.\n\nUse ⏹️ to cancel making a change or 🔄 to set it back to default (or send 1:1 idc).",
             fields: [
               {
-                name: 'Current Value',
-                value: `${frac[0]}:${frac[1]}`
-              }
-            ]
-          }
+                name: "Current Value",
+                value: `${frac[0]}:${frac[1]}`,
+              },
+            ],
+          },
         };
       },
-      reactions: new EmojiMap()
+      reactions: new EmojiMap(),
     };
 
-    setUserRNG.reactions.set({ name: '⏹️', id: null }, () => {
-      menu.setState('userSettings');
-      client.off('messageCreate', setUserRNGHandler);
+    setUserRNG.reactions.set({ name: "⏹️", id: null }, () => {
+      menu.setState("userSettings");
+      client.off("messageCreate", setUserRNGHandler);
     });
 
-    setUserRNG.reactions.set({ name: '🔄', id: null }, async () => {
+    setUserRNG.reactions.set({ name: "🔄", id: null }, async () => {
       await SettingsUtils.setUserSettings(msg.author.id, undefined, null);
-      menu.setState('userSettings');
-      client.off('messageCreate', setUserRNGHandler);
+      menu.setState("userSettings");
+      client.off("messageCreate", setUserRNGHandler);
     });
 
-    menu.addState('setUserRNG', setUserRNG);
+    menu.addState("setUserRNG", setUserRNG);
 
-    menu.addState('userSettings', userSettings);
+    menu.addState("userSettings", userSettings);
 
     let serverSettings: ReactionMenuState = {
       async message() {
@@ -241,14 +243,14 @@ const Settings: CommandModule = {
           frac = SettingsUtils.decimalToFraction(prefs.RNG || 1);
         return {
           embed: {
-            title: 'Server Settings',
+            title: "Server Settings",
             thumbnail: {
-              url: msg.channel.guild.dynamicIconURL()
+              url: msg.channel.guild.dynamicIconURL(),
             },
             description: `Use 🔼 and 🔽 to select what setting you want to modify, ⏺️ to toggle your selection, #⃣ to switch between server and channel mode, 〰️ to change the servers's RNG for auto responses, ❗ to change the server prefix, and use ⏹️ to go back to the previous menu!${
               prefs.default
-                ? '\n\nThese are currently set to default, so the default settings will be used.'
-                : ''
+                ? "\n\nThese are currently set to default, so the default settings will be used."
+                : ""
             }`,
             fields: [
               ...SettingsUtils.enumToArray(SettingsUtils.Flags).map(
@@ -258,41 +260,41 @@ const Settings: CommandModule = {
                     value: `Is currently \`${
                       prefs.flags &
                       SettingsUtils.Flags[k as keyof typeof SettingsUtils.Flags]
-                        ? 'ENABLED'
-                        : 'DISABLED'
-                    }\``
+                        ? "ENABLED"
+                        : "DISABLED"
+                    }\``,
                   };
                 }
               ),
               {
-                name: 'Server Prefix',
+                name: "Server Prefix",
                 value: `\`${
                   client.guildPrefixes[msg.channel.guild.id]
                     ? (client.guildPrefixes[msg.channel.guild.id] as string)
                     : (client.commandOptions.prefix as string)
-                }\``
+                }\``,
               },
               {
-                name: 'Current Server RNG',
-                value: `${frac[0]}:${frac[1]}`
-              }
-            ]
-          }
+                name: "Current Server RNG",
+                value: `${frac[0]}:${frac[1]}`,
+              },
+            ],
+          },
         };
       },
-      reactions: new EmojiMap()
+      reactions: new EmojiMap(),
     };
 
-    serverSettings.reactions.set({ name: '🔼', id: null }, () => {
+    serverSettings.reactions.set({ name: "🔼", id: null }, () => {
       if (--cursorPos < 0)
         cursorPos = SettingsUtils.enumToArray(SettingsUtils.Flags).length - 1;
     });
-    serverSettings.reactions.set({ name: '🔽', id: null }, () => {
+    serverSettings.reactions.set({ name: "🔽", id: null }, () => {
       if (++cursorPos >= SettingsUtils.enumToArray(SettingsUtils.Flags).length)
         cursorPos = 0;
     });
 
-    serverSettings.reactions.set({ name: '⏺️', id: null }, async () => {
+    serverSettings.reactions.set({ name: "⏺️", id: null }, async () => {
       let prefs = await SettingsUtils.getGuildSettings(msg.channel.guild.id);
       let curFlag = SettingsUtils.enumToArray(SettingsUtils.Flags)[
         cursorPos
@@ -307,17 +309,17 @@ const Settings: CommandModule = {
       });
     });
 
-    serverSettings.reactions.set({ name: '#⃣', id: null }, () => {
-      menu.setState('channelSettings');
+    serverSettings.reactions.set({ name: "#⃣", id: null }, () => {
+      menu.setState("channelSettings");
     });
 
-    serverSettings.reactions.set({ name: '〰️', id: null }, () => {
-      menu.setState('setServerRNG');
-      client.on('messageCreate', setServerRNGHandler);
+    serverSettings.reactions.set({ name: "〰️", id: null }, () => {
+      menu.setState("setServerRNG");
+      client.on("messageCreate", setServerRNGHandler);
     });
 
-    serverSettings.reactions.set({ name: '⏹️', id: null }, () => {
-      menu.setState('default');
+    serverSettings.reactions.set({ name: "⏹️", id: null }, () => {
+      menu.setState("default");
     });
 
     let newPrefix: string;
@@ -339,65 +341,65 @@ const Settings: CommandModule = {
         newPrefix = match[1];
       }
       await mesg.delete();
-      client.off('messageCreate', setPrefixHandler);
-      menu.setState('confirmPrefix');
+      client.off("messageCreate", setPrefixHandler);
+      menu.setState("confirmPrefix");
     }
 
     let confirmPrefix: ReactionMenuState = {
       async message() {
         return {
           embed: {
-            title: 'Confirm Prefix',
-            description: `Are you 100% sure you want your prefix to be \`${newPrefix}\`? This means to use dad bot you'll have to use commands like: \`${newPrefix}help\``
-          }
+            title: "Confirm Prefix",
+            description: `Are you 100% sure you want your prefix to be \`${newPrefix}\`? This means to use dad bot you'll have to use commands like: \`${newPrefix}help\``,
+          },
         };
       },
-      reactions: new EmojiMap()
+      reactions: new EmojiMap(),
     };
 
-    confirmPrefix.reactions.set({ name: '✅', id: null }, async () => {
+    confirmPrefix.reactions.set({ name: "✅", id: null }, async () => {
       await updatePrefix(client, msg.channel.guild.id, newPrefix);
-      await menu.setState('serverSettings');
+      await menu.setState("serverSettings");
     });
 
-    confirmPrefix.reactions.set({ name: '❎', id: null }, async () => {
-      await menu.setState('serverSettings');
+    confirmPrefix.reactions.set({ name: "❎", id: null }, async () => {
+      await menu.setState("serverSettings");
     });
 
-    menu.addState('confirmPrefix', confirmPrefix);
+    menu.addState("confirmPrefix", confirmPrefix);
 
     serverSettings.reactions.set(
       {
-        name: '❗',
-        id: null
+        name: "❗",
+        id: null,
       },
       async (message, user) => {
-        newPrefix = '';
-        await menu.setState('setPrefix');
-        client.on('messageCreate', setPrefixHandler);
+        newPrefix = "";
+        await menu.setState("setPrefix");
+        client.on("messageCreate", setPrefixHandler);
       }
     );
 
     let setPrefix: ReactionMenuState = {
       message: {
         embed: {
-          title: 'Set Prefix',
+          title: "Set Prefix",
           description:
-            '**THIS WILL CHANGE THE PREFIX YOU USE TO CONTROL THE BOT, IF YOU DON\'T WANT THIS TO HAPPEN USE THE ⏹️ REACTION TO CANCEL.** To reset the prefix to default, use 🔄 to reset it!\n\nSend a message with the new prefix you want the bot to respond to. If you want spaces in the prefix, like: `dad help`, enclose the prefix in backticks (\\`), so to use a command like `dad help`, send "\\`dad \\`".'
-        }
+            '**THIS WILL CHANGE THE PREFIX YOU USE TO CONTROL THE BOT, IF YOU DON\'T WANT THIS TO HAPPEN USE THE ⏹️ REACTION TO CANCEL.** To reset the prefix to default, use 🔄 to reset it!\n\nSend a message with the new prefix you want the bot to respond to. If you want spaces in the prefix, like: `dad help`, enclose the prefix in backticks (\\`), so to use a command like `dad help`, send "\\`dad \\`".',
+        },
       },
-      reactions: new EmojiMap()
+      reactions: new EmojiMap(),
     };
 
-    setPrefix.reactions.set({ name: '🔄', id: null }, async () => {
-      client.off('messageCreate', setPrefixHandler);
+    setPrefix.reactions.set({ name: "🔄", id: null }, async () => {
+      client.off("messageCreate", setPrefixHandler);
       await removePrefix(client, msg.channel.guild.id);
-      menu.setState('serverSettings');
+      menu.setState("serverSettings");
     });
 
-    setPrefix.reactions.set({ name: '⏹️', id: null }, () => {
-      client.off('messageCreate', setPrefixHandler);
-      menu.setState('serverSettings');
+    setPrefix.reactions.set({ name: "⏹️", id: null }, () => {
+      client.off("messageCreate", setPrefixHandler);
+      menu.setState("serverSettings");
     });
 
     async function setServerRNGHandler(
@@ -412,17 +414,19 @@ const Settings: CommandModule = {
       menu.restartInactivityTimer();
 
       if (mesg.content.match(/^\d+:\d+$/)) {
-        let ratio = mesg.content.split(':').map(a => Number(a));
-        if (!ratio.every(a => !isNaN(a))) {
-          mesg.channel.createMessage("That isn't a valid ratio!").then(aaa => {
-            setTimeout(() => aaa.delete(), 5000);
-          });
+        let ratio = mesg.content.split(":").map((a) => Number(a));
+        if (!ratio.every((a) => !isNaN(a))) {
+          mesg.channel
+            .createMessage("That isn't a valid ratio!")
+            .then((aaa) => {
+              setTimeout(() => aaa.delete(), 5000);
+            });
         } else {
           let float = ratio[0] / ratio[1];
           if (float > 1) {
             mesg.channel
               .createMessage("That isn't a valid ratio!")
-              .then(aaa => {
+              .then((aaa) => {
                 setTimeout(() => aaa.delete(), 5000);
               });
           } else {
@@ -433,16 +437,16 @@ const Settings: CommandModule = {
             );
             mesg.channel
               .createMessage(`Your RNG has been set to ${float}!`)
-              .then(aaa => {
+              .then((aaa) => {
                 setTimeout(() => aaa.delete(), 5000);
               });
 
-            menu.setState('serverSettings');
-            client.off('messageCreate', setServerRNGHandler);
+            menu.setState("serverSettings");
+            client.off("messageCreate", setServerRNGHandler);
           }
         }
       } else {
-        mesg.channel.createMessage("That isn't a valid ratio!").then(aaa => {
+        mesg.channel.createMessage("That isn't a valid ratio!").then((aaa) => {
           setTimeout(() => aaa.delete(), 5000);
         });
       }
@@ -457,39 +461,39 @@ const Settings: CommandModule = {
           embed: {
             title: `Set Randomness for Server`,
             description:
-              'Setting the randomness will change how often the bot will respond, by default the bot responds every time the bot can, you can change it so it responds about once every 5 messages that matches auto response criteria.\n\nTo change it, send a message with a ratio that looks something like `1:4` which means the bot will roughly respond once every 4 messages that matches criteria.\n\nUse ⏹️ to cancel making a change or 🔄 to set it back to default (or send 1:1 idc).',
+              "Setting the randomness will change how often the bot will respond, by default the bot responds every time the bot can, you can change it so it responds about once every 5 messages that matches auto response criteria.\n\nTo change it, send a message with a ratio that looks something like `1:4` which means the bot will roughly respond once every 4 messages that matches criteria.\n\nUse ⏹️ to cancel making a change or 🔄 to set it back to default (or send 1:1 idc).",
             fields: [
               {
-                name: 'Current Value',
-                value: `${frac[0]}:${frac[1]}`
-              }
-            ]
-          }
+                name: "Current Value",
+                value: `${frac[0]}:${frac[1]}`,
+              },
+            ],
+          },
         };
       },
-      reactions: new EmojiMap()
+      reactions: new EmojiMap(),
     };
 
-    setServerRNG.reactions.set({ name: '⏹️', id: null }, () => {
-      menu.setState('serverSettings');
-      client.off('messageCreate', setServerRNGHandler);
+    setServerRNG.reactions.set({ name: "⏹️", id: null }, () => {
+      menu.setState("serverSettings");
+      client.off("messageCreate", setServerRNGHandler);
     });
 
-    setServerRNG.reactions.set({ name: '🔄', id: null }, async () => {
+    setServerRNG.reactions.set({ name: "🔄", id: null }, async () => {
       await SettingsUtils.setGuildSettings(
         msg.channel.guild.id,
         undefined,
         null
       );
-      menu.setState('serverSettings');
-      client.off('messageCreate', setServerRNGHandler);
+      menu.setState("serverSettings");
+      client.off("messageCreate", setServerRNGHandler);
     });
 
-    menu.addState('setServerRNG', setServerRNG);
+    menu.addState("setServerRNG", setServerRNG);
 
-    menu.addState('setPrefix', setPrefix);
+    menu.addState("setPrefix", setPrefix);
 
-    menu.addState('serverSettings', serverSettings);
+    menu.addState("serverSettings", serverSettings);
 
     let channelSettings: ReactionMenuState = {
       async message() {
@@ -501,12 +505,12 @@ const Settings: CommandModule = {
               msg.channel.guild.channels.get(selectedChannelID).name
             }\``,
             thumbnail: {
-              url: msg.channel.guild.dynamicIconURL()
+              url: msg.channel.guild.dynamicIconURL(),
             },
             description: `Use 🔼 and 🔽 to select what setting you want to modify, ⏺️ to toggle your selection, #⃣ to switch between server and channel mode, 🔄 to change what channel you're managing, 〰️ to change the channel's RNG for auto responses, and ⏹️ to go back to the previous menu!${
               prefs.default
-                ? '\n\nThese are currently set to default, so the server and default settings will be used.'
-                : ''
+                ? "\n\nThese are currently set to default, so the server and default settings will be used."
+                : ""
             }`,
             fields: [
               ...SettingsUtils.enumToArray(SettingsUtils.Flags).map(
@@ -516,33 +520,33 @@ const Settings: CommandModule = {
                     value: `Is currently \`${
                       prefs.flags &
                       SettingsUtils.Flags[k as keyof typeof SettingsUtils.Flags]
-                        ? 'ENABLED'
-                        : 'DISABLED'
-                    }\``
+                        ? "ENABLED"
+                        : "DISABLED"
+                    }\``,
                   };
                 }
               ),
               {
-                name: 'Current Channel RNG',
-                value: `${frac[0]}:${frac[1]}`
-              }
-            ]
-          }
+                name: "Current Channel RNG",
+                value: `${frac[0]}:${frac[1]}`,
+              },
+            ],
+          },
         };
       },
-      reactions: new EmojiMap()
+      reactions: new EmojiMap(),
     };
 
-    channelSettings.reactions.set({ name: '🔼', id: null }, () => {
+    channelSettings.reactions.set({ name: "🔼", id: null }, () => {
       if (--cursorPos < 0)
         cursorPos = SettingsUtils.enumToArray(SettingsUtils.Flags).length - 1;
     });
-    channelSettings.reactions.set({ name: '🔽', id: null }, () => {
+    channelSettings.reactions.set({ name: "🔽", id: null }, () => {
       if (++cursorPos >= SettingsUtils.enumToArray(SettingsUtils.Flags).length)
         cursorPos = 0;
     });
 
-    channelSettings.reactions.set({ name: '⏺️', id: null }, async () => {
+    channelSettings.reactions.set({ name: "⏺️", id: null }, async () => {
       let prefs = await SettingsUtils.getChannelSettings(selectedChannelID);
       let curFlag = SettingsUtils.enumToArray(SettingsUtils.Flags)[
         cursorPos
@@ -556,34 +560,34 @@ const Settings: CommandModule = {
         setTimeout(resolve, 500);
       });
     });
-    channelSettings.reactions.set({ name: '#⃣', id: null }, () => {
-      menu.setState('serverSettings');
+    channelSettings.reactions.set({ name: "#⃣", id: null }, () => {
+      menu.setState("serverSettings");
     });
-    channelSettings.reactions.set({ name: '🔄', id: null }, () => {
-      menu.setState('changeChannel');
-      client.on('messageCreate', changeChannelHandler);
+    channelSettings.reactions.set({ name: "🔄", id: null }, () => {
+      menu.setState("changeChannel");
+      client.on("messageCreate", changeChannelHandler);
     });
-    channelSettings.reactions.set({ name: '〰️', id: null }, () => {
-      menu.setState('setChannelRNG');
-      client.on('messageCreate', setChannelRNGHandler);
+    channelSettings.reactions.set({ name: "〰️", id: null }, () => {
+      menu.setState("setChannelRNG");
+      client.on("messageCreate", setChannelRNGHandler);
     });
-    channelSettings.reactions.set({ name: '⏹️', id: null }, () =>
-      menu.setState('default')
+    channelSettings.reactions.set({ name: "⏹️", id: null }, () =>
+      menu.setState("default")
     );
-    menu.addState('channelSettings', channelSettings);
+    menu.addState("channelSettings", channelSettings);
 
     let changeChannel: ReactionMenuState = {
       message: {
         embed: {
-          title: 'Change Channel',
+          title: "Change Channel",
           description:
-            'Mention, send the name, or send the ID of the channel to switch to that channel. '
-        }
+            "Mention, send the name, or send the ID of the channel to switch to that channel. ",
+        },
       },
-      reactions: new EmojiMap()
+      reactions: new EmojiMap(),
     };
 
-    menu.addState('changeChannel', changeChannel);
+    menu.addState("changeChannel", changeChannel);
 
     function changeChannelHandler(
       mesg: Eris.Message<Eris.GuildTextableChannel>
@@ -597,30 +601,32 @@ const Settings: CommandModule = {
       menu.restartInactivityTimer();
       if (mesg.channelMentions.length < 1) {
         let chnl = mesg.channel.guild.channels.find(
-          c => c.name === mesg.content || c.id === mesg.content
+          (c) => c.name === mesg.content || c.id === mesg.content
         );
         if (!chnl) {
-          mesg.channel.createMessage("That's not a valid channel!").then(a => {
-            setTimeout(() => {
-              a.delete();
-            }, 5000);
-          });
+          mesg.channel
+            .createMessage("That's not a valid channel!")
+            .then((a) => {
+              setTimeout(() => {
+                a.delete();
+              }, 5000);
+            });
         } else {
           selectedChannelID = chnl.id;
-          menu.setState('channelSettings');
-          client.off('messageCreate', changeChannelHandler);
+          menu.setState("channelSettings");
+          client.off("messageCreate", changeChannelHandler);
         }
       } else {
         selectedChannelID = mesg.channelMentions[0];
-        menu.setState('channelSettings');
-        client.off('messageCreate', changeChannelHandler);
+        menu.setState("channelSettings");
+        client.off("messageCreate", changeChannelHandler);
       }
       mesg.delete();
     }
 
-    changeChannel.reactions.set({ name: '⏹️', id: null }, () => {
-      menu.setState('channelSettings');
-      client.off('messageCreate', changeChannelHandler);
+    changeChannel.reactions.set({ name: "⏹️", id: null }, () => {
+      menu.setState("channelSettings");
+      client.off("messageCreate", changeChannelHandler);
     });
 
     async function setChannelRNGHandler(
@@ -635,17 +641,19 @@ const Settings: CommandModule = {
       menu.restartInactivityTimer();
 
       if (mesg.content.match(/^\d+:\d+$/)) {
-        let ratio = mesg.content.split(':').map(a => Number(a));
-        if (!ratio.every(a => !isNaN(a))) {
-          mesg.channel.createMessage("That isn't a valid ratio!").then(aaa => {
-            setTimeout(() => aaa.delete(), 5000);
-          });
+        let ratio = mesg.content.split(":").map((a) => Number(a));
+        if (!ratio.every((a) => !isNaN(a))) {
+          mesg.channel
+            .createMessage("That isn't a valid ratio!")
+            .then((aaa) => {
+              setTimeout(() => aaa.delete(), 5000);
+            });
         } else {
           let float = ratio[0] / ratio[1];
           if (float > 1) {
             mesg.channel
               .createMessage("That isn't a valid ratio!")
-              .then(aaa => {
+              .then((aaa) => {
                 setTimeout(() => aaa.delete(), 5000);
               });
           } else {
@@ -656,16 +664,16 @@ const Settings: CommandModule = {
             );
             mesg.channel
               .createMessage(`Your RNG has been set to ${float}!`)
-              .then(aaa => {
+              .then((aaa) => {
                 setTimeout(() => aaa.delete(), 5000);
               });
 
-            menu.setState('channelSettings');
-            client.off('messageCreate', setChannelRNGHandler);
+            menu.setState("channelSettings");
+            client.off("messageCreate", setChannelRNGHandler);
           }
         }
       } else {
-        mesg.channel.createMessage("That isn't a valid ratio!").then(aaa => {
+        mesg.channel.createMessage("That isn't a valid ratio!").then((aaa) => {
           setTimeout(() => aaa.delete(), 5000);
         });
       }
@@ -682,36 +690,36 @@ const Settings: CommandModule = {
               msg.channel.guild.channels.get(selectedChannelID).name
             }\``,
             description:
-              'Setting the randomness will change how often the bot will respond, by default the bot responds every time the bot can, you can change it so it responds about once every 5 messages that matches auto response criteria.\n\nTo change it, send a message with a ratio that looks something like `1:4` which means the bot will roughly respond once every 4 messages that matches criteria.\n\nUse ⏹️ to cancel making a change or 🔄 to set it back to default (or send 1:1 idc).',
+              "Setting the randomness will change how often the bot will respond, by default the bot responds every time the bot can, you can change it so it responds about once every 5 messages that matches auto response criteria.\n\nTo change it, send a message with a ratio that looks something like `1:4` which means the bot will roughly respond once every 4 messages that matches criteria.\n\nUse ⏹️ to cancel making a change or 🔄 to set it back to default (or send 1:1 idc).",
             fields: [
               {
-                name: 'Current Value',
-                value: `${frac[0]}:${frac[1]}`
-              }
-            ]
-          }
+                name: "Current Value",
+                value: `${frac[0]}:${frac[1]}`,
+              },
+            ],
+          },
         };
       },
-      reactions: new EmojiMap()
+      reactions: new EmojiMap(),
     };
 
-    setChannelRNG.reactions.set({ name: '⏹️', id: null }, () => {
-      menu.setState('channelSettings');
-      client.off('messageCreate', setChannelRNGHandler);
+    setChannelRNG.reactions.set({ name: "⏹️", id: null }, () => {
+      menu.setState("channelSettings");
+      client.off("messageCreate", setChannelRNGHandler);
     });
 
-    setChannelRNG.reactions.set({ name: '🔄', id: null }, async () => {
+    setChannelRNG.reactions.set({ name: "🔄", id: null }, async () => {
       await SettingsUtils.setChannelSettings(
         selectedChannelID,
         undefined,
         null
       );
-      menu.setState('channelSettings');
-      client.off('messageCreate', setChannelRNGHandler);
+      menu.setState("channelSettings");
+      client.off("messageCreate", setChannelRNGHandler);
     });
 
-    menu.addState('setChannelRNG', setChannelRNG);
-  }
+    menu.addState("setChannelRNG", setChannelRNG);
+  },
 };
 
 export default Settings;

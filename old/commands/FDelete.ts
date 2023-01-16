@@ -1,9 +1,9 @@
-import { client } from '..';
-import { isOwner } from '../utils/Owners';
-import Suggestions from '../utils/Suggestions';
+import { client } from "..";
+import { isOwner } from "../../src/utils/Owners";
+import Suggestions from "../utils/Suggestions";
 
 const FDelete: CommandModule = {
-  name: 'fdelete',
+  name: "fdelete",
 
   async handler(msg, args) {
     let suggestion = await Suggestions.get(args[0]);
@@ -13,18 +13,18 @@ const FDelete: CommandModule = {
         return "You don't have the permission to delete that suggestion!";
       else {
         await Suggestions.delete(args[0], client);
-        return 'Done!';
+        return "Done!";
       }
     } else {
       await Suggestions.delete(args[0], client);
-      return 'Done!';
+      return "Done!";
     }
   },
 
   options: {
-    usage: '<FeedbackID>',
-    description: 'Delete your own pieces of feedback!'
-  }
+    usage: "<FeedbackID>",
+    description: "Delete your own pieces of feedback!",
+  },
 };
 
 export default FDelete;

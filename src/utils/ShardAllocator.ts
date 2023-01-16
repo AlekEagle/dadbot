@@ -1,6 +1,6 @@
-import fetch from 'node-fetch';
-import { Constants } from 'eris';
-import { isDebug } from '..';
+import fetch from "node-fetch";
+import { Constants } from "oceanic.js";
+import { isDebug } from "..";
 
 export let cachedShardAllocation: ShardAllocation | null = null;
 
@@ -33,7 +33,7 @@ export async function getShardAllocation(
   const { token, clusterID, clusters, force } = options,
     url = `https://discord.com/api/v${Constants.REST_VERSION}/gateway/bot`,
     headers = {
-      Authorization: `Bot ${token}`
+      Authorization: `Bot ${token}`,
     },
     body: ShardAllocation = {
       total: -1,
@@ -44,9 +44,9 @@ export async function getShardAllocation(
       thisCluster: {
         start: -1,
         end: -1,
-        count: -1
+        count: -1,
       },
-      allClusters: []
+      allClusters: [],
     };
 
   if (cachedShardAllocation && !force) return cachedShardAllocation;
@@ -54,8 +54,8 @@ export async function getShardAllocation(
     const response = await fetch(url, { headers }),
       json = (await response.json()) as any;
 
-    if (response.status === 429) throw new Error('Ratelimited');
-    if (response.status !== 200) throw new Error('Unexpected response');
+    if (response.status === 429) throw new Error("Ratelimited");
+    if (response.status !== 200) throw new Error("Unexpected response");
 
     body.total = json.shards;
     body.totalSessions = json.session_start_limit.total;
@@ -74,7 +74,7 @@ export async function getShardAllocation(
         const range: ShardAllocationRange = {
           start: i,
           end: i + 1,
-          count: 1
+          count: 1,
         };
         body.allClusters.push(range);
       }
@@ -92,7 +92,7 @@ export async function getShardAllocation(
         const range: ShardAllocationRange = {
           start: Math.floor(body.total / clusters) * i,
           end: Math.floor(body.total / clusters) * (i + 1) - 1,
-          count: -1
+          count: -1,
         };
         // If there is a remainder, add them to the last cluster
         if (body.total % clusters > 0 && i === clusters - 1) {

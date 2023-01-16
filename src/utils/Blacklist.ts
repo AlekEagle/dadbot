@@ -1,5 +1,5 @@
-import GBlacklist from './DB/GlobalBlacklist';
-import { Message, TextableChannel, GuildTextableChannel } from 'eris';
+import GBlacklist from "./DB/GlobalBlacklist";
+import { Message, AnyGuildChannel, AnyTextChannel } from "oceanic.js";
 
 export interface BlacklistData {
   type: 0 | 1 | 2;
@@ -9,8 +9,8 @@ export interface BlacklistData {
 export async function getValueByID(id: string) {
   let res = await GBlacklist.findOne({
     where: {
-      id
-    }
+      id,
+    },
   });
   return res;
 }
@@ -19,8 +19,8 @@ export async function setValueByID(id: string, cmds: string[]) {
   try {
     let res = await GBlacklist.findOne({
       where: {
-        id
-      }
+        id,
+      },
     });
 
     if (!res) {
@@ -45,12 +45,12 @@ export async function setValueByID(id: string, cmds: string[]) {
 }
 
 export async function checkBlacklistStatus(
-  msg: Message<TextableChannel>
+  msg: Message<AnyTextChannel>
 ): Promise<null | BlacklistData> {
   let usr = msg.author.id,
     channel = msg.channel.id,
-    guild = (msg.channel as GuildTextableChannel).guild
-      ? (msg.channel as GuildTextableChannel).guild.id
+    guild = (msg.channel as AnyGuildChannel).guild
+      ? (msg.channel as AnyGuildChannel).guild.id
       : null;
 
   let usrBL = await getValueByID(usr),

@@ -1,11 +1,11 @@
-import Eris from 'eris';
-import { client, cluster } from '..';
-import CPU from '../utils/CPU';
-import Memory from '../utils/Memory';
-import ReadableTime from '../utils/ReadableTime';
+import Eris from "eris";
+import { client, cluster } from "..";
+import CPU from "../../src/utils/CPU";
+import Memory from "../../src/utils/Memory";
+import ReadableTime from "../../src/utils/ReadableTime";
 
 const Info: CommandModule = {
-  name: 'info',
+  name: "info",
 
   async handler(msg, args) {
     let clusterData: {
@@ -22,7 +22,7 @@ const Info: CommandModule = {
     clusterData = (
       (
         await cluster.startCCC(
-          'all',
+          "all",
           `import { getData } from './utils/Statistics';
 return JSON.stringify(
   {
@@ -41,112 +41,112 @@ return JSON.stringify(
     let cpu = await CPU();
     return {
       embed: {
-        title: 'Dad Bot Info',
-        description: 'All of the general info about Dad Bot!',
+        title: "Dad Bot Info",
+        description: "All of the general info about Dad Bot!",
         thumbnail: { url: client.user.dynamicAvatarURL() },
         fields: [
           {
-            name: 'Uptime',
+            name: "Uptime",
             value: time.toShorthand(),
-            inline: true
+            inline: true,
           },
           {
-            name: 'Memory Usage',
+            name: "Memory Usage",
             value: new Memory().stringify(),
-            inline: true
+            inline: true,
           },
           {
-            name: 'CPU Usage',
+            name: "CPU Usage",
             value: `${cpu}%`,
-            inline: true
+            inline: true,
           },
           {
-            name: 'Users',
+            name: "Users",
             value: clusterData
-              .map(v => v.userCount)
+              .map((v) => v.userCount)
               .reduce((a, b) => a + b, 0)
               .toLocaleString(),
-            inline: true
+            inline: true,
           },
           {
-            name: 'Servers',
+            name: "Servers",
             value: clusterData
-              .map(v => v.guildCount)
+              .map((v) => v.guildCount)
               .reduce((a, b) => a + b, 0)
               .toLocaleString(),
-            inline: true
+            inline: true,
           },
           {
-            name: 'Messages Processed',
+            name: "Messages Processed",
             value: clusterData
-              .map(v => v.msgCount)
+              .map((v) => v.msgCount)
               .reduce((a, b) => a + b, 0)
               .toLocaleString(),
-            inline: true
+            inline: true,
           },
           {
-            name: 'Auto responses Issued',
+            name: "Auto responses Issued",
             value: clusterData
-              .map(v => v.responseCount)
+              .map((v) => v.responseCount)
               .reduce((a, b) => a + b, 0)
               .toLocaleString(),
-            inline: true
+            inline: true,
           },
           {
-            name: 'Barbecues Served',
+            name: "Barbecues Served",
             value: clusterData
-              .map(v => v.barbecuesServed)
+              .map((v) => v.barbecuesServed)
               .reduce((a, b) => a + b, 0)
               .toLocaleString(),
-            inline: true
+            inline: true,
           },
           {
-            name: 'Commands Used',
+            name: "Commands Used",
             value: clusterData
-              .map(v => v.commandCount)
+              .map((v) => v.commandCount)
               .reduce((a, b) => a + b, 0)
               .toLocaleString(),
-            inline: true
+            inline: true,
           },
           {
-            name: 'AVG Ping',
+            name: "AVG Ping",
             value:
               (
-                clusterData.map(v => v.ping).reduce((a, b) => a + b, 0) /
+                clusterData.map((v) => v.ping).reduce((a, b) => a + b, 0) /
                 clusterData.length
-              ).toLocaleString() + ' ms',
-            inline: true
+              ).toLocaleString() + " ms",
+            inline: true,
           },
           {
-            name: 'Total Shards',
+            name: "Total Shards",
             value: clusterData
-              .map(v => v.shardCount)
+              .map((v) => v.shardCount)
               .reduce((a, b) => a + b, 0)
               .toLocaleString(),
-            inline: true
+            inline: true,
           },
           {
-            name: 'Total Clusters',
+            name: "Total Clusters",
             value: clusterData.length.toLocaleString(),
-            inline: true
+            inline: true,
           },
           {
-            name: 'Current Cluster',
+            name: "Current Cluster",
             value: process.env.CLUSTER_ID,
-            inline: true
+            inline: true,
           },
           {
-            name: 'Current Shard',
+            name: "Current Shard",
             value: ((msg.channel as Eris.GuildTextableChannel).guild
               ? (msg.channel as Eris.GuildTextableChannel).guild.shard.id
               : 0
             ).toLocaleString(),
-            inline: true
-          }
-        ]
-      }
+            inline: true,
+          },
+        ],
+      },
     };
-  }
+  },
 };
 
 export default Info;
