@@ -1,5 +1,5 @@
-import Options from './DB/Options';
-import { GuildChannel, Message } from 'eris';
+import Options from "./DB/Options";
+import { GuildChannel, Message } from "oceanic.js";
 
 export enum Flags {
   IM_RESPONSES = 1 << 0,
@@ -8,13 +8,13 @@ export enum Flags {
   WINNING_RESPONSES = 1 << 3,
   GOODBYE_RESPONSES = 1 << 4,
   THANKS_RESPONSES = 1 << 5,
-  SHOUTING_RESPONSES = 1 << 6
+  SHOUTING_RESPONSES = 1 << 6,
 }
 
 function kvsFromEnum(enumObj: any): { [key: string]: number | string } {
   const keys = Object.keys(enumObj).filter(
-      k =>
-        typeof enumObj[k] === 'number' ||
+      (k) =>
+        typeof enumObj[k] === "number" ||
         enumObj[k] === k ||
         enumObj[enumObj[k]]?.toString() !== k
     ),
@@ -50,20 +50,20 @@ export interface SettingsConfigObject {
   id?: string | null;
 }
 
-export type SettingsConfigParam = Omit<SettingsConfigObject, 'id' | 'default'>;
+export type SettingsConfigParam = Omit<SettingsConfigObject, "id" | "default">;
 
 export interface SettingsHierarchyObject {
   user: SettingsConfigObject;
   channel: SettingsConfigObject;
   guild?: SettingsConfigObject;
-  preferred: 'user' | 'channel' | 'guild';
+  preferred: "user" | "channel" | "guild";
 }
 
 export interface ComputedSettingsObject {
   value: SettingsConfigObject;
   inheritedFrom: {
-    flags: 'user' | 'channel' | 'guild' | 'default';
-    RNG: 'user' | 'channel' | 'guild' | 'default';
+    flags: "user" | "channel" | "guild" | "default";
+    RNG: "user" | "channel" | "guild" | "default";
   };
 }
 
@@ -76,7 +76,7 @@ const defaultSettings: SettingsConfigParam = {
     Flags.GOODBYE_RESPONSES |
     Flags.THANKS_RESPONSES |
     Flags.SHOUTING_RESPONSES,
-  RNG: null
+  RNG: null,
 };
 
 export async function getUserSettings(
@@ -84,8 +84,8 @@ export async function getUserSettings(
 ): Promise<SettingsConfigObject> {
   const user = await Options.findOne({
     where: {
-      id
-    }
+      id,
+    },
   });
   if (!user) return { ...defaultSettings, id, default: true };
   else return { flags: user.flags, RNG: user.RNG, id, default: false };
@@ -96,8 +96,8 @@ export async function getChannelSettings(
 ): Promise<SettingsConfigObject> {
   const channel = await Options.findOne({
     where: {
-      id
-    }
+      id,
+    },
   });
   if (!channel) return { ...defaultSettings, id, default: true };
   else return { flags: channel.flags, RNG: channel.RNG, id, default: false };
@@ -108,8 +108,8 @@ export async function getGuildSettings(
 ): Promise<SettingsConfigObject> {
   const guild = await Options.findOne({
     where: {
-      id
-    }
+      id,
+    },
   });
   if (!guild) return { ...defaultSettings, id, default: true };
   else return { flags: guild.flags, RNG: guild.RNG, id, default: false };
@@ -126,19 +126,19 @@ export async function getComputedSettings(
       : null;
   const RNG = user.RNG ?? channel.RNG ?? guild?.RNG ?? defaultSettings.RNG;
   const inheritedRNGFrom = user.RNG
-    ? 'user'
+    ? "user"
     : channel.RNG
-    ? 'channel'
+    ? "channel"
     : guild?.RNG
-    ? 'guild'
-    : 'default';
+    ? "guild"
+    : "default";
   const inheritedFlagsFrom = !user.default
-    ? 'user'
+    ? "user"
     : !channel.default
-    ? 'channel'
+    ? "channel"
     : !guild?.default
-    ? 'guild'
-    : 'default';
+    ? "guild"
+    : "default";
   const flags = !user.default
     ? user.flags
     : !channel.default
@@ -149,14 +149,14 @@ export async function getComputedSettings(
   const value = {
     flags,
     RNG,
-    default: false
+    default: false,
   };
   return {
     value,
     inheritedFrom: {
       flags: inheritedFlagsFrom,
-      RNG: inheritedRNGFrom
-    }
+      RNG: inheritedRNGFrom,
+    },
   };
 }
 
@@ -167,8 +167,8 @@ export async function setUserSettings(
 ): Promise<SettingsConfigObject> {
   const user = await Options.findOne({
     where: {
-      id
-    }
+      id,
+    },
   });
 
   if (!user) {
@@ -181,13 +181,13 @@ export async function setUserSettings(
       await Options.create({
         id,
         flags: flags ?? defaultSettings.flags,
-        RNG: RNG ?? defaultSettings.RNG
+        RNG: RNG ?? defaultSettings.RNG,
       });
       return {
         flags: flags ?? defaultSettings.flags,
         RNG: RNG ?? defaultSettings.RNG,
         id,
-        default: false
+        default: false,
       };
     }
   } else {
@@ -197,27 +197,27 @@ export async function setUserSettings(
     ) {
       await Options.destroy({
         where: {
-          id
-        }
+          id,
+        },
       });
       return { ...defaultSettings, id, default: true };
     } else {
       await Options.update(
         {
           flags: flags ?? user.flags,
-          RNG: RNG ?? user.RNG
+          RNG: RNG ?? user.RNG,
         },
         {
           where: {
-            id
-          }
+            id,
+          },
         }
       );
       return {
         flags: flags ?? user.flags,
         RNG: RNG ?? user.RNG,
         id,
-        default: false
+        default: false,
       };
     }
   }
@@ -230,8 +230,8 @@ export async function setChannelSettings(
 ): Promise<SettingsConfigObject> {
   const channel = await Options.findOne({
     where: {
-      id
-    }
+      id,
+    },
   });
 
   if (!channel) {
@@ -244,13 +244,13 @@ export async function setChannelSettings(
       await Options.create({
         id,
         flags: flags ?? defaultSettings.flags,
-        RNG: RNG ?? defaultSettings.RNG
+        RNG: RNG ?? defaultSettings.RNG,
       });
       return {
         flags: flags ?? defaultSettings.flags,
         RNG: RNG ?? defaultSettings.RNG,
         id,
-        default: false
+        default: false,
       };
     }
   } else {
@@ -260,27 +260,27 @@ export async function setChannelSettings(
     ) {
       await Options.destroy({
         where: {
-          id
-        }
+          id,
+        },
       });
       return { ...defaultSettings, id, default: true };
     } else {
       await Options.update(
         {
           flags: flags ?? channel.flags,
-          RNG: RNG ?? channel.RNG
+          RNG: RNG ?? channel.RNG,
         },
         {
           where: {
-            id
-          }
+            id,
+          },
         }
       );
       return {
         flags: flags ?? channel.flags,
         RNG: RNG ?? channel.RNG,
         id,
-        default: false
+        default: false,
       };
     }
   }
@@ -293,8 +293,8 @@ export async function setGuildSettings(
 ): Promise<SettingsConfigObject> {
   const guild = await Options.findOne({
     where: {
-      id: id
-    }
+      id: id,
+    },
   });
 
   if (!guild) {
@@ -307,13 +307,13 @@ export async function setGuildSettings(
       await Options.create({
         id,
         flags: flags ?? defaultSettings.flags,
-        RNG: RNG ?? defaultSettings.RNG
+        RNG: RNG ?? defaultSettings.RNG,
       });
       return {
         flags: flags ?? defaultSettings.flags,
         RNG: RNG ?? defaultSettings.RNG,
         id,
-        default: false
+        default: false,
       };
     }
   } else {
@@ -323,27 +323,27 @@ export async function setGuildSettings(
     ) {
       await Options.destroy({
         where: {
-          id
-        }
+          id,
+        },
       });
       return { ...defaultSettings, id, default: true };
     } else {
       await Options.update(
         {
           flags: flags ?? guild.flags,
-          RNG: RNG ?? guild.RNG
+          RNG: RNG ?? guild.RNG,
         },
         {
           where: {
-            id
-          }
+            id,
+          },
         }
       );
       return {
         flags: flags ?? guild.flags,
         RNG: RNG ?? guild.RNG,
         id,
-        default: false
+        default: false,
       };
     }
   }
@@ -376,8 +376,8 @@ export function gcd(a: number, b: number) {
 
 export function decimalToFraction(decimal: number): number[] {
   let strVal = decimal.toString();
-  if (!strVal.includes('.')) return [decimal, 1];
-  let strDecimal = strVal.replace(/\d+[.]/, '');
+  if (!strVal.includes(".")) return [decimal, 1];
+  let strDecimal = strVal.replace(/\d+[.]/, "");
   let pow = Math.pow(10, strDecimal.length);
   return bestFrac(Number(strDecimal), pow);
 }
