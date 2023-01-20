@@ -15,6 +15,7 @@ import { getShardAllocation, ShardAllocation } from "./utils/ShardAllocator";
 import chalk from "chalk";
 import { coolDadBotASCII } from "./utils/UselessStartupMessage";
 import ReadableTime from "./utils/ReadableTime";
+import CommandHandler from "./utils/CommandHandler";
 
 envConfig();
 
@@ -201,6 +202,20 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
 
   client.on("shardReady", logShardStatus);
 
+  const handler = new CommandHandler(client);
+
+  handler.register(
+    "echo",
+    {
+      message: {
+        type: 3,
+        description: "Big dumb stinky dumb stink",
+        required: true,
+      },
+    },
+    console.log.bind(null, "echo")
+  );
+
   // Connect to the cluster manager.
   cluster.connect();
 
@@ -340,7 +355,9 @@ function deathCroak(thing: string | number) {
   client.disconnect(false);
   cluster.disconnect();
   // Dad screams at the user that he is dying.
-  console.error(chalk.red("A".repeat(Math.floor(Math.random() * 100000) + 1)));
+  console.error(
+    chalk.red("A".repeat(Math.floor(Math.random() * 1_000_000) + 1))
+  );
   if (typeof thing === "string") {
     // This is a signal eg: SIGINT
     // Nodejs will no longer exit by default with this event handler
