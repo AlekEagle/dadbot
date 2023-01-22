@@ -1,13 +1,13 @@
-import Path from 'node:path';
-import SourceMapSupport from 'source-map-support';
-import VM from 'node:vm';
+import Path from "node:path";
+import SourceMapSupport from "source-map-support";
+import VM from "node:vm";
 import {
   CompilerOptions,
   ModuleKind,
   ScriptTarget,
-  transpileModule
-} from 'typescript';
-import EventEmitter from 'node:events';
+  transpileModule,
+} from "typescript";
+import EventEmitter from "node:events";
 
 const compilerOptions: CompilerOptions = {
     module: ModuleKind.CommonJS,
@@ -18,13 +18,14 @@ const compilerOptions: CompilerOptions = {
     noImplicitAny: true,
     allowJs: true,
     alwaysStrict: true,
-    resolveJsonModule: true
+    resolveJsonModule: true,
+    lib: ["ES2022"],
   },
   IMPORT_REGEX = /^import .+?;$/i;
 
 export default function evaluateSafe(code: string, args: any) {
   let evalStr: string,
-    codeSplit = code.split('\n'),
+    codeSplit = code.split("\n"),
     imports: string[] = [],
     beginLine = 0;
 
@@ -37,9 +38,9 @@ export default function evaluateSafe(code: string, args: any) {
     }
   }
 
-  let endStr = codeSplit.slice(beginLine).join('\n');
+  let endStr = codeSplit.slice(beginLine).join("\n");
   evalStr = `${
-    imports && imports.length > 0 ? `${imports.join('\n')}\n\n` : ''
+    imports && imports.length > 0 ? `${imports.join("\n")}\n\n` : ""
   }(async function () {
   ${endStr}
 })`;
@@ -56,7 +57,7 @@ export default function evaluateSafe(code: string, args: any) {
         return fn(...args);
       } catch (error) {
         clearer(timeout);
-        emitter.emit('timeoutError', error, setter.name);
+        emitter.emit("timeoutError", error, setter.name);
       }
     }, ...args);
     return timeout;
@@ -72,32 +73,32 @@ export default function evaluateSafe(code: string, args: any) {
       },
       setImmediate: (fn: Function, ...args: any) => {
         return safeWrapSetter(fn, setImmediate, clearImmediate, ...args);
-      }
+      },
     })
   );
 
   const sourcePathToSource = Object.create(null);
   SourceMapSupport.install({
-    environment: 'node',
-    retrieveFile: sourcePath => sourcePathToSource[sourcePath]
+    environment: "node",
+    retrieveFile: (sourcePath) => sourcePathToSource[sourcePath],
   });
-  const tsPath = Path.resolve('input.ts');
+  const tsPath = Path.resolve("input.ts");
   let transpiledStr = transpileModule(evalStr, {
     compilerOptions,
     fileName: tsPath,
-    moduleName: 'input'
+    moduleName: "input",
   });
-  const jsPath = Path.resolve('input.js');
+  const jsPath = Path.resolve("input.js");
   sourcePathToSource[jsPath] = transpiledStr.outputText;
-  sourcePathToSource[Path.resolve('input.js.map')] =
+  sourcePathToSource[Path.resolve("input.js.map")] =
     transpiledStr.sourceMapText;
   const funArgs: { [key: string]: any } = {};
-  asyncFunctionArgs.forEach(a => (funArgs[a[0]] = a[1]));
+  asyncFunctionArgs.forEach((a) => (funArgs[a[0]] = a[1]));
   VM.createContext(funArgs);
   let evalFn: any;
   try {
     evalFn = VM.runInContext(transpiledStr.outputText, funArgs, {
-      filename: jsPath
+      filename: jsPath,
     });
   } catch (e) {
     return e;
@@ -106,18 +107,18 @@ export default function evaluateSafe(code: string, args: any) {
     .then(() => {
       let promise;
       try {
-        promise = evalFn(...asyncFunctionArgs.map(arg => arg[1]));
+        promise = evalFn(...asyncFunctionArgs.map((arg) => arg[1]));
       } catch (err) {
-        emitter.emit('complete', err, true);
+        emitter.emit("complete", err, true);
       }
       return promise;
     })
     .then(
-      thing => {
-        emitter.emit('complete', thing, false);
+      (thing) => {
+        emitter.emit("complete", thing, false);
       },
-      thing => {
-        emitter.emit('complete', thing, true);
+      (thing) => {
+        emitter.emit("complete", thing, true);
       }
     );
   return emitter;

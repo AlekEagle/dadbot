@@ -10,7 +10,8 @@
     "typeRoots": ["node_modules/@types"],
     "alwaysStrict": true,
     "esModuleInterop": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "lib": ["ES2022"]
   },
   "include": ["./src/**/*", "old/DentInChairError.ts"]
 }

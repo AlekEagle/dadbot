@@ -16,6 +16,8 @@ import chalk from "chalk";
 import { coolDadBotASCII } from "./utils/UselessStartupMessage";
 import ReadableTime from "./utils/ReadableTime";
 import CommandHandler from "./utils/CommandHandler";
+import { OptionBuilder } from "./utils/CommandHandler/OptionBuilder";
+import * as Patreon from "./utils/Patreon";
 
 envConfig();
 
@@ -204,16 +206,105 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
 
   const handler = new CommandHandler(client);
 
-  handler.register(
+  handler.registerSlashCommand(
     "echo",
     {
-      message: {
-        type: 3,
-        description: "Big dumb stinky dumb stink",
-        required: true,
+      description:
+        "I like watching big black men shake their booty cheeks. I don't know why, but when I see a black man shaking his booty cheeks, it makes my mouth start to drool, and I start dancing with the black man as well.".substring(
+          0,
+          99
+        ),
+      options: {
+        message: {
+          type: 3,
+          description: "Big dumb stinky dumb stink",
+          required: true,
+        },
       },
     },
-    console.log.bind(null, "echo")
+    (options, interaction) => {
+      interaction.createMessage({ content: options.message });
+    }
+  );
+
+  handler.registerSlashCommand(
+    "bigtest",
+    {
+      description: "Big test.",
+      options: {
+        one: OptionBuilder.String("Test string argument."),
+        two: {
+          type: 6,
+          required: true,
+          description: "a user",
+        },
+      },
+    },
+    (options, interaction) => {
+      interaction.createMessage({ content: JSON.stringify(options) });
+    }
+  );
+
+  handler.registerSlashCommand(
+    "eval",
+    {
+      description: "Does the thing.",
+      options: {
+        code: OptionBuilder.String("The code."),
+      },
+    },
+    (options, interaction) => {
+      const authorized = ["798254690286174218", "222882552472535041"];
+      if (authorized.includes(interaction.user.id)) {
+        let emitter = evaluateSafe(options.code, {
+          require,
+          exports,
+          console,
+          process,
+          client,
+          logger,
+          cluster,
+          shards,
+          handler,
+          Patreon,
+          inspect,
+        });
+
+        // If emitter is an event emitter, then we can use it as an event emitter.
+        if (emitter instanceof EventEmitter) {
+          emitter.once("complete", async (out, error) => {
+            if (error) {
+              interaction.createMessage({
+                content: `You did a stinky butt fart.\n${out}`.substring(
+                  0,
+                  3999
+                ),
+              });
+            } else {
+              interaction.createMessage({
+                content: `Thing is done.\n${out}`.substring(0, 3999),
+              });
+            }
+          });
+          emitter.once("timeoutError", (error, funcName) => {
+            interaction.createFollowup({
+              content: `You did a stinky butt fart.\n${error}`.substring(
+                0,
+                3999
+              ),
+            });
+          });
+        } else {
+          interaction.createMessage({
+            content: `Thing is done.\n${emitter}`.substring(0, 3999),
+          });
+        }
+      } else {
+        interaction.createMessage({
+          embeds: [{ image: { url: "https://alekeagle.me/cAPOyKp9Mm.jpg" } }],
+        });
+      }
+    }
   );
 
   // Connect to the cluster manager.
@@ -232,6 +323,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
       logger,
       cluster,
       shards,
+      handler,
     });
 
     // If emitter is an event emitter, then we can use it as an event emitter.
@@ -255,13 +347,33 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   client.once("ready", () => {
     console.log(chalk.green(" All shards connected!"));
     client.off("shardReady", logShardStatus);
+
+    function updateStatus() {
+      client.editStatus("online", [
+        {
+          name: "I can have",
+          type: Constants.ActivityTypes.GAME,
+        },
+        {
+          name: "two activities?",
+          type: Constants.ActivityTypes.GAME,
+        },
+        {
+          name: "Idk",
+          type: Constants.ActivityTypes.COMPETING,
+        },
+      ]);
+    }
+
+    updateStatus();
+
     // Thank the newest patron
-    client.editStatus("online", [
+    /*client.editStatus("online", [
       {
         name: "Thank you chompus for increasing their patronage!",
         type: Constants.ActivityTypes.GAME,
       },
-    ]);
+    ]);*/
   });
 
   // Set up the error event module
