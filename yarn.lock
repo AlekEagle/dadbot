@@ -18,46 +18,46 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/core@npm:7.31.0":
-  version: 7.31.0
-  resolution: "@sentry/core@npm:7.31.0"
+"@sentry/core@npm:7.31.1":
+  version: 7.31.1
+  resolution: "@sentry/core@npm:7.31.1"
   dependencies:
-    "@sentry/types": 7.31.0
-    "@sentry/utils": 7.31.0
+    "@sentry/types": 7.31.1
+    "@sentry/utils": 7.31.1
     tslib: ^1.9.3
-  checksum: 7c43846e7b29383de2fa929c8e5435689609ab2649dfeaa038bae94ce9679e311fd42869033491c7b112a49aa3fa62436555c6d6a060a8dcda71ffb3f915778a
+  checksum: 9e00c18d0af5e2c3566931b9a9410dc0b368c81b66ae26b529bbb072db9a09d30e0b1a395cc5785009a8c9e1208ce701d14cf93b1e6a52a2b5c012ebda01bd06
   languageName: node
   linkType: hard
 
 "@sentry/node@npm:^7.31.0":
-  version: 7.31.0
-  resolution: "@sentry/node@npm:7.31.0"
+  version: 7.31.1
+  resolution: "@sentry/node@npm:7.31.1"
   dependencies:
-    "@sentry/core": 7.31.0
-    "@sentry/types": 7.31.0
-    "@sentry/utils": 7.31.0
+    "@sentry/core": 7.31.1
+    "@sentry/types": 7.31.1
+    "@sentry/utils": 7.31.1
     cookie: ^0.4.1
     https-proxy-agent: ^5.0.0
     lru_map: ^0.3.3
     tslib: ^1.9.3
-  checksum: 251133064d9376d2bffb655ff4c0fa5fbe7d05cd40637d21b3209af1e11bbfebd13a0dbc75c2d14c86cb05eb496e7ea26535b2cd1220b51f07131d87ba75bb3f
+  checksum: 515646e2133d51d983eedb155e069e3226dcbc0f324ae74a4eaa8018e6731bb51e52cc0a42d85a0743e4cff633b7357af748d40a1c134cfa291a4ef072c01cae
   languageName: node
   linkType: hard
 
-"@sentry/types@npm:7.31.0":
-  version: 7.31.0
-  resolution: "@sentry/types@npm:7.31.0"
-  checksum: fb5dae15edd5d8a6d9d68d7b87ec9e96a8a2c2fc696a8870a836770fd419a273615c7f441a353e2ede146ffdeb7e23536858fa90156f72f9563bfdefc2eb0405
+"@sentry/types@npm:7.31.1":
+  version: 7.31.1
+  resolution: "@sentry/types@npm:7.31.1"
+  checksum: 246d9529ef3a47f1f69f24b32a3737b583afc8e3fa632ee097ca5b0aff1de1f35b22317a175803f663920fc252358b45caa4e3ebe0f124f36f7fa262a21ff3b2
   languageName: node
   linkType: hard
 
-"@sentry/utils@npm:7.31.0":
-  version: 7.31.0
-  resolution: "@sentry/utils@npm:7.31.0"
+"@sentry/utils@npm:7.31.1":
+  version: 7.31.1
+  resolution: "@sentry/utils@npm:7.31.1"
   dependencies:
-    "@sentry/types": 7.31.0
+    "@sentry/types": 7.31.1
     tslib: ^1.9.3
-  checksum: 5656949c3c5d444c229cf05e0da7dd70af3ebec3baee977e3b306cc0ef3d8a8a78ead37d20a4dbdb24feeff01ecaab233e9c83ebc450a8ebc99840060cba2da2
+  checksum: dc40063d2287f211a8e4f8df94e2b3aaf5caf3a6316a7054b9e6ddbff2eef3151267f53239ef4b9eb87eec9f5ccd7a8e0a828163db38ca23795b7746d02095e7
   languageName: node
   linkType: hard
 
@@ -104,14 +104,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
-  version: 18.11.5
-  resolution: "@types/node@npm:18.11.5"
-  checksum: ac54e9287dd4549ea3dc8aabc0cf7bfa04c52f02925d7fd68414789617ec770f034c8ae2e111e8bd00d446a46fcac42587b5a316a1303e2f6ea094854248c9ff
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^18.11.18":
+"@types/node@npm:*, @types/node@npm:^18.11.18":
   version: 18.11.18
   resolution: "@types/node@npm:18.11.18"
   checksum: 03f17f9480f8d775c8a72da5ea7e9383db5f6d85aa5fefde90dd953a1449bd5e4ffde376f139da4f3744b4c83942166d2a7603969a6f8ea826edfb16e6e3b49d
@@ -127,30 +120,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/validator@npm:^13.7.1":
-  version: 13.7.9
-  resolution: "@types/validator@npm:13.7.9"
-  checksum: 562305e75e744c23946e9bfe5cebc73f63c2211fb4eeb42dfb17b8ed92b0da2689d8330b8e262607e37a1ceee6835f9d0c19d1fc040dccfa07be21a27eed2038
-  languageName: node
-  linkType: hard
-
-"@types/validator@npm:^13.7.10":
+"@types/validator@npm:^13.7.1, @types/validator@npm:^13.7.10":
   version: 13.7.10
   resolution: "@types/validator@npm:13.7.10"
   checksum: 7b142c08019f484d62c9f3074231f640c24311558f157dd253a60810dd0cb29e41ec64ca210a192b54f6de51f4fe016bfeb2c30f90fa49c9337ed54a9d8e02aa
   languageName: node
   linkType: hard
 
-"@types/ws@npm:^8.5.3":
-  version: 8.5.3
-  resolution: "@types/ws@npm:8.5.3"
-  dependencies:
-    "@types/node": "*"
-  checksum: 0ce46f850d41383fcdc2149bcacc86d7232fa7a233f903d2246dff86e31701a02f8566f40af5f8b56d1834779255c04ec6ec78660fe0f9b2a69cf3d71937e4ae
-  languageName: node
-  linkType: hard
-
-"@types/ws@npm:^8.5.4":
+"@types/ws@npm:^8.5.3, @types/ws@npm:^8.5.4":
   version: 8.5.4
   resolution: "@types/ws@npm:8.5.4"
   dependencies:
@@ -496,11 +473,11 @@ __metadata:
   linkType: hard
 
 "moment-timezone@npm:^0.5.34":
-  version: 0.5.38
-  resolution: "moment-timezone@npm:0.5.38"
+  version: 0.5.40
+  resolution: "moment-timezone@npm:0.5.40"
   dependencies:
     moment: ">= 2.9.0"
-  checksum: ff7077de41f2c41a0026cd2b310154c14df8f918331a4ebe88f5872a599deb5e463b123c96990dc447b7474a81c9f3aef7ac57c3d0dfc3bfb9af2cc5b0bca826
+  checksum: 6f6be5412b37fd937bb143efe74bf65b2c3f115fd967a6dc13b717a126ed6dd198bff6db6e179d69a089e20ac03ce7622c6b5598dd585005195554487a91b528
   languageName: node
   linkType: hard
 
@@ -525,21 +502,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^2.6.1":
-  version: 2.6.7
-  resolution: "node-fetch@npm:2.6.7"
-  dependencies:
-    whatwg-url: ^5.0.0
-  peerDependencies:
-    encoding: ^0.1.0
-  peerDependenciesMeta:
-    encoding:
-      optional: true
-  checksum: 8d816ffd1ee22cab8301c7756ef04f3437f18dace86a1dae22cf81db8ef29c0bf6655f3215cb0cdb22b420b6fe141e64b26905e7f33f9377a7fa59135ea3e10b
-  languageName: node
-  linkType: hard
-
-"node-fetch@npm:^2.6.8":
+"node-fetch@npm:^2.6.1, node-fetch@npm:^2.6.8":
   version: 2.6.8
   resolution: "node-fetch@npm:2.6.8"
   dependencies:
@@ -553,9 +516,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"oceanic.js@npm:dev":
-  version: 1.4.2-dev.c1c435f
-  resolution: "oceanic.js@npm:1.4.2-dev.c1c435f"
+oceanic.js@dev:
+  version: 1.4.2-dev.cf73b0d
+  resolution: "oceanic.js@npm:1.4.2-dev.cf73b0d"
   dependencies:
     "@discordjs/voice": ^0.14.0
     undici: ^5.14.0
@@ -563,7 +526,7 @@ __metadata:
   dependenciesMeta:
     "@discordjs/voice":
       optional: true
-  checksum: 176eaa568a5cf2233721da4f6644cb2381757f3b46321eb38576600fa43aca927c2368fd3940ba80be363d73c51770fc3d4a5f2e53bb97bc61600a7c3fc474c8
+  checksum: ac9b4279e535e4ad1e34cccdc0842e5519063b4805fa25cc3c5f29c2c5e6ee3971c265fb61fc18541832653703935159a843d90b902e57d4487cb42e2c095c9f
   languageName: node
   linkType: hard
 
@@ -910,11 +873,11 @@ __metadata:
   linkType: hard
 
 "undici@npm:^5.14.0":
-  version: 5.15.0
-  resolution: "undici@npm:5.15.0"
+  version: 5.15.1
+  resolution: "undici@npm:5.15.1"
   dependencies:
     busboy: ^1.6.0
-  checksum: cdc03ceff8d2b76a5ae08dc48d0b9d44dcb970f6e89e8a3cfe7031b9351dd3c90b223c143565c153a5f1165cd573aae1b128e6b9f557b4af4eb36da337a2a345
+  checksum: 45ebf72b1c589ad00077923c1064312bc7a7afcdbbf8d1b4fd56de03e8a3e2daef2a22f37e4d0a0019120004c57e31879447b98b2fe1df32f4ce9508359cbeb9
   languageName: node
   linkType: hard
 
