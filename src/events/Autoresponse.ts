@@ -94,18 +94,9 @@ const __event: EventModule = {
       msg.channel
         .createMessage({
           allowedMentions: {
-            everyone: msg.mentionEveryone,
-            roles: msg.roleMentions
-              .map(roleId =>
-                (msg.channel as GuildTextableChannel).guild.roles.get(roleId)
-              )
-              .filter(
-                role =>
-                  role.mentionable ||
-                  msg.member?.permissions.has('mentionEveryone')
-              )
-              .map(role => role.id),
-            users: msg.mentions.slice(0, 2).map(user => user.id)
+            everyone: false,
+            roles: false,
+            users: false
           },
           content: `Hi ${hiContent}, I'm ${imContent}!`
         })
