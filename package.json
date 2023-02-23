@@ -18,7 +18,7 @@
     "node-fetch": "^2.6.7",
     "pg": "^8.8.0",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.25.3",
+    "sequelize": "^6.28.2",
     "source-map-support": "^0.5.21",
     "typescript": "^4.8.4"
   },
