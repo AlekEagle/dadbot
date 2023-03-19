@@ -32,7 +32,7 @@ export async function getLatestSupporter(): Promise<any> {
     .filter(
       (m: any) =>
         m.attributes.patron_status !== "declined" &&
-        m.attributes.patron_status !== "former"
+        m.attributes.patron_status !== "former_patron"
     )
     .sort((a: any, b: any) => {
       const aDate = new Date(a.attributes.pledge_relationship_start),
