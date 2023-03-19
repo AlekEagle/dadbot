@@ -1,16 +1,16 @@
-import { User, Member } from "oceanic.js";
+import { User, Member, Constants } from "oceanic.js";
 
 export type OptionChoice<T> = {
   name: string;
   value: T;
 };
 
-export type Options<P extends { [option: string]: OptionParameter }> = {
-  [K in keyof P]: P[K] extends { type: 3 }
+export type Options<P extends OptionParameter[]> = {
+  [K in P[number]["name"]]: P[number]["type"] extends Constants.ApplicationCommandOptionTypes.STRING
     ? string
-    : P[K] extends { type: 4 }
+    : P[number]["type"] extends Constants.ApplicationCommandOptionTypes.INTEGER
     ? number
-    : P[K] extends { type: 6 }
+    : P[number]["type"] extends Constants.ApplicationCommandOptionTypes.USER
     ? User | Member
     : never;
 };
@@ -23,28 +23,53 @@ export type OptionParameter = (
   | { type: 4; choices: OptionChoice<number>[] }
   | { type: 4; max_value?: number; min_value?: number }
   | { type: 6 }
-) & { description: string; required: boolean };
+) & { name: string; description: string; required: boolean };
 
 export namespace OptionBuilder {
   export function String(
+    name: string,
     description: string,
     required: boolean = true,
     options:
       | { choices: OptionChoice<string>[] }
-      | { min_length: number; max_length: number }
-      | {} = {}
+      | { min_length?: number; max_length?: number } = {}
   ): OptionParameter {
-    return { type: 3, description, required, ...options };
+    return {
+      name,
+      type: Constants.ApplicationCommandOptionTypes.STRING,
+      description,
+      required,
+      ...options,
+    };
   }
 
   export function Number(
+    name: string,
     description: string,
     required: boolean = true,
     options:
       | { choices: OptionChoice<number>[] }
-      | { min_value?: number; max_value?: number }
-      | {} = {}
+      | { min_value?: number; max_value?: number } = {}
   ): OptionParameter {
-    return { type: 4, description, required, ...options };
+    return {
+      name,
+      type: Constants.ApplicationCommandOptionTypes.INTEGER,
+      description,
+      required,
+      ...options,
+    };
+  }
+
+  export function User(
+    name: string,
+    description: string,
+    required: boolean = true
+  ): OptionParameter {
+    return {
+      name,
+      type: Constants.ApplicationCommandOptionTypes.USER,
+      description,
+      required,
+    };
   }
 }

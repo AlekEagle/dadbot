@@ -15,8 +15,7 @@ import { getShardAllocation, ShardAllocation } from "./utils/ShardAllocator";
 import chalk from "chalk";
 import { coolDadBotASCII } from "./utils/UselessStartupMessage";
 import ReadableTime from "./utils/ReadableTime";
-import CommandHandler from "./utils/CommandHandler";
-import { OptionBuilder } from "./utils/CommandHandler/OptionBuilder";
+import CommandHandler, { Command, OptionBuilder } from "./utils/CommandHandler";
 import * as Patreon from "./utils/Patreon";
 
 envConfig();
@@ -168,7 +167,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
       firstShardID: shards.thisCluster.start,
       lastShardID: shards.thisCluster.end,
       maxShards: shards.total,
-      // compress: true,6
+      // compress: true,
       presence: {
         status: "dnd",
         activities: [
@@ -207,45 +206,33 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   const handler = new CommandHandler(client);
 
   handler.registerSlashCommand(
-    "echo",
-    {
-      description:
-        "I like watching big black men shake their booty cheeks. I don't know why, but when I see a black man shaking his booty cheeks, it makes my mouth start to drool, and I start dancing with the black man as well.".substring(
-          0,
-          99
-        ),
-      options: {
-        message: {
-          type: 3,
-          description: "Big dumb stinky dumb stink",
-          required: true,
-        },
-      },
-    },
-    (options, interaction) => {
-      interaction.createMessage({ content: options.message });
-    }
+    new Command("ping", "Pong!", async (options, interaction) => {
+      interaction.createMessage({
+        content: `Pong! \`${
+          client.shards
+            .map((s) => s.latency)
+            .filter((a) => isFinite(a))
+            .reduce((a, b) => a + b, 0) /
+          client.shards.map((e) => e.latency).filter((a) => isFinite(a)).length
+        }ms\``,
+      });
+    })
   );
 
   handler.registerSlashCommand(
-    "bigtest",
-    {
-      description: "Big test.",
-      options: {
-        one: OptionBuilder.String("Test string argument."),
-        two: {
-          type: 6,
-          required: true,
-          description: "a user",
-        },
+    new Command(
+      "echo",
+      "Echoes the message.",
+      (args, interaction) => {
+        interaction.createMessage({
+          content: args.message,
+        });
       },
-    },
-    (options, interaction) => {
-      interaction.createMessage({ content: JSON.stringify(options) });
-    }
+      [OptionBuilder.String("message", "The message to echo.", true)]
+    )
   );
 
-  handler.registerSlashCommand(
+  /* handler.registerSlashCommand(
     "eval",
     {
       description: "Does the thing.",
@@ -305,7 +292,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
         });
       }
     }
-  );
+  ); */
 
   // Connect to the cluster manager.
   cluster.connect();
@@ -344,36 +331,23 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   });
 
   // Create an event listener for the client ready event
-  client.once("ready", () => {
+  client.once("ready", async () => {
     console.log(chalk.green(" All shards connected!"));
     client.off("shardReady", logShardStatus);
 
-    function updateStatus() {
+    async function updateStatus() {
+      // Fetch the latest patron supporter to thank
+      const patron = await Patreon.getLatestSupporter();
+      console.debug(patron);
       client.editStatus("online", [
         {
-          name: "I can have",
+          name: `Thank you ${patron.attributes.full_name} for supporting on Patreon!`,
           type: Constants.ActivityTypes.GAME,
-        },
-        {
-          name: "two activities?",
-          type: Constants.ActivityTypes.GAME,
-        },
-        {
-          name: "Idk",
-          type: Constants.ActivityTypes.COMPETING,
         },
       ]);
     }
 
     updateStatus();
-
-    // Thank the newest patron
-    /*client.editStatus("online", [
-      {
-        name: "Thank you chompus for increasing their patronage!",
-        type: Constants.ActivityTypes.GAME,
-      },
-    ]);*/
   });
 
   // Set up the error event module
