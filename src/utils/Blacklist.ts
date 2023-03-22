@@ -45,7 +45,7 @@ export async function setValueByID(id: string, cmds: string[]) {
 }
 
 export async function checkBlacklistStatus(
-  msg: Message<AnyTextChannel>
+  msg: Message
 ): Promise<null | BlacklistData> {
   let usr = msg.author.id,
     channel = msg.channel.id,
