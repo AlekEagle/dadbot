@@ -1,5 +1,5 @@
 import Logger, { Level } from "./utils/Logger";
-import { Constants, Client } from "oceanic.js";
+import { Constants, Client, Permission } from "oceanic.js";
 import envConfig from "./utils/dotenv";
 import { readFile } from "node:fs/promises";
 import { checkBlacklistStatus } from "./utils/Blacklist";
@@ -15,8 +15,15 @@ import { getShardAllocation, ShardAllocation } from "./utils/ShardAllocator";
 import chalk from "chalk";
 import { coolDadBotASCII } from "./utils/UselessStartupMessage";
 import ReadableTime from "./utils/ReadableTime";
-import CommandHandler, { Command, OptionBuilder } from "./utils/CommandHandler";
+import {
+  CommandHandler,
+  SlashCommand,
+  ButtonComponent,
+  ActionRowComponent,
+  UserSelectMenuComponent,
+} from "oceanic.js-interactions";
 import * as Patreon from "./utils/Patreon";
+import Commands from "./commands";
 
 envConfig();
 
@@ -30,6 +37,8 @@ export let cluster: DadbotClusterClient<
 >;
 
 export let shards: ShardAllocation;
+
+export let handler: CommandHandler;
 
 export let sendShardInfoInterval: NodeJS.Timer | null;
 
@@ -203,96 +212,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
 
   client.on("shardReady", logShardStatus);
 
-  const handler = new CommandHandler(client);
-
-  handler.registerSlashCommand(
-    new Command("ping", "Pong!", async (options, interaction) => {
-      interaction.createMessage({
-        content: `Pong! \`${
-          client.shards
-            .map((s) => s.latency)
-            .filter((a) => isFinite(a))
-            .reduce((a, b) => a + b, 0) /
-          client.shards.map((e) => e.latency).filter((a) => isFinite(a)).length
-        }ms\``,
-      });
-    })
-  );
-
-  handler.registerSlashCommand(
-    new Command(
-      "echo",
-      "Echoes the message.",
-      (args, interaction) => {
-        interaction.createMessage({
-          content: args.message,
-        });
-      },
-      [OptionBuilder.String("message", "The message to echo.", true)]
-    )
-  );
-
-  /* handler.registerSlashCommand(
-    "eval",
-    {
-      description: "Does the thing.",
-      options: {
-        code: OptionBuilder.String("The code."),
-      },
-    },
-    (options, interaction) => {
-      const authorized = ["798254690286174218", "222882552472535041"];
-      if (authorized.includes(interaction.user.id)) {
-        let emitter = evaluateSafe(options.code, {
-          require,
-          exports,
-          console,
-          process,
-          client,
-          logger,
-          cluster,
-          shards,
-          handler,
-          Patreon,
-          inspect,
-        });
-
-        // If emitter is an event emitter, then we can use it as an event emitter.
-        if (emitter instanceof EventEmitter) {
-          emitter.once("complete", async (out, error) => {
-            if (error) {
-              interaction.createMessage({
-                content: `You did a stinky butt fart.\n${out}`.substring(
-                  0,
-                  3999
-                ),
-              });
-            } else {
-              interaction.createMessage({
-                content: `Thing is done.\n${out}`.substring(0, 3999),
-              });
-            }
-          });
-          emitter.once("timeoutError", (error, funcName) => {
-            interaction.createFollowup({
-              content: `You did a stinky butt fart.\n${error}`.substring(
-                0,
-                3999
-              ),
-            });
-          });
-        } else {
-          interaction.createMessage({
-            content: `Thing is done.\n${emitter}`.substring(0, 3999),
-          });
-        }
-      } else {
-        interaction.createMessage({
-          embeds: [{ image: { url: "https://alekeagle.me/cAPOyKp9Mm.jpg" } }],
-        });
-      }
-    }
-  ); */
+  handler = new CommandHandler(client);
 
   // Connect to the cluster manager.
   cluster.connect();
@@ -335,10 +255,16 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
     console.log(chalk.green(" All shards connected!"));
     client.off("shardReady", logShardStatus);
 
+    // Publish the commands
+    console.log(" Publishing commands...");
+
+    await handler.publishCommands();
+
+    console.log(" All commands registered and published!");
+
     async function updateStatus() {
       // Fetch the latest patron supporter to thank
       const patron = await Patreon.getLatestSupporter();
-      console.debug(patron);
       client.editStatus("online", [
         {
           name: `Thank you ${patron.attributes.full_name} for supporting on Patreon!`,
@@ -354,6 +280,13 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   client.on("error", (error) => {
     logger.error(error);
   });
+
+  console.log(" Registering slash commands...");
+  // Register the command modules
+  for (const command of Commands) {
+    console.log(` Adding command ${command.name}...`);
+    handler.registerCommand(command);
+  }
 
   // ========================================================
   // TODO: Migrate Dad Bot to the new command handler (this includes the command modules and the event modules)

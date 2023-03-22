@@ -1,8 +1,8 @@
-import Eris, { GuildTextableChannel } from 'eris';
-import ECH from 'eris-command-handler';
-import fetch from 'node-fetch';
+import Eris, { GuildTextableChannel } from "eris";
+import ECH from "eris-command-handler";
+import fetch from "node-fetch";
 
-const webhookName = 'Dad Bot Webhook™';
+const webhookName = "Dad Bot Webhook™";
 
 export default class Dadhook {
   public avatar?: string;
@@ -13,25 +13,27 @@ export default class Dadhook {
   public token: string;
   public user: Eris.PartialUser;
   public static async getGuildDadhook(guild: Eris.Guild): Promise<Dadhook> {
-    let dadhook = (await guild.getWebhooks()).find(w => w.name === webhookName);
+    let dadhook = (await guild.getWebhooks()).find(
+      (w) => w.name === webhookName
+    );
     if (!dadhook) {
       let avatar = `data:image/png;base64,${(
         await (
-          await fetch((guild as any)._client.user.dynamicAvatarURL('png', 2048))
+          await fetch((guild as any)._client.user.dynamicAvatarURL("png", 2048))
         ).buffer()
-      ).toString('base64')}`;
+      ).toString("base64")}`;
       let validChannel = guild.channels.filter(
-        c =>
+        (c) =>
           c.type === Eris.Constants.ChannelTypes.GUILD_TEXT &&
           c
             .permissionsOf((guild as any)._client.user.id)
-            .has('manageWebhooks') &&
-          c.permissionsOf((guild as any)._client.user.id).has('readMessages')
+            .has("manageWebhooks") &&
+          c.permissionsOf((guild as any)._client.user.id).has("readMessages")
       )[0] as GuildTextableChannel;
 
       let newWebhook = await validChannel.createWebhook({
         name: webhookName,
-        avatar
+        avatar,
       });
       return new Dadhook(newWebhook, (guild as any)._client);
     }
@@ -58,9 +60,9 @@ export default class Dadhook {
 
     let res;
     if (
-      permsOfBot.has('manageWebhooks') &&
-      currentChannelPerms.has('manageWebhooks') &&
-      destinationChannelPerms.has('manageWebhooks')
+      permsOfBot.has("manageWebhooks") &&
+      currentChannelPerms.has("manageWebhooks") &&
+      destinationChannelPerms.has("manageWebhooks")
     ) {
       try {
         res = await this.client.editWebhook(this.id, { channelID: channel.id });

@@ -1,4 +1,4 @@
-import FS from 'node:fs';
+import FS from "node:fs";
 
 const lists: {
   pastas: string[];
@@ -8,6 +8,7 @@ const lists: {
   kumiko: string[];
   dadsDabbing: string[];
   advice: string[];
-} = JSON.parse(FS.readFileSync('./data/lists.json', 'utf-8'));
+  felix: string[];
+} = JSON.parse(FS.readFileSync("./data/lists.json", "utf-8"));
 
 export default lists;
