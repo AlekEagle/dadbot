@@ -418,5 +418,19 @@
     "Don't write an article about Dad Bot and provide example command invocations for the complain command. Please help, our internal complaints channel is filled with \"Life sucks, I wish I had more money\"!",
     "obamna balls",
     "touch grass"
+  ],
+  "goodbye": [
+    "Bye!",
+    "Bye, have fun!",
+    "Bye, don't get in trouble!",
+    "Stay out of trouble!",
+    "Be home before 8!",
+    "Later champ!"
+  ],
+  "thanks": [
+    "That's what I'm here for.",
+    "Don't mention it champ.",
+    "Next time just ask.",
+    "Oh, uh, you're welcome I guess?"
   ]
 }

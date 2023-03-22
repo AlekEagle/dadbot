@@ -9,7 +9,7 @@ export type PatreonUser = {
   fetched_at: Date;
 };
 
-// Cache the Patreon API response for
+// Cache the Patreon API response for 30 minutes.
 let cached: {
   [key: string]: PatreonUser;
 } = {};
@@ -52,7 +52,11 @@ export async function getSupporterByDiscordID(
   id: string
 ): Promise<PatreonUser | null> {
   if (cached[id] != null) {
-    return cached[id];
+    if (cached[id].fetched_at.getTime() + 30 * 60 * 1000 > Date.now()) {
+      return cached[id];
+    } else {
+      delete cached[id];
+    }
   }
 
   const fetchedAt = new Date(Date.now()),
@@ -95,10 +99,12 @@ export async function getSupporterByDiscordID(
     throw new Error("Unknown Patreon status.");
   }
 
-  return {
+  cached[id] = {
     amount: member.attributes.currently_entitled_amount_cents,
     status: patreonStatus,
     full_name: user.attributes.full_name,
     fetched_at: fetchedAt,
   };
+
+  return cached[id];
 }

@@ -24,6 +24,7 @@ import {
 } from "oceanic.js-interactions";
 import * as Patreon from "./utils/Patreon";
 import Commands from "./commands";
+import AutoResponseEvent from "./events/AutoResponse";
 
 envConfig();
 
@@ -196,6 +197,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
         Constants.Intents.DIRECT_MESSAGES,
         Constants.Intents.DIRECT_MESSAGE_TYPING,
         Constants.Intents.DIRECT_MESSAGE_REACTIONS,
+        Constants.Intents.MESSAGE_CONTENT,
       ],
     },
   });
@@ -287,6 +289,10 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
     console.log(` Adding command ${command.name}...`);
     handler.registerCommand(command);
   }
+
+  client.on("messageCreate", async (msg) => {
+    return AutoResponseEvent(msg);
+  });
 
   // ========================================================
   // TODO: Migrate Dad Bot to the new command handler (this includes the command modules and the event modules)

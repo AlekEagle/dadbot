@@ -9,6 +9,8 @@ const lists: {
   dadsDabbing: string[];
   advice: string[];
   felix: string[];
+  goodbye: string[];
+  thanks: string[];
 } = JSON.parse(FS.readFileSync("./data/lists.json", "utf-8"));
 
 export default lists;
