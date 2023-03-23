@@ -174,7 +174,6 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
       autoModerationRules: 0,
       voiceMembers: 0,
       groupChannels: 0,
-      members: 0,
       privateChannels: 0,
       unavailableGuilds: 0,
       voiceStates: 0,
