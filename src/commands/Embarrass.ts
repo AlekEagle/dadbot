@@ -7,6 +7,7 @@ import {
 import { SlashCommand, OptionBuilder } from "oceanic.js-interactions";
 import Dadhook from "../utils/Dadhook";
 import Lists from "../utils/Lists";
+import { client } from "..";
 
 const embarrass = new SlashCommand(
   "embarrass",
@@ -39,7 +40,9 @@ const embarrass = new SlashCommand(
         return;
       }
 
-      const dadhook = await Dadhook.giveMeDadhook(interaction.channel);
+      const dadhook = await Dadhook.giveMeDadhook(
+        await client.rest.channels.get(interaction.channelID)
+      );
       const user = args.user ?? interaction.member;
       dadhook.execute({
         content:
