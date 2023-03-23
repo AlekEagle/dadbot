@@ -38,7 +38,7 @@ export default class Dadhook extends Webhook {
     // Check if the bot has webhook permission for the guild
     if (
       !channel.guild
-        .permissionsOf(channel.client.user.id)
+        .permissionsOf(channel.guild.clientMember)
         .has("MANAGE_WEBHOOKS")
     )
       throw new Error(
