@@ -6,10 +6,12 @@ import DadJoke from "./DadJoke";
 import Embarrass from "./Embarrass";
 import Felix from "./Felix";
 import Github from "./Github";
+import Help from "./Help";
 import Info from "./Info";
 import Kumiko from "./Kumiko";
 import Mio from "./Mio";
 import Patreon from "./Patreon";
+import Settings from "./Settings";
 
 const commands = [
   Advice,
@@ -20,10 +22,12 @@ const commands = [
   Embarrass,
   Felix,
   Github,
+  Help,
   Info,
   Kumiko,
   Mio,
   Patreon,
+  Settings,
 ];
 
 export default commands;

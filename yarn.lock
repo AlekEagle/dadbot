@@ -13,48 +13,48 @@
     tslib "^2.5.0"
     ws "^8.12.1"
 
-"@sentry/core@7.43.0":
-  version "7.43.0"
-  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-7.43.0.tgz#c78e79399172738c96e3b388244258153c49215f"
-  integrity sha512-zvMZgEi7ptLBwDnd+xR/u4zdSe5UzS4S3ZhoemdQrn1PxsaVySD/ptyzLoGSZEABqlRxGHnQrZ78MU1hUDvKuQ==
+"@sentry/core@7.44.2":
+  version "7.44.2"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-7.44.2.tgz#e33b2880e83cc4aaaa3d1b8a160588484d0e2624"
+  integrity sha512-m2nOHP4YX+kmWFQTzgBEsdblCuNFSB7017oLaR6/VH0a0mVWdrW7Q1gHMpw4/08uWRiA+oC2dXqCH7A1FwfGIQ==
   dependencies:
-    "@sentry/types" "7.43.0"
-    "@sentry/utils" "7.43.0"
+    "@sentry/types" "7.44.2"
+    "@sentry/utils" "7.44.2"
     tslib "^1.9.3"
 
 "@sentry/node@^7.43.0":
-  version "7.43.0"
-  resolved "https://registry.yarnpkg.com/@sentry/node/-/node-7.43.0.tgz#bcb553486ffe3f1413063e9125fd34f9d84277d2"
-  integrity sha512-oXaTBq6Bk8Qwsd46hhRU2MLEnjYqWI41nPJmXyAWkDSYQTP7sUe1qM8bCUdsRpPwQh955Vq9qCRfgMbN4lEoAQ==
+  version "7.44.2"
+  resolved "https://registry.yarnpkg.com/@sentry/node/-/node-7.44.2.tgz#e37864790d95b91d1a2610ee59af36eda6807ac2"
+  integrity sha512-tEMcT+di7q7OYZt8Lg9kIpXoSO1YQNhnfMyffpzC82TMyJGNclBllNTF/UUnPqEiRW8WeewNgWuJAMLpPzjmfw==
   dependencies:
-    "@sentry/core" "7.43.0"
-    "@sentry/types" "7.43.0"
-    "@sentry/utils" "7.43.0"
+    "@sentry/core" "7.44.2"
+    "@sentry/types" "7.44.2"
+    "@sentry/utils" "7.44.2"
     cookie "^0.4.1"
     https-proxy-agent "^5.0.0"
     lru_map "^0.3.3"
     tslib "^1.9.3"
 
-"@sentry/types@7.43.0":
-  version "7.43.0"
-  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.43.0.tgz#e621257601e9db2a39cdd3bd75e67fe338ed51eb"
-  integrity sha512-5XxCWqYWJNoS+P6Ie2ZpUDxLRCt7FTEzmlQkCdjW6MFWOX26hAbF/wEuOTYAFKZXMIXOz0Egofik1e8v1Cg6/A==
+"@sentry/types@7.44.2":
+  version "7.44.2"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-7.44.2.tgz#c8acdd884f4daf03f3e813935e9e16da71473247"
+  integrity sha512-vdGb2BAelXRitgKWRBF1cCAoisLsbugUaJzrGCQoIoS3lYpZ8d8r2zELE7cNoVObVoQbUHF/WFhXVv8cumj+RA==
 
-"@sentry/utils@7.43.0":
-  version "7.43.0"
-  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.43.0.tgz#ad16efb86b94ffe6dca2ed2b299d5230ba6d815b"
-  integrity sha512-f78YfMLcgNU7+suyWFCuQhQlneXXMS+egb0EFZh7iU7kANUPRX5T4b+0C+fwaPm5gA6XfGYskr4ZnzQJLOlSqg==
+"@sentry/utils@7.44.2":
+  version "7.44.2"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-7.44.2.tgz#a2f77713fec4471076e79e050c75561c21ad8abb"
+  integrity sha512-PzL4Z0fhIHfQacfWvgiAs+drcm4Nc45Tc8PW1RdOZtHxzhGAYZYAPniDGML586Mnlu19QM6kGHiDu+CBgnnXAQ==
   dependencies:
-    "@sentry/types" "7.43.0"
+    "@sentry/types" "7.44.2"
     tslib "^1.9.3"
 
 "@top-gg/sdk@^3.1.3":
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/@top-gg/sdk/-/sdk-3.1.3.tgz#197e2726c76cb80ec19b83d7e2a68e212ee913e7"
-  integrity sha512-jvj3jH8BY35AXKFXkap2cJRuFMOz1yBvBvCvNq90gfvplKWDYqGPQKt+nOhT/hdYc+XcKskY/c5OOWDX0xbg2Q==
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/@top-gg/sdk/-/sdk-3.1.4.tgz#e5d23d7d55a1eed4c5f2ce895ddf296ad26ff289"
+  integrity sha512-BOW3AxNKShiCl4YjxUYtKv0WxwKySuhcDWroz3i3fxx7l8T+vIKAFsuPqC9YPdLVSJuU/MVWdiK8NjFc53wGmQ==
   dependencies:
-    node-fetch "^2.6.1"
-    raw-body "^2.4.1"
+    raw-body "^2.5.2"
+    undici "^5.21.0"
 
 "@types/collections@^5.1.2":
   version "5.1.2"
@@ -82,9 +82,9 @@
     form-data "^3.0.0"
 
 "@types/node@*", "@types/node@^18.15.3":
-  version "18.15.3"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.15.3.tgz#f0b991c32cfc6a4e7f3399d6cb4b8cf9a0315014"
-  integrity sha512-p6ua9zBxz5otCmbpb5D3U4B5Nanw6Pk3PPyX05xnxbB/fRv71N7CPmORg7uAD5P70T0xmx1pzAx/FUfa5X+3cw==
+  version "18.15.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.15.5.tgz#3af577099a99c61479149b716183e70b5239324a"
+  integrity sha512-Ark2WDjjZO7GmvsyFFf81MXuGTA/d6oP38anyxWOL6EREyBKAxKoFHwBhaZxCfLRLpO8JgVXwqOwSwa7jRcjew==
 
 "@types/source-map-support@^0.5.6":
   version "0.5.6"
@@ -212,9 +212,9 @@ depd@2.0.0:
   integrity sha512-g7nH6P6dyDioJogAAGprGpCtVImJhpPk/roCzdb3fIh61/s/nPsfR6onyMwkCAR/OlC3yBC0lESvUoQEAssIrw==
 
 discord-api-types@^0.37.35:
-  version "0.37.36"
-  resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.37.36.tgz#650a8f66dce2c5e54a8c2275db74a0bb7936430d"
-  integrity sha512-Nlxmp10UpVr/utgZ9uODQvG2Or+5w7LFrvFMswyeKC9l/+UaqGT6H0OVgEFhu9GEO4U6K7NNO5W8Carv7irnCA==
+  version "0.37.37"
+  resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.37.37.tgz#49bc42a36124c85f06297f1548f130329ed5aeb0"
+  integrity sha512-LDMBKzl/zbvHO/yCzno5hevuA6lFIXJwdKSJZQrB+1ToDpFfN9thK+xxgZNR4aVkI7GHRDja0p4Sl2oYVPnHYg==
 
 dotenv@^16.0.3:
   version "16.0.3"
@@ -367,17 +367,17 @@ node-fetch@^2.6.1, node-fetch@^2.6.9:
   dependencies:
     whatwg-url "^5.0.0"
 
-oceanic.js-interactions@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/oceanic.js-interactions/-/oceanic.js-interactions-0.0.2.tgz#5bab77ccae9587e69f72a604972a950f2825ded4"
-  integrity sha512-V2Bvebcun6h6LOqx9bdfLJLua4SP8NKkfl7mK7M3LSwWn4swJPR7sVUNHsXYtsair7gpC6zrraiiTI4dW114xQ==
+oceanic.js-interactions@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/oceanic.js-interactions/-/oceanic.js-interactions-0.0.7.tgz#807659a875e9f83dbb0321e214ae4c86a3992d40"
+  integrity sha512-jIis3F7TAIImCp6gv39dX1JGQpAkgE15TV8AbHJh19zT77529Et2TJBcwZWA3FMq9PWvVJ0iPJSbZJ/OdLbmyA==
   dependencies:
     oceanic.js dev
 
 oceanic.js@dev:
-  version "1.5.2-dev.4696476"
-  resolved "https://registry.yarnpkg.com/oceanic.js/-/oceanic.js-1.5.2-dev.4696476.tgz#0d30d7c0f770b6a0d81dfb0852c5b12398bbfef2"
-  integrity sha512-MT+B2/EuhOLPxEDr34LAqGn8neiuF9AO06+uJaw0nQ+Wvz02/FUfXWcyVE8JZGhTp2rn3ffv4/1/iJUdn4u5og==
+  version "1.5.2-dev.474057e"
+  resolved "https://registry.yarnpkg.com/oceanic.js/-/oceanic.js-1.5.2-dev.474057e.tgz#06fc23969a16617fe9572cc14710c3b90d28c459"
+  integrity sha512-cMknSVtdLpTNeHQtrJITi3Q2MPlqCzfGJ1/WrvIfsT6HpL3Am+Gqi5zhEgilHgTJX+S4V5p+OfTzDCmDV7+91w==
   dependencies:
     undici "^5.21.0"
     ws "^8.13.0"
@@ -474,7 +474,7 @@ prism-media@^1.3.5:
   resolved "https://registry.yarnpkg.com/prism-media/-/prism-media-1.3.5.tgz#ea1533229f304a1b774b158de40e98c765db0aa6"
   integrity sha512-IQdl0Q01m4LrkN1EGIE9lphov5Hy7WWlH6ulf5QdGePLlPas9p2mhgddTEHrlaXYjjFToM1/rWuwF37VF4taaA==
 
-raw-body@^2.4.1:
+raw-body@^2.5.2:
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/raw-body/-/raw-body-2.5.2.tgz#99febd83b90e08975087e8f1f9419a149366b68a"
   integrity sha512-8zGqypfENjCIqGhgXToC8aB2r7YrBX+AQAfIPs/Mlk+BtPTztOvTS01NRW/3Eh60J+a48lt8qsCzirQ6loCVfA==

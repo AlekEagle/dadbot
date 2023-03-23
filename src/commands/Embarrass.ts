@@ -19,7 +19,15 @@ const embarrass = new SlashCommand(
   },
   async (args, interaction) => {
     try {
+      console.log(
+        `interaction.acknowledged before defer: ${interaction.acknowledged}`
+      );
+
       interaction.defer(Constants.MessageFlags.EPHEMERAL);
+
+      console.log(
+        `interaction.acknowledged after defer: ${interaction.acknowledged}`
+      );
 
       if (
         interaction.channel instanceof AnnouncementThreadChannel ||

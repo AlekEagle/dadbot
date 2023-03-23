@@ -15,13 +15,7 @@ import { getShardAllocation, ShardAllocation } from "./utils/ShardAllocator";
 import chalk from "chalk";
 import { coolDadBotASCII } from "./utils/UselessStartupMessage";
 import ReadableTime from "./utils/ReadableTime";
-import {
-  CommandHandler,
-  SlashCommand,
-  ButtonComponent,
-  ActionRowComponent,
-  UserSelectMenuComponent,
-} from "oceanic.js-interactions";
+import { CommandHandler } from "oceanic.js-interactions";
 import * as Patreon from "./utils/Patreon";
 import Commands from "./commands";
 import AutoResponseEvent from "./events/AutoResponse";
@@ -215,6 +209,15 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   client.on("shardReady", logShardStatus);
 
   handler = new CommandHandler(client);
+
+  // Handle unregistered message components.
+  handler.on("unhandledMessageComponent", (interaction) => {
+    interaction.createMessage({
+      content:
+        "I'm sorry, but I don't remember what that was supposed to do. Try running the command that gave you the item you interacted with again and see if it works. If it continues to not work, please let us know in https://alekeagle.com/d",
+      flags: Constants.MessageFlags.EPHEMERAL,
+    });
+  });
 
   // Connect to the cluster manager.
   cluster.connect();
