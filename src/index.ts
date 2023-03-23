@@ -173,7 +173,6 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
       stageInstances: 0,
       autoModerationRules: 0,
       voiceMembers: 0,
-      channels: 0,
       groupChannels: 0,
       members: 0,
       privateChannels: 0,
