@@ -168,6 +168,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
       integrations: 0,
       channelThreads: 0,
       scheduledEvents: 0,
+      roles: 0,
       guildThreads: 0,
       stageInstances: 0,
       autoModerationRules: 0,
