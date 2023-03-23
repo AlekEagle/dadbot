@@ -1,5 +1,5 @@
 import Logger, { Level } from "./utils/Logger";
-import { Constants, Client, Permission } from "oceanic.js";
+import { Constants, Client } from "oceanic.js";
 import envConfig from "./utils/dotenv";
 import { readFile } from "node:fs/promises";
 import { checkBlacklistStatus } from "./utils/Blacklist";
@@ -175,8 +175,8 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
       voiceMembers: 0,
       groupChannels: 0,
       privateChannels: 0,
-      unavailableGuilds: 0,
       voiceStates: 0,
+      channels: 0,
     },
     defaultImageFormat: "png",
     defaultImageSize: 2048,

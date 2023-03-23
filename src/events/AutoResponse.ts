@@ -3,9 +3,7 @@ import {
   Flags,
   SettingsConfigObject,
   getComputedSettings,
-  setUserSettings,
 } from "../utils/Settings";
-import { getSupporterByDiscordID } from "../utils/Patreon";
 import { client } from "..";
 import { GuildChannel, TextableChannel, Message } from "oceanic.js";
 import { incrementMsgCount, incrementResponseCount } from "../utils/Statistics";
@@ -65,18 +63,18 @@ export default async function AutoResponseEvent(msg: Message) {
     incrementResponseCount();
     switch (msg.content.match(WINNING_MATCH)[0]) {
       case "play":
-        msg.channel
-          .createMessage({ content: "I hope ya win son!" })
+        msg.client.rest.channels
+          .createMessage(msg.channelID, { content: "I hope ya win son!" })
           .catch(() => {});
         break;
       case "playing":
-        msg.channel
-          .createMessage({ content: "Are ya winning son?" })
+        msg.client.rest.channels
+          .createMessage(msg.channelID, { content: "Are ya winning son?" })
           .catch(() => {});
         break;
       case "played":
-        msg.channel
-          .createMessage({ content: "Did ya win son?" })
+        msg.client.rest.channels
+          .createMessage(msg.channelID, { content: "Did ya win son?" })
           .catch(() => {});
     }
     return;
@@ -93,19 +91,15 @@ export default async function AutoResponseEvent(msg: Message) {
     // Send the response
     let imMatchData = msg.content.match(IM_MATCH),
       formattingMatchData = msg.content.match(FORMAT_MATCH),
-      nick =
-        msg.channel instanceof GuildChannel
-          ? (msg.channel as TextableChannel).guild.members.get(client.user.id)
-              .nick
-          : null,
+      nick = msg.guildID ? msg.guild.clientMember.nick : null,
       hiContent =
         !formattingMatchData || formattingMatchData.index > imMatchData.index
           ? `${imMatchData[2]}`
           : `${formattingMatchData[0]}${imMatchData[2]}`,
       imContent = nick ? nick : "Dad";
 
-    msg.channel
-      .createMessage({
+    msg.client.rest.channels
+      .createMessage(msg.channelID, {
         allowedMentions: {
           everyone: msg.mentions.everyone,
           roles: msg.mentions.roles
@@ -132,8 +126,10 @@ export default async function AutoResponseEvent(msg: Message) {
     settings.value.flags & Flags.KYS_RESPONSES
   ) {
     incrementResponseCount();
-    msg.channel
-      .createMessage({ content: `You better mean Kissing Your Self!` })
+    msg.client.rest.channels
+      .createMessage(msg.channelID, {
+        content: `You better mean Kissing Your Self!`,
+      })
       .catch(() => {});
     return;
   }
@@ -144,8 +140,8 @@ export default async function AutoResponseEvent(msg: Message) {
     settings.value.flags & Flags.SHUT_UP_RESPONSES
   ) {
     incrementResponseCount();
-    msg.channel
-      .createMessage({
+    msg.client.rest.channels
+      .createMessage(msg.channelID, {
         content: `Listen here ${
           msg.member && msg.member.nick ? msg.member.nick : msg.member.username
         }, I will not tolerate you saying the words that consist of the letters 's h u t  u p' being said in this server, so take your own advice and close thine mouth in the name of the christian minecraft server owner.`,
@@ -160,8 +156,8 @@ export default async function AutoResponseEvent(msg: Message) {
     settings.value.flags & Flags.GOODBYE_RESPONSES
   ) {
     incrementResponseCount();
-    msg.channel
-      .createMessage({
+    msg.client.rest.channels
+      .createMessage(msg.channelID, {
         content:
           Lists.goodbye[Math.floor(Math.random() * Lists.goodbye.length)],
       })
@@ -175,8 +171,8 @@ export default async function AutoResponseEvent(msg: Message) {
     settings.value.flags & Flags.THANKS_RESPONSES
   ) {
     incrementResponseCount();
-    msg.channel
-      .createMessage({
+    msg.client.rest.channels
+      .createMessage(msg.channelID, {
         content: Lists.thanks[Math.floor(Math.random() * Lists.thanks.length)],
       })
       .catch(() => {});
@@ -190,8 +186,8 @@ export default async function AutoResponseEvent(msg: Message) {
     settings.value.flags & Flags.SHOUTING_RESPONSES
   ) {
     incrementResponseCount();
-    msg.channel
-      .createMessage({ content: "Keep your voice down!" })
+    msg.client.rest.channels
+      .createMessage(msg.channelID, { content: "Keep your voice down!" })
       .catch(() => {});
     return;
   }

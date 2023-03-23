@@ -48,10 +48,8 @@ export async function checkBlacklistStatus(
   msg: Message
 ): Promise<null | BlacklistData> {
   let usr = msg.author.id,
-    channel = msg.channel.id,
-    guild = (msg.channel as AnyGuildChannel).guild
-      ? (msg.channel as AnyGuildChannel).guild.id
-      : null;
+    channel = msg.channelID,
+    guild = msg.guildID !== undefined ? msg.guildID : null;
 
   let usrBL = await getValueByID(usr),
     channelBL = await getValueByID(channel),

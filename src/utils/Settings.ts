@@ -1,5 +1,5 @@
 import Options from "./DB/Options";
-import { GuildChannel, Message } from "oceanic.js";
+import { Message } from "oceanic.js";
 
 export enum Flags {
   IM_RESPONSES = 1 << 0,
@@ -119,11 +119,9 @@ export async function getComputedSettings(
   msg: Message
 ): Promise<ComputedSettingsObject> {
   const user = await getUserSettings(msg.author.id);
-  const channel = await getChannelSettings(msg.channel.id);
+  const channel = await getChannelSettings(msg.channelID);
   const guild =
-    msg.channel instanceof GuildChannel
-      ? await getGuildSettings(msg.channel.guild.id)
-      : null;
+    msg.guildID !== undefined ? await getGuildSettings(msg.guildID) : null;
   const RNG = user.RNG ?? channel.RNG ?? guild?.RNG ?? defaultSettings.RNG;
   const inheritedRNGFrom = user.RNG
     ? "user"
