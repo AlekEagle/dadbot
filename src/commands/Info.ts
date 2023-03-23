@@ -142,8 +142,8 @@ return JSON.stringify(
             {
               name: "Current Shard",
               value:
-                interaction.channel instanceof TextableChannel
-                  ? interaction.channel.guild.shard.id.toString()
+                interaction.guildID !== undefined
+                  ? interaction.guild.shard.id.toString()
                   : "0",
               inline: true,
             },
