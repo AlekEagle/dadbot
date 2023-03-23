@@ -164,6 +164,12 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
     },
     collectionLimits: {
       messages: 0,
+      auditLogEntries: 0,
+      integrations: 0,
+      channelThreads: 0,
+      scheduledEvents: 0,
+      roles: 0,
+      guildThreads: 0,
     },
     defaultImageFormat: "png",
     defaultImageSize: 2048,
