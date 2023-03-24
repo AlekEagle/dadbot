@@ -1,5 +1,6 @@
 import Advice from "./Advice";
 import Barbecue from "./Barbecue";
+import ChannelSettings from "./ChannelSettings";
 import CreatorInfo from "./CreatorInfo";
 import Dab from "./Dab";
 import DadJoke from "./DadJoke";
@@ -11,11 +12,13 @@ import Info from "./Info";
 import Kumiko from "./Kumiko";
 import Mio from "./Mio";
 import Patreon from "./Patreon";
-import Settings from "./Settings";
+import ServerSettings from "./ServerSettings";
+import UserSettings from "./UserSettings";
 
 const commands = [
   Advice,
   Barbecue,
+  ChannelSettings,
   CreatorInfo,
   Dab,
   DadJoke,
@@ -27,7 +30,8 @@ const commands = [
   Kumiko,
   Mio,
   Patreon,
-  Settings,
+  ServerSettings,
+  UserSettings,
 ];
 
 export default commands;
