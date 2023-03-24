@@ -28,7 +28,9 @@ const viewUserSettings = new Subcommand(
     const settings = await getUserSettings(interaction.user.id);
 
     const embed = {
-      title: "Your Dad Bot Settings",
+      title: "Your Settings",
+      description:
+        "Here are your current settings, if you need a more detailed explanation of what each setting does, use `/help settings`.",
       fields: [
         ...enumToArray(Flags).map((flag) => ({
           name: flag

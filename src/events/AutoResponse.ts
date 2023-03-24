@@ -4,8 +4,7 @@ import {
   SettingsConfigObject,
   getComputedSettings,
 } from "../utils/Settings";
-import { client } from "..";
-import { GuildChannel, TextableChannel, Message } from "oceanic.js";
+import { TextableChannel, Message } from "oceanic.js";
 import { incrementMsgCount, incrementResponseCount } from "../utils/Statistics";
 import Lists from "../utils/Lists";
 
@@ -123,7 +122,7 @@ export default async function AutoResponseEvent(msg: Message) {
   // Kys matcher
   if (
     msg.content.match(KYS_MATCH) &&
-    settings.value.flags & Flags.KYS_RESPONSES
+    settings.value.flags & Flags.KISS_RESPONSES
   ) {
     incrementResponseCount();
     msg.client.rest.channels

@@ -3,7 +3,7 @@ import { Message } from "oceanic.js";
 
 export enum Flags {
   IM_RESPONSES = 1 << 0,
-  KYS_RESPONSES = 1 << 1,
+  KISS_RESPONSES = 1 << 1,
   SHUT_UP_RESPONSES = 1 << 2,
   WINNING_RESPONSES = 1 << 3,
   GOODBYE_RESPONSES = 1 << 4,
@@ -70,7 +70,7 @@ export interface ComputedSettingsObject {
 const defaultSettings: SettingsConfigParam = {
   flags:
     Flags.IM_RESPONSES |
-    Flags.KYS_RESPONSES |
+    Flags.KISS_RESPONSES |
     Flags.SHUT_UP_RESPONSES |
     Flags.WINNING_RESPONSES |
     Flags.GOODBYE_RESPONSES |
