@@ -176,6 +176,15 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
       privateChannels: 0,
       voiceStates: 0,
       channels: 0,
+      // Obligatory limits to try and cut back on memory leaks/memory exhaustion problems
+      members: 10000,
+      // Worst case, limit users, roles, guilds, and/or channels. Hopefully it doesn't reach that point
+      /*
+      users: 10000, // If we limit users, we'll need another way to roughly determine user count.
+      roles: 10000,
+      guilds: 100,
+      channels: 10000,
+      */
     },
     defaultImageFormat: "png",
     defaultImageSize: 2048,
