@@ -234,6 +234,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
 
   handler = new CommandHandler(client);
 
+  /*
   // Handle errors
   handler.on("error", (error) => {
     interaction.createMessage({
@@ -242,6 +243,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
     });
     logger.error(error);
   });
+  */
 
   // Handle unregistered message components.
   handler.on("unhandledMessageComponent", (interaction) => {
