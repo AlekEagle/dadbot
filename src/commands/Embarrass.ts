@@ -20,6 +20,7 @@ const embarrass = new SlashCommand(
   },
   async (args, interaction) => {
     try {
+      await interaction.defer(Constants.MessageFlags.EPHEMERAL);
       if (
         interaction.channel instanceof AnnouncementThreadChannel ||
         interaction.channel instanceof ThreadChannel
