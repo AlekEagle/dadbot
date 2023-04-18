@@ -177,10 +177,9 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
       voiceStates: 0,
       channels: 0,
       // Obligatory limits to try and cut back on memory leaks/memory exhaustion problems
+      // Limit the number of cached members per guild to 500, in theory this shouldn't have an impact on Dad's functionality, but we aren't in physics class
       members: 500,
-      // Limit the number of cached channels per guild to 50, in theory this shouldn't have an impact on Dad's functionality, but we aren't in physics class
-      channels: 50,
-      // Limit the number of cached roles per guild to 50,in theory this shouldn't have an impact on Dad's functionality, but we aren't in physics class
+      // Limit the number of cached roles per guild to 50, in theory this shouldn't have an impact on Dad's functionality, but we aren't in physics class
       roles: 50,
       // Worst case, limit users and/or guilds. Hopefully it doesn't reach that point
       /*
