@@ -41,7 +41,7 @@ export default class Dadhook extends Webhook {
     try {
       let webhooks = await channel.guild.getWebhooks();
       webhook = webhooks.find((w) => w.name === webhookName);
-    } catch () {
+    } catch (_) {
       throw new Error(
         'The bot does not have the "Manage Webhooks" permission for this guild.'
       );
@@ -52,7 +52,7 @@ export default class Dadhook extends Webhook {
         if (webhook.channelID !== channel.id)
           await webhook.edit({ channelID: channel.id });
         return Dadhook.promoteToDadhook(webhook);
-      } catch () {
+      } catch (_) {
         throw new Error(
           'The bot does not have the permissions to move the webhook.'
         );
@@ -65,7 +65,7 @@ export default class Dadhook extends Webhook {
             avatar: await Dadhook.getAvatar(channel.client),
           })
         );
-      } catch () {
+      } catch (_) {
         throw new Error(
           'The bot does not have permissions to create a new webhook.'
         );
