@@ -100,18 +100,9 @@ export default async function AutoResponseEvent(msg: Message) {
     msg.client.rest.channels
       .createMessage(msg.channelID, {
         allowedMentions: {
-          everyone: msg.mentions.everyone,
-          roles: msg.mentions.roles
-            .map((roleId) =>
-              (msg.channel as TextableChannel).guild.roles.get(roleId)
-            )
-            .filter(
-              (role) =>
-                role.mentionable ||
-                msg.member?.permissions.has("MENTION_EVERYONE")
-            )
-            .map((role) => role.id),
-          users: msg.mentions.users.slice(0, 2).map((user) => user.id),
+          everyone: msg.mentions.everyone, // Only mention everyone if the triggering message mentions everyone 
+          roles: msg.mentions.roles.slice(0, 2), // Mention a maximum of 2 roles the triggering message successfully mentioned
+          users: msg.mentions.users.slice(0, 2).map((user) => user.id), // Limit to 2 user mentions
         },
         content: `Hi ${hiContent}, I'm ${imContent}!`,
       })
