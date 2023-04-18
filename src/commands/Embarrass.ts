@@ -7,7 +7,7 @@ import {
 import { SlashCommand, OptionBuilder } from "oceanic.js-interactions";
 import Dadhook from "../utils/Dadhook";
 import Lists from "../utils/Lists";
-import { client } from "..";
+import { client, logger } from "..";
 
 const embarrass = new SlashCommand(
   "embarrass",
@@ -63,6 +63,7 @@ const embarrass = new SlashCommand(
             : "Okay, there, I am embarrassed a friend for you.",
       });
     } catch (e) {
+      logger.error(e);
       interaction.createFollowup({ content: (e as Error).message });
     }
   }
