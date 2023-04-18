@@ -35,28 +35,41 @@ export default class Dadhook extends Webhook {
       PrivateChannel | AnnouncementThreadChannel | ThreadChannel
     >
   ) {
-    // Check if the bot has webhook permission for the guild
-    if (
-      !channel.guild
-        .permissionsOf(channel.guild.clientMember)
-        .has("MANAGE_WEBHOOKS")
-    )
+    // Screw checking for permissions, we're just going to try/catch missing permission errors
+    let webhook: Webhook;
+
+    try {
+      let webhooks = await channel.guild.getWebhooks();
+      webhook = webhooks.find((w) => w.name === webhookName);
+    } catch () {
       throw new Error(
         'The bot does not have the "Manage Webhooks" permission for this guild.'
       );
-    const webhooks = await channel.guild.getWebhooks(),
-      webhook = webhooks.find((w) => w.name === webhookName);
+    }
 
     if (webhook) {
-      await webhook.edit({ channelID: channel.id });
-      return Dadhook.promoteToDadhook(webhook);
+      try {
+        if (webhook.channelID !== channel.id)
+          await webhook.edit({ channelID: channel.id });
+        return Dadhook.promoteToDadhook(webhook);
+      } catch () {
+        throw new Error(
+          'The bot does not have the permissions to move the webhook.'
+        );
+      }
     } else {
-      return Dadhook.promoteToDadhook(
-        await channel.createWebhook({
-          name: webhookName,
-          avatar: await Dadhook.getAvatar(channel.client),
-        })
-      );
+      try {
+        return Dadhook.promoteToDadhook(
+          await channel.createWebhook({
+            name: webhookName,
+            avatar: await Dadhook.getAvatar(channel.client),
+          })
+        );
+      } catch () {
+        throw new Error(
+          'The bot does not have permissions to create a new webhook.'
+        );
+      }
     }
   }
 }
