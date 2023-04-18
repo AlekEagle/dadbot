@@ -177,13 +177,17 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
       voiceStates: 0,
       channels: 0,
       // Obligatory limits to try and cut back on memory leaks/memory exhaustion problems
-      members: 10000,
-      // Worst case, limit users, roles, guilds, and/or channels. Hopefully it doesn't reach that point
+      members: 500,
+      // Limit the number of cached channels per guild to 50, in theory this shouldn't have an impact on Dad's functionality, but we aren't in physics class
+      channels: 50,
+      // Limit the number of cached roles per guild to 50,in theory this shouldn't have an impact on Dad's functionality, but we aren't in physics class
+      roles: 50,
+      // Worst case, limit users and/or guilds. Hopefully it doesn't reach that point
       /*
-      users: 10000, // If we limit users, we'll need another way to roughly determine user count.
-      roles: 10000,
+      // If we limit users, we'll need another way to roughly determine user count.
+      users: 10000,
+      // If we limit guilds, we are going to have one hell of a time making sure nothing breaks
       guilds: 100,
-      channels: 10000,
       */
     },
     defaultImageFormat: "png",
