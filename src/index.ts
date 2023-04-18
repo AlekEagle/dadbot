@@ -234,6 +234,15 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
 
   handler = new CommandHandler(client);
 
+  // Handle errors
+  handler.on("error", (error) => {
+    interaction.createMessage({
+      content: "Whoops! I made a mistake and I'm not sure how to handle it! Try the command again and see if it works this time. If it continues to not work, please let us know in https://alekeagle.com/d",
+      flags: Constants.MessageFlags.EPHEMERAL,
+    });
+    logger.error(error);
+  });
+
   // Handle unregistered message components.
   handler.on("unhandledMessageComponent", (interaction) => {
     interaction.createMessage({
