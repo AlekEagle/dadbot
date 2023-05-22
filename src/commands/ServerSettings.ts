@@ -28,12 +28,8 @@ const serverSettings = new SlashCommand(
 const viewServerSettings = new Subcommand(
   "view",
   "View the current settings for the server!",
-  {
-    defaultMemberPermissions: Constants.Permissions.MANAGE_GUILD.toString(),
-    dmPermissions: false,
-  },
   {},
-  async (_, interaction) => {
+  async (interaction) => {
     const message = await interaction.acknowledge(true);
     const settings = await getGuildSettings(interaction.guildID);
     const embed = {
@@ -74,10 +70,6 @@ const serverAutoResponseSettings = new Subcommand(
   "autoresponses",
   "Manage The automatic responses from Dad Bot across the server!",
   {
-    defaultMemberPermissions: Constants.Permissions.MANAGE_GUILD.toString(),
-    dmPermissions: false,
-  },
-  {
     response: OptionBuilder.String("The response to enable or disable.", true, {
       choices: enumToArray(Flags).map((flag) => ({
         name: flag
@@ -94,7 +86,7 @@ const serverAutoResponseSettings = new Subcommand(
       true
     ),
   },
-  async (args, interaction) => {
+  async (interaction, args) => {
     const message = await interaction.acknowledge(true);
     const settings = await getGuildSettings(interaction.guildID);
     let flags = settings.flags;
@@ -126,10 +118,6 @@ const serverRNGSettings = new Subcommand(
   "rng",
   "Manage RNG settings for Dad Bot across the server!",
   {
-    defaultMemberPermissions: Constants.Permissions.MANAGE_GUILD.toString(),
-    dmPermissions: false,
-  },
-  {
     percentage: OptionBuilder.Integer(
       "The percentage chance of Dad Bot responding to a message.",
       true,
@@ -139,7 +127,7 @@ const serverRNGSettings = new Subcommand(
       }
     ),
   },
-  async (args, interaction) => {
+  async (interaction, args) => {
     const message = await interaction.acknowledge(true);
     await setGuildSettings(
       interaction.guildID,
@@ -158,12 +146,8 @@ serverSettings.addSubcommand(serverRNGSettings);
 const resetServerSettings = new Subcommand(
   "reset",
   "Reset the settings for the server to the default!",
-  {
-    defaultMemberPermissions: Constants.Permissions.MANAGE_GUILD.toString(),
-    dmPermissions: false,
-  },
   {},
-  async (_, interaction) => {
+  async (interaction) => {
     const message = await interaction.acknowledge(true);
     await setGuildSettings(interaction.guildID);
 

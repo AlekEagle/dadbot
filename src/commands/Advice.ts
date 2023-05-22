@@ -6,7 +6,7 @@ const advice = new SlashCommand(
   "Get some advice.",
   {},
   {},
-  async (_, interaction) => {
+  async (interaction) => {
     interaction.createMessage({
       content: Lists.advice[Math.floor(Math.random() * Lists.advice.length)],
     });

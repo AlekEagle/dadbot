@@ -24,16 +24,12 @@ const viewChannelSettings = new Subcommand(
   "view",
   "View the current settings for the channel!",
   {
-    defaultMemberPermissions: Constants.Permissions.MANAGE_CHANNELS.toString(),
-    dmPermissions: false,
-  },
-  {
     channel: OptionBuilder.Channel(
       "The channel to view the settings for.",
       false
     ),
   },
-  async (args, interaction) => {
+  async (interaction, args) => {
     const message = await interaction.acknowledge(true);
 
     // Exclude weird channels
@@ -92,10 +88,6 @@ const channelAutoResponseSettings = new Subcommand(
   "autoresponses",
   "Manage The automatic responses from Dad Bot for a channel!",
   {
-    defaultMemberPermissions: Constants.Permissions.MANAGE_CHANNELS.toString(),
-    dmPermissions: false,
-  },
-  {
     response: OptionBuilder.String("The response to enable or disable.", true, {
       choices: enumToArray(Flags).map((flag) => ({
         name: flag
@@ -116,7 +108,7 @@ const channelAutoResponseSettings = new Subcommand(
       false
     ),
   },
-  async (args, interaction) => {
+  async (interaction, args) => {
     const message = await interaction.acknowledge(true);
 
     // Exclude weird channels
@@ -163,10 +155,6 @@ const channelRNGSettings = new Subcommand(
   "rng",
   "Manage RNG settings for Dad Bot for a channel!",
   {
-    defaultMemberPermissions: Constants.Permissions.MANAGE_CHANNELS.toString(),
-    dmPermissions: false,
-  },
-  {
     percentage: OptionBuilder.Integer(
       "The percentage chance of Dad Bot responding to a message.",
       true,
@@ -180,7 +168,7 @@ const channelRNGSettings = new Subcommand(
       false
     ),
   },
-  async (args, interaction) => {
+  async (interaction, args) => {
     const message = await interaction.acknowledge(true);
 
     // Exclude weird channels
@@ -215,16 +203,12 @@ const resetChannelSettings = new Subcommand(
   "reset",
   "Reset the settings for a channel!",
   {
-    defaultMemberPermissions: Constants.Permissions.MANAGE_CHANNELS.toString(),
-    dmPermissions: false,
-  },
-  {
     channel: OptionBuilder.Channel(
       "The channel to change the settings for.",
       false
     ),
   },
-  async (args, interaction) => {
+  async (interaction, args) => {
     const message = await interaction.acknowledge(true);
 
     // Exclude weird channels

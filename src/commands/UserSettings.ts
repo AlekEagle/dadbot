@@ -18,11 +18,8 @@ const userSettings = new SlashCommand(
 const viewUserSettings = new Subcommand(
   "view",
   "View your current settings!",
-  {
-    dmPermissions: true,
-  },
   {},
-  async (_, interaction) => {
+  async (interaction) => {
     const message = await interaction.acknowledge(true);
 
     const settings = await getUserSettings(interaction.user.id);
@@ -66,9 +63,6 @@ const userAutoResponseSettings = new Subcommand(
   "autoresponses",
   "Manage The automatic responses from Dad Bot for yourself!",
   {
-    dmPermissions: true,
-  },
-  {
     response: OptionBuilder.String("The response to enable or disable.", true, {
       choices: enumToArray(Flags).map((flag) => ({
         name: flag
@@ -85,7 +79,7 @@ const userAutoResponseSettings = new Subcommand(
       true
     ),
   },
-  async (args, interaction) => {
+  async (interaction, args) => {
     const message = await interaction.acknowledge(true);
 
     const settings = await getUserSettings(interaction.user.id);
@@ -118,9 +112,6 @@ const userRNGSettings = new Subcommand(
   "rng",
   "Manage RNG settings for Dad Bot for yourself!",
   {
-    dmPermissions: true,
-  },
-  {
     percentage: OptionBuilder.Integer(
       "The percentage chance of Dad Bot responding to a message.",
       true,
@@ -130,7 +121,7 @@ const userRNGSettings = new Subcommand(
       }
     ),
   },
-  async (args, interaction) => {
+  async (interaction, args) => {
     const message = await interaction.acknowledge(true);
 
     await setUserSettings(
@@ -150,11 +141,8 @@ userSettings.addSubcommand(userRNGSettings);
 const resetUserSettings = new Subcommand(
   "reset",
   "Reset your settings!",
-  {
-    dmPermissions: true,
-  },
   {},
-  async (_, interaction) => {
+  async (interaction) => {
     const message = await interaction.acknowledge(true);
 
     await setUserSettings(interaction.user.id);

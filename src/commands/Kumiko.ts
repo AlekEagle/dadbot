@@ -6,7 +6,7 @@ const kumiko = new SlashCommand(
   "Just Kumiko.",
   {},
   {},
-  async (_, interaction) => {
+  async (interaction) => {
     interaction.createMessage({
       content: Lists.kumiko[Math.floor(Math.random() * Lists.kumiko.length)],
     });

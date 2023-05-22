@@ -10,7 +10,7 @@ const info = new SlashCommand(
   "Get info about the bot.",
   {},
   {},
-  async (_, interaction) => {
+  async (interaction) => {
     let clusterData: {
       id: number;
       guildCount: number;

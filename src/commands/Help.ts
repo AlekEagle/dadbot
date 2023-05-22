@@ -13,8 +13,7 @@ const helpBasics = new Subcommand(
   "basics",
   "Learn the basics of Dad Bot!",
   {},
-  {},
-  async (_, interaction) => {
+  async (interaction) => {
     await interaction.createInitialMessage({
       embeds: [
         {
@@ -55,8 +54,7 @@ const helpSettings = new Subcommand(
   "settings",
   "Manage Dad Bot settings",
   {},
-  {},
-  async (_, interaction) => {
+  async (interaction) => {
     await interaction.createInitialMessage({
       embeds: [
         {
@@ -97,8 +95,7 @@ const helpAutoresponses = new Subcommand(
   "autoresponses",
   "Learn about Dad Bot's auto responses!",
   {},
-  {},
-  async (_, interaction) => {
+  async (interaction) => {
     await interaction.createInitialMessage({
       embeds: [
         {

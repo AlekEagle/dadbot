@@ -6,7 +6,7 @@ const dab = new SlashCommand(
   "Dads dabbing!",
   {},
   {},
-  async (_, interaction) => {
+  async (interaction) => {
     interaction.createMessage({
       content:
         Lists.dadsDabbing[Math.floor(Math.random() * Lists.dadsDabbing.length)],

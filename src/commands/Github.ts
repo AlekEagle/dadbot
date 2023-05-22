@@ -5,7 +5,7 @@ const github = new SlashCommand(
   "Take a look at the Dad Bot source code!!",
   {},
   {},
-  (_, interaction) => {
+  (interaction) => {
     interaction.createMessage({
       content:
         "Here, as well as the other components that aren't built directly into dad, enjoy! https://github.com/AlekEagle/dadbot https://github.com/AlekEagle/dadbot-cluster-manager https://github.com/AlekEagle/dadbot-cluster-client",

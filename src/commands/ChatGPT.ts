@@ -7,7 +7,7 @@ const chatGPT = new SlashCommand(
   {
     prompt: OptionBuilder.String("The prompt for GPT-3 to use", true),
   },
-  async (_, interaction) => {
+  async (interaction) => {
     // Acknowledge the interaction so the user knows the bot is working and ChatGPT is thinking.
     await interaction.defer();
     // Wait anywhere from 1 to 5 seconds to simulate thinking.

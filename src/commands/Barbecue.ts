@@ -6,7 +6,7 @@ const barbecue = new SlashCommand(
   "Mmm tasty.",
   {},
   {},
-  (_, interaction) => {
+  (interaction) => {
     incrementBarbecuesServed();
     interaction.createMessage({
       embeds: [

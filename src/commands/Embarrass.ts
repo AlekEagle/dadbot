@@ -18,7 +18,7 @@ const embarrass = new SlashCommand(
   {
     user: OptionBuilder.User("The user to embarrass.", false),
   },
-  async (args, interaction) => {
+  async (interaction, args) => {
     try {
       await interaction.defer(Constants.MessageFlags.EPHEMERAL);
       if (

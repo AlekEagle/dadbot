@@ -6,7 +6,7 @@ const mio = new SlashCommand(
   "Just Mio.",
   {},
   {},
-  async (_, interaction) => {
+  async (interaction) => {
     interaction.createMessage({
       content: Lists.mio[Math.floor(Math.random() * Lists.mio.length)],
     });

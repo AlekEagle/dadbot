@@ -6,7 +6,7 @@ const dadjoke = new SlashCommand(
   "Dad jokes.",
   {},
   {},
-  async (_, interaction) => {
+  async (interaction) => {
     interaction.createMessage({
       content: Lists.jokes[Math.floor(Math.random() * Lists.jokes.length)],
     });
