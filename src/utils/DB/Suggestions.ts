@@ -1,22 +1,22 @@
-import { sequelize, init as initDB } from '.';
-import { Model, DataTypes } from 'sequelize';
+import { sequelize, init as initDB } from ".";
+import { Model, DataTypes } from "sequelize";
 
 export default class Suggestions extends Model {
-  userID: string;
-  type: number;
-  guildID: string;
-  channelID: string;
-  messageID: string;
-  content: string;
-  attachments: {
+  declare userID: string;
+  declare type: number;
+  declare guildID: string;
+  declare channelID: string;
+  declare messageID: string;
+  declare content: string;
+  declare attachments: {
     filename: string;
     url: string;
   }[];
-  replies: { replied: string; content: string; at: Date }[];
-  id: number;
-  suggestionMsgID: string;
-  createdAt: Date;
-  updatedAt: Date;
+  declare replies: { replied: string; content: string; at: Date }[];
+  declare id: number;
+  declare suggestionMsgID: string;
+  declare createdAt: Date;
+  declare updatedAt: Date;
 }
 (async function () {
   await initDB();
@@ -31,17 +31,17 @@ export default class Suggestions extends Model {
       attachments: { type: DataTypes.JSON, allowNull: true },
       replies: { type: DataTypes.JSON, allowNull: false, defaultValue: [] },
       id: { type: DataTypes.INTEGER, unique: true, autoIncrement: true },
-      suggestionMsgID: { type: DataTypes.STRING, allowNull: true }
+      suggestionMsgID: { type: DataTypes.STRING, allowNull: true },
     },
     {
-      sequelize
+      sequelize,
     }
   );
 
   Suggestions.sync().then(
     () => {},
-    err => {
-      console.error('Unable to sync Suggestions! Error: ', err);
+    (err) => {
+      console.error("Unable to sync Suggestions! Error: ", err);
     }
   );
 })();

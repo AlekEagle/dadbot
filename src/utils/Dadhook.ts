@@ -1,11 +1,9 @@
 import {
-  TextableChannel,
   Webhook,
   Client,
-  AnyTextChannelWithoutGroup,
+  AnyTextableChannel,
   PrivateChannel,
   AnnouncementThreadChannel,
-  PublicThreadChannel,
   ThreadChannel,
 } from "oceanic.js";
 
@@ -31,7 +29,7 @@ export default class Dadhook extends Webhook {
 
   public static async giveMeDadhook(
     channel: Exclude<
-      AnyTextChannelWithoutGroup,
+      AnyTextableChannel,
       PrivateChannel | AnnouncementThreadChannel | ThreadChannel
     >
   ) {

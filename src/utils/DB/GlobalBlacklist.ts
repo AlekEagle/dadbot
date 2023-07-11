@@ -1,9 +1,9 @@
-import { sequelize, init as initDB } from '.';
-import { Model, DataTypes } from 'sequelize';
+import { sequelize, init as initDB } from ".";
+import { Model, DataTypes } from "sequelize";
 
 export default class GlobalBlacklist extends Model {
-  id: string;
-  cmds: string[];
+  declare id: string;
+  declare cmds: string[];
 }
 
 (async function () {
@@ -11,17 +11,17 @@ export default class GlobalBlacklist extends Model {
   GlobalBlacklist.init(
     {
       id: { type: DataTypes.STRING, primaryKey: true },
-      cmds: DataTypes.ARRAY(DataTypes.STRING)
+      cmds: DataTypes.ARRAY(DataTypes.STRING),
     },
     {
-      sequelize
+      sequelize,
     }
   );
 
   GlobalBlacklist.sync().then(
     () => {},
-    err => {
-      console.error('Unable to sync GlobalBlacklist! Error: ', err);
+    (err) => {
+      console.error("Unable to sync GlobalBlacklist! Error: ", err);
     }
   );
 })();

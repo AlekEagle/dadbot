@@ -2,9 +2,9 @@ import { sequelize, init as initDB } from '.';
 import { Model, DataTypes } from 'sequelize';
 
 export default class Options extends Model {
-  id: string;
-  flags: number;
-  RNG: number;
+  declare id: string;
+  declare flags: number;
+  declare RNG: number;
 }
 
 (async function () {

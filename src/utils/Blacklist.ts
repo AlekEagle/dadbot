@@ -1,5 +1,5 @@
 import GBlacklist from "./DB/GlobalBlacklist";
-import { Message, AnyGuildChannel, AnyTextChannel } from "oceanic.js";
+import { Message } from "oceanic.js";
 
 export interface BlacklistData {
   type: 0 | 1 | 2;

@@ -1,4 +1,4 @@
-import { AnyGuildTextChannel, Constants } from "oceanic.js";
+import { AnyTextableGuildChannel, Constants } from "oceanic.js";
 import {
   SlashCommand,
   Subcommand,
@@ -50,8 +50,8 @@ const viewChannelSettings = new Subcommand(
 
     const embed = {
       title:
-        "Channel Settings for " + (args.channel as AnyGuildTextChannel)?.name ||
-        "this channel",
+        "Channel Settings for " +
+          (args.channel as AnyTextableGuildChannel)?.name || "this channel",
       description:
         "Here are the current settings for the channel, if you need a more detailed explanation of what each setting does, use `/help settings`.",
       fields: [

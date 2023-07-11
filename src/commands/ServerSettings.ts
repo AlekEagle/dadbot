@@ -1,17 +1,12 @@
-import { AnyGuildTextChannel, Constants } from "oceanic.js";
+import { Constants } from "oceanic.js";
 import {
   SlashCommand,
-  SubcommandGroup,
   Subcommand,
   OptionBuilder,
 } from "oceanic.js-interactions";
 import {
-  getUserSettings,
-  getChannelSettings,
   getGuildSettings,
-  setChannelSettings,
   setGuildSettings,
-  setUserSettings,
   Flags,
   enumToArray,
 } from "../utils/Settings";

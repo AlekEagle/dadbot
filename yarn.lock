@@ -288,8 +288,8 @@ __metadata:
     dotenv: ^16.0.3
     ms: ^2.1.3
     node-fetch: ^2.6.9
-    oceanic.js: ^1.6.1-dev.ecc3a90
-    oceanic.js-interactions: ^0.0.9
+    oceanic.js: ^1.7.1
+    oceanic.js-interactions: latest
     pg: ^8.10.0
     pg-hstore: ^2.3.4
     sequelize: ^6.29.3
@@ -492,27 +492,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"oceanic.js-interactions@npm:^0.0.9":
-  version: 0.0.9
-  resolution: "oceanic.js-interactions@npm:0.0.9"
+"oceanic.js-interactions@npm:latest":
+  version: 0.0.10
+  resolution: "oceanic.js-interactions@npm:0.0.10"
   dependencies:
-    oceanic.js: 1.6.1-dev.ecc3a90
-  checksum: d198fd43aac6d272586fcc33b33eb870cbc0895091d344a7100193caffa118d0bfd7a93d5235b4dbb1d38f5f9f02ea3bdc2d57359ea2d20e536e23438aae0875
+    oceanic.js: 1.7.1
+  checksum: 11fb59417d71b0e26ac206bbccca289fea59f66b0964f28e130a142525f2c74bb51ef4af068d5287eab938a217a680098aa50728f32f8566aa390af6b034cdd8
   languageName: node
   linkType: hard
 
-"oceanic.js@npm:1.6.1-dev.ecc3a90, oceanic.js@npm:^1.6.1-dev.ecc3a90":
-  version: 1.6.1-dev.ecc3a90
-  resolution: "oceanic.js@npm:1.6.1-dev.ecc3a90"
+"oceanic.js@npm:1.7.1, oceanic.js@npm:^1.7.1":
+  version: 1.7.1
+  resolution: "oceanic.js@npm:1.7.1"
   dependencies:
     "@discordjs/voice": ^0.16.0
-    tslib: ^2.5.2
-    undici: ^5.22.0
+    tslib: ^2.5.3
+    undici: ^5.22.1
     ws: ^8.13.0
   dependenciesMeta:
     "@discordjs/voice":
       optional: true
-  checksum: 705191962f79acacd31804d515934a4ab048b5f1dac1a4f5dd86ed337dd3907b7853dffcd95d6dd4c0ccac6682cbf283b5958ef3fa93f3476b4540a1d331014c
+  checksum: 00532693a55cdd55db4c5991b778edcb1d1158ab8467b884bfe2d174b2fc6cbfcdda66633b07865dfdb4e6f4928e4dd937e1f7e5ecccb3ac4d096283945c6266
   languageName: node
   linkType: hard
 
@@ -835,10 +835,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.5.0, tslib@npm:^2.5.2":
+"tslib@npm:^2.5.0":
   version: 2.5.2
   resolution: "tslib@npm:2.5.2"
   checksum: 4d3c1e238b94127ed0e88aa0380db3c2ddae581dc0f4bae5a982345e9f50ee5eda90835b8bfba99b02df10a5734470be197158c36f9129ac49fdc14a6a9da222
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.5.3":
+  version: 2.6.0
+  resolution: "tslib@npm:2.6.0"
+  checksum: c01066038f950016a18106ddeca4649b4d76caa76ec5a31e2a26e10586a59fceb4ee45e96719bf6c715648e7c14085a81fee5c62f7e9ebee68e77a5396e5538f
   languageName: node
   linkType: hard
 
@@ -869,7 +876,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^5.21.0, undici@npm:^5.22.0":
+"undici@npm:^5.21.0, undici@npm:^5.22.1":
   version: 5.22.1
   resolution: "undici@npm:5.22.1"
   dependencies:

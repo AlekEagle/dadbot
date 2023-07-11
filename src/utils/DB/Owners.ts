@@ -1,9 +1,9 @@
-import { sequelize, init as initDB } from '.';
-import { Model, DataTypes } from 'sequelize';
+import { sequelize, init as initDB } from ".";
+import { Model, DataTypes } from "sequelize";
 
 export default class Owners extends Model {
-  id: string;
-  admin: boolean;
+  declare id: string;
+  declare admin: boolean;
 }
 
 (async function () {
@@ -11,17 +11,17 @@ export default class Owners extends Model {
   Owners.init(
     {
       id: { type: DataTypes.STRING, primaryKey: true },
-      admin: DataTypes.BOOLEAN
+      admin: DataTypes.BOOLEAN,
     },
     {
-      sequelize
+      sequelize,
     }
   );
 
   Owners.sync().then(
     () => {},
-    err => {
-      console.error('Unable to sync Owners! Error: ', err);
+    (err) => {
+      console.error("Unable to sync Owners! Error: ", err);
     }
   );
 })();
