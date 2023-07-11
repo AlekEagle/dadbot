@@ -27,8 +27,8 @@ Dad Bot is an absolute mess of code, and I'm sorry. I'm working on cleaning it u
     +-- dadbot-cluster-client
    ```
 
-3. Install the dependencies for each repo
-4. Transpile the TypeScript for each repo
+3. Install the dependencies for each repo (`npm i` in each repo or whatever the hell package manager you use)
+4. Transpile the TypeScript for each repo (`npm run build` in each repo)
 5. Prepare a PostgreSQL database for Dad Bot (Dad Bot deserves his own database, he'll create his own tables as needed)
 6. Prepare Dad Bot's `.env` file (There is an `example.env` file in the repo, use that as a template)
 7. Make sure the cluster manager is configured correctly (Those instructions are in the cluster manager repo)
