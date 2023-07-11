@@ -95,7 +95,7 @@ export default async function AutoResponseEvent(msg: Message) {
         !formattingMatchData || formattingMatchData.index > imMatchData.index
           ? `${imMatchData[2]}`
           : `${formattingMatchData[0]}${imMatchData[2]}`,
-      imContent = nick ? nick : "Dad";
+      imContent = nick ? nick : (Math.random() * 1000 > 999 ? "Dda" : "Dad");
 
     msg.client.rest.channels
       .createMessage(msg.channelID, {
