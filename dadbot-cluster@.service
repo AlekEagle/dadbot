@@ -7,7 +7,7 @@ After=dadbot-cluster-manager.service
 # TO BE FILLED BY OEM
 WorkingDirectory=/path/to/dadbot
 User=dadbot
-#end of TO BE FILLED BY OEM
+# end of TO BE FILLED BY OEM
 Restart=always
 ExecStart=./start-dadbot %i
 

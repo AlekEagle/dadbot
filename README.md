@@ -31,8 +31,8 @@ Dad Bot is an absolute mess of code, and I'm sorry. I'm working on cleaning it u
 4. Transpile the TypeScript for each repo (`npm run build` in each repo)
 5. Prepare a PostgreSQL database for Dad Bot (Dad Bot deserves his own database, he'll create his own tables as needed)
 6. Prepare Dad Bot's `.env` file (There is an `example.env` file in the repo, use that as a template)
-7. Make sure the cluster manager is configured correctly (Those instructions are in the cluster manager repo)
-8. (Optional, but recommended for production environments) Place the `dadbot-cluster@.service` file in `/etc/systemd/system/` and enable it with `systemctl enable dadbot-cluster@<ClusterID>.service` (Replace `<ClusterID>` with the ID of the cluster you want to enable and repeat for each cluster you want to enable)
+7. Make sure the cluster manager is configured correctly (Those instructions are in the [cluster manager repo](https://github.com/AlekEagle/dadbot-cluster-manager#running-your-own-instance))
+8. (Optional, but recommended for production environments) Replace the placeholder fields in the `dadbot-cluster@.service` file with the correct paths and user information, copy it to `/etc/systemd/system/`, run `systemctl daemon-reload`, and enable it with `systemctl enable dadbot-cluster@<ClusterID>.service` (Replace `<ClusterID>` with the ID of the cluster you want to enable and repeat for each cluster you want to enable)
 9. Run the damn thing.
    - Systemd service: `systemctl start dadbot-cluster@0.service ...`
    - Manually: (Make sure you manually set `CLUSTER_ID` in the `.env` file or in the environment) `node .`
