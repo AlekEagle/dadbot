@@ -58,7 +58,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
 
   // Initialize the cluster client.
   cluster = new DadbotClusterClient(
-    { name: "ws", options: { url: "ws://localhost:8080/manager" } },
+    { name: "ws", options: { url: `ws://${process.env.MANAGER_HOST || 'localhost'}:${process.env.MANAGER_PORT || '8080'}/manager` } },
     process.env.CLUSTER_MANAGER_TOKEN,
     JSON.parse(await readFile("./data/schema.json", "utf-8")),
     {
