@@ -424,7 +424,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
 
   // Finally, tell the client to connect to Discord.
   client.connect();
-})();
+})().catch(console.error);
 
 function deathCroak(thing: string | number) {
   client.disconnect(false);
