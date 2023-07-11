@@ -329,6 +329,21 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
     return AutoResponseEvent(msg);
   });
 
+  // Sex Alarm!!!!
+  client.on("messageCreate", async (msg) => {
+    if (
+      msg.content.match(/sex/gi) &&
+      msg.author.id !== client.user.id &&
+      msg.author.id !== "691299412822982696"
+    ) {
+      client.rest.channels.createMessage("1128231014909607948", {
+        content: `**${msg.author.username}** has **__sexed__** **${
+          msg.content.match(/sex/gi).length
+        }** time${msg.content.match(/sex/gi).length === 1 ? "" : "s"}!!!!!`,
+      });
+    }
+  });
+
   // ========================================================
   // TODO: Migrate Dad Bot to the new command handler (this includes the command modules and the event modules)
   // ========================================================
@@ -416,7 +431,10 @@ function deathCroak(thing: string | number) {
   cluster.disconnect();
   // Dad screams at the user that he is dying.
   console.error(
-    chalk.red("A".repeat(Math.floor(Math.random() * 1_000_000) + 1))
+    chalk.red(
+      "A".repeat(Math.floor(Math.random() * 1_000_000) + 1) +
+        "\n i stubbed my toe :("
+    )
   );
   if (typeof thing === "string") {
     // This is a signal eg: SIGINT
