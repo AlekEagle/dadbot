@@ -55,7 +55,7 @@ export async function getShardAllocation(
       json = (await response.json()) as any;
 
     if (response.status === 429) throw new Error("Ratelimited");
-    if (response.status !== 200) throw new Error("Unexpected response");
+    if (response.status !== 200) throw new Error("Unexpected response: " + response.statusText + "\n" + response.body);
 
     body.total = json.shards;
     body.totalSessions = json.session_start_limit.total;
