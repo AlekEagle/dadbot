@@ -8,24 +8,33 @@ Contributing is super simple, you can fork the repo, make your contribution, and
 
 ## Running Your Own Instance
 
-Dad Bot is a bit of a complicated mess, but don't worry, we can go through it together. Dad Bot uses a few services and modules that aren't included. One of them is [dadbot-cluster-client](https://github.com/AlekEagle/dadbot-cluster-client), this should be in the same directory as the root directory of Dad Bot, so it should look something like this:
+Dad Bot is an absolute mess of code, and I'm sorry. I'm working on cleaning it up, but it's a slow process. If you want to run your own instance of Dad Bot, you can do so by following these steps:
 
-```
-|
-+-- dadbot/
-|
-+-- dadbot-cluster-client/
-```
+1. Clone the necessary repos
 
-The next thing you want is the [dadbot-cluster-manager](https://github.com/AlekEagle/dadbot-cluster-manager). If you didn't catch on, Dad Bot is large enough that it needs to be split into multiple "clusters." A cluster in this context is just a process that handles a portion of Dad Bot's shards. The cluster manager can be placed anywhere you want it to be, but in this demonstration I'll be placing it in the same directory as everything else. so it should look something like this:
+   - Dad Bot (this repo)
+   - [Dad Bot Cluster Manager](https://github.com/AlekEagle/dadbot-cluster-manager)
+   - [Dad Bot Cluster Client](https://github.com/AlekEagle/dadbot-cluster-client)
 
-```
-|
-+-- dadbot/
-|
-+-- dadbot-cluster-client/
-|
-+-- dadbot-cluster-manager/
-```
+2. Organize the repos like so:
 
-Next, we need to install the node modules for everything, so in each directory, run `npm i` in each repo. Then, you need to run `npm run build` in all of the directories as well since they are all TypeScript projects. After that, create a .env file in the root directory of this project, model it with valid data, with the same keys of `example.env`. Then spin up the cluster manager with its included instructions, and then spin up Dad Dot with the additional environment variables `NODE_APP_INSTANCE=instance id 0 indexed` and `instances=# of total instances`. That should be it!
+   ```txt
+    |
+    +-- dadbot
+    |
+    +-- dadbot-cluster-manager
+    |
+    +-- dadbot-cluster-client
+   ```
+
+3. Install the dependencies for each repo
+4. Transpile the TypeScript for each repo
+5. Prepare a PostgreSQL database for Dad Bot (Dad Bot deserves his own database, he'll create his own tables as needed)
+6. Prepare Dad Bot's `.env` file (There is an `example.env` file in the repo, use that as a template)
+7. Make sure the cluster manager is configured correctly (Those instructions are in the cluster manager repo)
+8. (Optional, but recommended for production environments) Place the `dadbot-cluster@.service` file in `/etc/systemd/system/` and enable it with `systemctl enable dadbot-cluster@<ClusterID>.service` (Replace `<ClusterID>` with the ID of the cluster you want to enable and repeat for each cluster you want to enable)
+9. Run the damn thing.
+   - Systemd service: `systemctl start dadbot-cluster@0.service ...`
+   - Manually: (Make sure you manually set `CLUSTER_ID` in the `.env` file or in the environment) `node .`
+
+Want to run Dad in debug mode? Set the `DEBUG` environment variable to `true` in the `.env` file or in the environment and run the damn thing again.
