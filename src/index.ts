@@ -19,8 +19,11 @@ import { CommandHandler } from "oceanic.js-interactions";
 import * as Patreon from "./utils/Patreon";
 import Commands from "./commands";
 import AutoResponseEvent from "./events/AutoResponse";
+import AdminCommandHandler from "./events/AdminCommands";
 
 envConfig();
+
+export const evaluation = [process.env.DISCORD_ID_BOT_EVAL];
 
 export const isDebug = process.env.DEBUG === "true";
 export const token = !isDebug ? process.env.TOKEN : process.env.OTHER_TOKEN;
@@ -326,7 +329,11 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   }
 
   client.on("messageCreate", async (msg) => {
-    return AutoResponseEvent(msg);
+    if (evaluation.includes(msg.channelID)) {
+      return AdminCommandHandler(msg);
+    } else {
+      return AutoResponseEvent(msg);
+    }
   });
 
   // Sex Alarm!!!!
