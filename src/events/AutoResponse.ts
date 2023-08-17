@@ -115,6 +115,7 @@ export default async function AutoResponseEvent(msg: Message) {
     msg.content.match(KYS_MATCH) &&
     settings.value.flags & Flags.KISS_RESPONSES
   ) {
+    if (!doRandom(settings.value)) return;
     incrementResponseCount();
     msg.client.rest.channels
       .createMessage(msg.channelID, {
@@ -129,6 +130,7 @@ export default async function AutoResponseEvent(msg: Message) {
     msg.content.match(SHUT_UP_MATCH) &&
     settings.value.flags & Flags.SHUT_UP_RESPONSES
   ) {
+    if (!doRandom(settings.value)) return;
     incrementResponseCount();
     msg.client.rest.channels
       .createMessage(msg.channelID, {
@@ -145,6 +147,7 @@ export default async function AutoResponseEvent(msg: Message) {
     msg.content.match(GOODBYE_MATCH) &&
     settings.value.flags & Flags.GOODBYE_RESPONSES
   ) {
+    if (!doRandom(settings.value)) return;
     incrementResponseCount();
     msg.client.rest.channels
       .createMessage(msg.channelID, {
@@ -160,6 +163,7 @@ export default async function AutoResponseEvent(msg: Message) {
     msg.content.match(THANKS_MATCH) &&
     settings.value.flags & Flags.THANKS_RESPONSES
   ) {
+    if (!doRandom(settings.value)) return;
     incrementResponseCount();
     msg.client.rest.channels
       .createMessage(msg.channelID, {
@@ -175,6 +179,7 @@ export default async function AutoResponseEvent(msg: Message) {
     volumeDown(msg.content) &&
     settings.value.flags & Flags.SHOUTING_RESPONSES
   ) {
+    if (!doRandom(settings.value)) return;
     incrementResponseCount();
     msg.client.rest.channels
       .createMessage(msg.channelID, { content: "Keep your voice down!" })
