@@ -169,7 +169,6 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
       messages: 0,
       auditLogEntries: 0,
       integrations: 0,
-      channelThreads: 0,
       scheduledEvents: 0,
       guildThreads: 0,
       stageInstances: 0,
