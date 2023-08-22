@@ -220,9 +220,9 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
         Constants.Intents.MESSAGE_CONTENT,
       ],
       connectionProperties: {
-        browser: "Discord iOS",
-        device: "iPhone",
-        os: "iOS"
+        browser: "Discord Android",
+        device: "Samsung Galaxy Z Flip5",
+        os: "Android"
       },
     },
   });
