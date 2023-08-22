@@ -219,6 +219,11 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
         Constants.Intents.DIRECT_MESSAGE_REACTIONS,
         Constants.Intents.MESSAGE_CONTENT,
       ],
+      connectionProperties: {
+        browser: "Discord iOS",
+        device: "iPhone",
+        os: "iOS"
+      },
     },
   });
 
