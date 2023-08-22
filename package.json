@@ -13,7 +13,7 @@
     "dotenv": "^16.0.3",
     "ms": "^2.1.3",
     "node-fetch": "^2.6.9",
-    "oceanic.js": "^1.7.1",
+    "oceanic.js": "latest",
     "oceanic.js-interactions": "latest",
     "pg": "^8.10.0",
     "pg-hstore": "^2.3.4",
