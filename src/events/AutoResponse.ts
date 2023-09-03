@@ -59,6 +59,7 @@ export default async function AutoResponseEvent(msg: Message) {
     msg.content.match(WINNING_MATCH) &&
     settings.value.flags & Flags.WINNING_RESPONSES
   ) {
+    if (!doRandom(settings.value)) return;
     incrementResponseCount();
     switch (msg.content.match(WINNING_MATCH)[0]) {
       case "play":
