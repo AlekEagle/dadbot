@@ -103,7 +103,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
         cpuUsage: cpu,
         memoryUsage: Math.round(new Memory().raw() / 1024 / 1024),
       });
-    }, 5000);
+    }, 20e3);
   });
 
   // Set up the shard allocation.
