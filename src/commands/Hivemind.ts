@@ -39,19 +39,23 @@ import {
               .map((x) => `${x.username}'s computer named ${x.computer}`)
               .join('\n')}\n\`\`\``,
           });
+          break;
         case 502:
           interaction.createFollowup({
             content:
               "I'm sorry, I couldn't connect to the server. Please try again later.",
           });
+          break;
         case 503:
           interaction.createFollowup({
             content: 'There are no computers connected. Try again later.',
           });
+          break;
         default:
           interaction.createFollowup({
             content: 'Uhhh... something went wrong. Try again later.',
           });
+          break;
       }
     },
   );
