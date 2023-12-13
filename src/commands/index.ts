@@ -9,6 +9,7 @@ import Embarrass from "./Embarrass";
 import Felix from "./Felix";
 import Github from "./Github";
 import Help from "./Help";
+import Hivemind from './Hivemind';
 import Info from "./Info";
 import Kumiko from "./Kumiko";
 import Mio from "./Mio";
@@ -28,6 +29,7 @@ const commands = [
   Felix,
   Github,
   Help,
+  Hivemind,
   Info,
   Kumiko,
   Mio,
