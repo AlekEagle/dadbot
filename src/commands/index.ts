@@ -15,6 +15,7 @@ import Kumiko from './Kumiko';
 import Mio from './Mio';
 import Patreon from './Patreon';
 import ServerSettings from './ServerSettings';
+import SetActivity from './SetActivity';
 import UserSettings from './UserSettings';
 
 const commands = [
@@ -36,6 +37,7 @@ const commands = [
   Patreon,
   ServerSettings,
   UserSettings,
+  SetActivity,
 ];
 
 export default commands;
