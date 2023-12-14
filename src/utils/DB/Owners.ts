@@ -1,5 +1,5 @@
-import { sequelize, init as initDB } from ".";
-import { Model, DataTypes } from "sequelize";
+import { sequelize, init as initDB } from '.';
+import { Model, DataTypes } from 'sequelize';
 
 export default class Owners extends Model {
   declare id: string;
@@ -15,13 +15,13 @@ export default class Owners extends Model {
     },
     {
       sequelize,
-    }
+    },
   );
 
   Owners.sync().then(
     () => {},
     (err) => {
-      console.error("Unable to sync Owners! Error: ", err);
-    }
+      console.error('Unable to sync Owners! Error: ', err);
+    },
   );
 })();

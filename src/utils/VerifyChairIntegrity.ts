@@ -1,20 +1,20 @@
-import { createHash } from "node:crypto";
-import { DentInChairError } from "./DentInChairError";
+import { createHash } from 'node:crypto';
+import { DentInChairError } from './DentInChairError';
 
-export const knownGoodTextChairHash = "25acc7a27b",
-  knownGoodAsciiChairHash = "feedb74662";
+export const knownGoodTextChairHash = '25acc7a27b',
+  knownGoodAsciiChairHash = 'feedb74662';
 
 export default async function verifyChairIntegrity() {
   try {
-    const chair = (await import("./Chair")).default;
+    const chair = (await import('./Chair')).default;
     if (!chair || !chair.chair || !chair.ascii) throw new DentInChairError();
 
-    const textChairHash = createHash("shake256", { outputLength: 5 })
+    const textChairHash = createHash('shake256', { outputLength: 5 })
         .update(chair.chair)
-        .digest("hex"),
-      asciiChairHash = createHash("shake256", { outputLength: 5 })
+        .digest('hex'),
+      asciiChairHash = createHash('shake256', { outputLength: 5 })
         .update(chair.ascii)
-        .digest("hex");
+        .digest('hex');
 
     if (
       knownGoodAsciiChairHash !== asciiChairHash ||

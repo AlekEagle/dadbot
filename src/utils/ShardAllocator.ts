@@ -1,6 +1,5 @@
-import fetch from "node-fetch";
-import { Constants } from "oceanic.js";
-import { isDebug } from "..";
+import { Constants } from 'oceanic.js';
+import { isDebug } from '..';
 
 export let cachedShardAllocation: ShardAllocation | null = null;
 
@@ -28,7 +27,7 @@ export interface ShardAllocatorOptions {
 }
 
 export async function getShardAllocation(
-  options: ShardAllocatorOptions
+  options: ShardAllocatorOptions,
 ): Promise<ShardAllocation> {
   const { token, clusterID, clusters, force } = options,
     url = `https://discord.com/api/v${Constants.REST_VERSION}/gateway/bot`,
@@ -54,8 +53,8 @@ export async function getShardAllocation(
     const response = await fetch(url, { headers }),
       json = (await response.json()) as any;
 
-    if (response.status === 429) throw new Error("Ratelimited");
-    if (response.status !== 200) throw new Error("Unexpected response");
+    if (response.status === 429) throw new Error('Ratelimited');
+    if (response.status !== 200) throw new Error('Unexpected response');
 
     body.total = json.shards;
     body.totalSessions = json.session_start_limit.total;

@@ -7,7 +7,7 @@ export enum Level {
   ERROR = 1,
   WARN = 2,
   INFO = 3,
-  DEBUG = 4
+  DEBUG = 4,
 }
 function addZero(n: number): string {
   return n >= 0 && n < 10 ? '0' + n : n + '';
@@ -18,13 +18,13 @@ function date(): string {
     [
       addZero(now.getDate()),
       addZero(now.getMonth() + 1),
-      now.getFullYear()
+      now.getFullYear(),
     ].join('/'),
     [
       addZero(now.getHours()),
       addZero(now.getMinutes()),
-      addZero(now.getSeconds())
-    ].join(':')
+      addZero(now.getSeconds()),
+    ].join(':'),
   ].join(' ');
 }
 
@@ -70,9 +70,9 @@ export default class Logger {
             '\n' +
             (optionalParams.length > 0
               ? optionalParams
-                  .map(p => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
+                  .map((p) => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
                   .join(' ')
-              : '')
+              : ''),
         )
         .catch(() => {});
     }
@@ -80,15 +80,15 @@ export default class Logger {
       `${this.timestamp ? `${Chalk.bgBlue(date())} ` : ''}${Chalk.rgb(
         214,
         78,
-        207
+        207,
       )('[ERROR]')} ${Chalk.reset(
-        typeof message !== 'string' ? NodeUtil.inspect(message) : message
+        typeof message !== 'string' ? NodeUtil.inspect(message) : message,
       )}`,
       optionalParams.length > 0
         ? optionalParams
-            .map(p => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
+            .map((p) => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
             .join(' ')
-        : ''
+        : '',
     );
   }
 
@@ -102,9 +102,9 @@ export default class Logger {
             '\n' +
             (optionalParams.length > 0
               ? optionalParams
-                  .map(p => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
+                  .map((p) => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
                   .join(' ')
-              : '')
+              : ''),
         )
         .catch(() => {});
     }
@@ -112,15 +112,15 @@ export default class Logger {
       `${this.timestamp ? `${Chalk.bgBlue(date())} ` : ''}${Chalk.rgb(
         177,
         170,
-        55
+        55,
       )('[WARN]')} ${Chalk.reset(
-        typeof message !== 'string' ? NodeUtil.inspect(message) : message
+        typeof message !== 'string' ? NodeUtil.inspect(message) : message,
       )}`,
       optionalParams.length > 0
         ? optionalParams
-            .map(p => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
+            .map((p) => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
             .join(' ')
-        : ''
+        : '',
     );
   }
 
@@ -134,9 +134,9 @@ export default class Logger {
             '\n' +
             (optionalParams.length > 0
               ? optionalParams
-                  .map(p => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
+                  .map((p) => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
                   .join(' ')
-              : '')
+              : ''),
         )
         .catch(() => {});
     }
@@ -144,15 +144,15 @@ export default class Logger {
       `${this.timestamp ? `${Chalk.bgBlue(date())} ` : ''}${Chalk.rgb(
         47,
         184,
-        55
+        55,
       )('[INFO]')} ${Chalk.reset(
-        typeof message !== 'string' ? NodeUtil.inspect(message) : message
+        typeof message !== 'string' ? NodeUtil.inspect(message) : message,
       )}`,
       optionalParams.length > 0
         ? optionalParams
-            .map(p => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
+            .map((p) => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
             .join(' ')
-        : ''
+        : '',
     );
   }
 
@@ -170,9 +170,9 @@ export default class Logger {
             '\n' +
             (optionalParams.length > 0
               ? optionalParams
-                  .map(p => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
+                  .map((p) => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
                   .join(' ')
-              : '')
+              : ''),
         )
         .catch(() => {});
     }
@@ -180,15 +180,15 @@ export default class Logger {
       `${this.timestamp ? `${Chalk.bgBlue(date())} ` : ''}${Chalk.rgb(
         74,
         69,
-        220
+        220,
       )('[DEBUG]')} ${Chalk.reset(
-        typeof message !== 'string' ? NodeUtil.inspect(message) : message
+        typeof message !== 'string' ? NodeUtil.inspect(message) : message,
       )}`,
       optionalParams.length > 0
         ? optionalParams
-            .map(p => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
+            .map((p) => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
             .join(' ')
-        : ''
+        : '',
     );
   }
 
@@ -202,9 +202,9 @@ export default class Logger {
             '\n' +
             (optionalParams.length > 0
               ? optionalParams
-                  .map(p => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
+                  .map((p) => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
                   .join(' ')
-              : '')
+              : ''),
         )
         .catch(() => {});
     }
@@ -212,15 +212,15 @@ export default class Logger {
       `${this.timestamp ? `${Chalk.bgBlue(date())} ` : ''}${Chalk.rgb(
         30,
         186,
-        198
+        198,
       )('[DEBUG]')} ${Chalk.reset(
-        typeof message !== 'string' ? NodeUtil.inspect(message) : message
+        typeof message !== 'string' ? NodeUtil.inspect(message) : message,
       )}`,
       optionalParams.length > 0
         ? optionalParams
-            .map(p => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
+            .map((p) => (typeof p !== 'string' ? NodeUtil.inspect(p) : p))
             .join(' ')
-        : ''
+        : '',
     );
   }
 }

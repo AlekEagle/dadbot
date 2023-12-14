@@ -1,5 +1,5 @@
-import GBlacklist from "./DB/GlobalBlacklist";
-import { Message } from "oceanic.js";
+import GBlacklist from './DB/GlobalBlacklist';
+import { Message } from 'oceanic.js';
 
 export interface BlacklistData {
   type: 0 | 1 | 2;
@@ -45,7 +45,7 @@ export async function setValueByID(id: string, cmds: string[]) {
 }
 
 export async function checkBlacklistStatus(
-  msg: Message
+  msg: Message,
 ): Promise<null | BlacklistData> {
   let usr = msg.author.id,
     channel = msg.channelID,
@@ -72,6 +72,6 @@ export async function checkBlacklistStatus(
     return { type: 2, commands: guildBL.cmds };
   }
   throw new Error(
-    "Not sure how we got here, we should've returned somewhere before this."
+    "Not sure how we got here, we should've returned somewhere before this.",
   );
 }

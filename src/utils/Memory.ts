@@ -15,14 +15,14 @@ export default class Memory {
         .toString()
         .slice(
           0,
-          (this.memory / 1024 / 1024 / 1024 / 1024).toString().indexOf('.') + 3
+          (this.memory / 1024 / 1024 / 1024 / 1024).toString().indexOf('.') + 3,
         )}TB`;
     else if (this.memory / 1024 / 1024 > 1024)
       return `${(this.memory / 1024 / 1024 / 1024)
         .toString()
         .slice(
           0,
-          (this.memory / 1024 / 1024 / 1024).toString().indexOf('.') + 3
+          (this.memory / 1024 / 1024 / 1024).toString().indexOf('.') + 3,
         )}GB`;
     else if (this.memory / 1024 > 1024)
       return `${(this.memory / 1024 / 1024)

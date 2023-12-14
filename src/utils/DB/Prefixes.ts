@@ -1,5 +1,5 @@
-import { sequelize, init as initDB } from ".";
-import { Model, DataTypes } from "sequelize";
+import { sequelize, init as initDB } from '.';
+import { Model, DataTypes } from 'sequelize';
 
 export default class Prefixes extends Model {
   declare serverID: string;
@@ -15,13 +15,13 @@ export default class Prefixes extends Model {
     },
     {
       sequelize,
-    }
+    },
   );
 
   Prefixes.sync().then(
     () => {},
     (err) => {
-      console.error("Unable to sync Prefixes! Error: ", err);
-    }
+      console.error('Unable to sync Prefixes! Error: ', err);
+    },
   );
 })();

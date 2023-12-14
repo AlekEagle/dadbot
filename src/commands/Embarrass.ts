@@ -3,20 +3,20 @@ import {
   Constants,
   Member,
   ThreadChannel,
-} from "oceanic.js";
-import { SlashCommand, OptionBuilder } from "oceanic.js-interactions";
-import Dadhook from "../utils/Dadhook";
-import Lists from "../utils/Lists";
-import { client, logger } from "..";
+} from 'oceanic.js';
+import { SlashCommand, OptionBuilder } from 'oceanic.js-interactions';
+import Dadhook from '../utils/Dadhook';
+import Lists from '../utils/Lists';
+import { client, logger } from '..';
 
 const embarrass = new SlashCommand(
-  "embarrass",
-  "Embarrass yourself or friends!",
+  'embarrass',
+  'Embarrass yourself or friends!',
   {
     dmPermissions: false,
   },
   {
-    user: OptionBuilder.User("The user to embarrass.", false),
+    user: OptionBuilder.User('The user to embarrass.', false),
   },
   async (interaction, args) => {
     try {
@@ -32,7 +32,7 @@ const embarrass = new SlashCommand(
       }
 
       const dadhook = await Dadhook.giveMeDadhook(
-        await client.rest.channels.get(interaction.channelID)
+        await client.rest.channels.get(interaction.channelID),
       );
       const user = args.user ?? interaction.member;
       dadhook.execute({
@@ -51,13 +51,13 @@ const embarrass = new SlashCommand(
         content:
           user == interaction.member
             ? "Okay, there, I am embarrassed you, but I still don't know why you'd want to embarrass yourself."
-            : "Okay, there, I am embarrassed a friend for you.",
+            : 'Okay, there, I am embarrassed a friend for you.',
       });
     } catch (e) {
       logger.error(e);
       interaction.createFollowup({ content: (e as Error).message });
     }
-  }
+  },
 );
 
 export default embarrass;

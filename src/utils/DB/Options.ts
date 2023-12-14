@@ -13,17 +13,17 @@ export default class Options extends Model {
     {
       id: { type: DataTypes.STRING, primaryKey: true },
       flags: DataTypes.SMALLINT,
-      RNG: DataTypes.FLOAT
+      RNG: DataTypes.FLOAT,
     },
     {
-      sequelize
-    }
+      sequelize,
+    },
   );
 
   Options.sync().then(
     () => {},
-    err => {
+    (err) => {
       console.error('Unable to sync Options! Error: ', err);
-    }
+    },
   );
 })();

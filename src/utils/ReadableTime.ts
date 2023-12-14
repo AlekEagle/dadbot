@@ -51,9 +51,9 @@ export default class ReadableTime {
 
   public toShorthand(): string {
     return `${this.days > 0 ? `${this.days} days ` : ''}${this.doubleDigits(
-      this.hours
+      this.hours,
     )}:${this.doubleDigits(this.minutes)}:${this.doubleDigits(
-      this.seconds
+      this.seconds,
     )}.${this.quadDigits(this.milliseconds)}`;
   }
 

@@ -1,9 +1,9 @@
-import { SlashCommand } from "oceanic.js-interactions";
-import Lists from "../utils/Lists";
+import { SlashCommand } from 'oceanic.js-interactions';
+import Lists from '../utils/Lists';
 
 const dab = new SlashCommand(
-  "dab",
-  "Dads dabbing!",
+  'dab',
+  'Dads dabbing!',
   {},
   {},
   async (interaction) => {
@@ -11,7 +11,7 @@ const dab = new SlashCommand(
       content:
         Lists.dadsDabbing[Math.floor(Math.random() * Lists.dadsDabbing.length)],
     });
-  }
+  },
 );
 
 export default dab;

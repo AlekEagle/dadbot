@@ -1,9 +1,9 @@
-import { incrementBarbecuesServed } from "../utils/Statistics";
-import { SlashCommand } from "oceanic.js-interactions";
+import { incrementBarbecuesServed } from '../utils/Statistics';
+import { SlashCommand } from 'oceanic.js-interactions';
 
 const barbecue = new SlashCommand(
-  "barbecue",
-  "Mmm tasty.",
+  'barbecue',
+  'Mmm tasty.',
   {},
   {},
   (interaction) => {
@@ -13,12 +13,12 @@ const barbecue = new SlashCommand(
         {
           title: "Here's your hotdog",
           image: {
-            url: "https://alekeagle.me/8YgKdGJORB.png",
+            url: 'https://alekeagle.me/8YgKdGJORB.png',
           },
         },
       ],
     });
-  }
+  },
 );
 
 export default barbecue;

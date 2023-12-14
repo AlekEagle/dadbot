@@ -1,12 +1,12 @@
-import { checkBlacklistStatus } from "../utils/Blacklist";
+import { checkBlacklistStatus } from '../utils/Blacklist';
 import {
   Flags,
   SettingsConfigObject,
   getComputedSettings,
-} from "../utils/Settings";
-import { TextableChannel, Message } from "oceanic.js";
-import { incrementMsgCount, incrementResponseCount } from "../utils/Statistics";
-import Lists from "../utils/Lists";
+} from '../utils/Settings';
+import { TextableChannel, Message } from 'oceanic.js';
+import { incrementMsgCount, incrementResponseCount } from '../utils/Statistics';
+import Lists from '../utils/Lists';
 
 const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
   KYS_MATCH = /\b(kys|kill\byour\s?self)\b/i,
@@ -18,11 +18,11 @@ const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
 
 // Function to calculate whether a message has enough uppercase characters to be considered "shouting"
 function volumeDown(message: string): boolean {
-  let individualCharacters = message.split("").filter((a) => !a.match(/\s/));
+  let individualCharacters = message.split('').filter((a) => !a.match(/\s/));
   // If the message has no spaces, it's not shouting (probably)
-  if (message.indexOf(" ") === -1) return false;
+  if (message.indexOf(' ') === -1) return false;
   let uppercaseCharacters = individualCharacters.filter((a) =>
-    a.match(/[A-Z]/)
+    a.match(/[A-Z]/),
   ).length;
   // If the message has more than 60% uppercase characters, it's shouting
   return uppercaseCharacters / individualCharacters.length >= 0.6;
@@ -49,8 +49,8 @@ export default async function AutoResponseEvent(msg: Message) {
   // If the user is blacklisted, and the blacklist includes the "responses" command, ignore the message
   if (
     blStatus &&
-    (blStatus.commands.includes("all") ||
-      blStatus.commands.includes("responses"))
+    (blStatus.commands.includes('all') ||
+      blStatus.commands.includes('responses'))
   )
     return;
 
@@ -62,19 +62,19 @@ export default async function AutoResponseEvent(msg: Message) {
     if (!doRandom(settings.value)) return;
     incrementResponseCount();
     switch (msg.content.match(WINNING_MATCH)[0]) {
-      case "play":
+      case 'play':
         msg.client.rest.channels
-          .createMessage(msg.channelID, { content: "I hope ya win son!" })
+          .createMessage(msg.channelID, { content: 'I hope ya win son!' })
           .catch(() => {});
         break;
-      case "playing":
+      case 'playing':
         msg.client.rest.channels
-          .createMessage(msg.channelID, { content: "Are ya winning son?" })
+          .createMessage(msg.channelID, { content: 'Are ya winning son?' })
           .catch(() => {});
         break;
-      case "played":
+      case 'played':
         msg.client.rest.channels
-          .createMessage(msg.channelID, { content: "Did ya win son?" })
+          .createMessage(msg.channelID, { content: 'Did ya win son?' })
           .catch(() => {});
     }
     return;
@@ -96,12 +96,12 @@ export default async function AutoResponseEvent(msg: Message) {
         !formattingMatchData || formattingMatchData.index > imMatchData.index
           ? `${imMatchData[2]}`
           : `${formattingMatchData[0]}${imMatchData[2]}`,
-      imContent = nick ? nick : (Math.random() * 1000 > 999 ? "Dda" : "Dad");
+      imContent = nick ? nick : Math.random() * 1000 > 999 ? 'Dda' : 'Dad';
 
     msg.client.rest.channels
       .createMessage(msg.channelID, {
         allowedMentions: {
-          everyone: msg.mentions.everyone, // Only mention everyone if the triggering message mentions everyone 
+          everyone: msg.mentions.everyone, // Only mention everyone if the triggering message mentions everyone
           roles: msg.mentions.roles.slice(0, 2), // Mention a maximum of 2 roles the triggering message successfully mentioned
           users: msg.mentions.users.slice(0, 2).map((user) => user.id), // Limit to 2 user mentions
         },
@@ -183,7 +183,7 @@ export default async function AutoResponseEvent(msg: Message) {
     if (!doRandom(settings.value)) return;
     incrementResponseCount();
     msg.client.rest.channels
-      .createMessage(msg.channelID, { content: "Keep your voice down!" })
+      .createMessage(msg.channelID, { content: 'Keep your voice down!' })
       .catch(() => {});
     return;
   }

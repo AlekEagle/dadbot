@@ -3,9 +3,7 @@
     {
       "match": "Have you eaten yet?",
       "from": "605864767915294730",
-      "reponses": [
-        "No, I haven't yet."
-      ]
+      "reponses": ["No, I haven't yet."]
     }
   ],
   "605864767915294730": [

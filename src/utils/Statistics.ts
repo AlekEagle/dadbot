@@ -7,7 +7,7 @@ const simpleStats: {
     msgCount: 0,
     responseCount: 0,
     commandCount: 0,
-    barbecuesServed: 0
+    barbecuesServed: 0,
   },
   commandStats: Map<string, number> = new Map<string, number>();
 
@@ -36,7 +36,7 @@ export function incrementCommand(name: string) {
   ++simpleStats.commandCount;
   return {
     command: commandStats.get(name),
-    allCommands: simpleStats.commandCount
+    allCommands: simpleStats.commandCount,
   };
 }
 
@@ -45,13 +45,13 @@ export function getData() {
     msgCount: simpleStats.msgCount,
     responseCount: simpleStats.responseCount,
     commandCount: simpleStats.commandCount,
-    barbecuesServed: simpleStats.barbecuesServed
+    barbecuesServed: simpleStats.barbecuesServed,
   };
 }
 
 export function getCommands() {
   let commands: { [key: string]: number } = {};
-  Array.from(commandStats.entries()).forEach(v => {
+  Array.from(commandStats.entries()).forEach((v) => {
     commands[v[0]] = v[1];
   });
   return commands;
@@ -64,5 +64,5 @@ export default {
   incrementBarbecuesServed,
   initializeCommand,
   getData,
-  getCommands
+  getCommands,
 };

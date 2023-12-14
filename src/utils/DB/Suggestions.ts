@@ -1,5 +1,5 @@
-import { sequelize, init as initDB } from ".";
-import { Model, DataTypes } from "sequelize";
+import { sequelize, init as initDB } from '.';
+import { Model, DataTypes } from 'sequelize';
 
 export default class Suggestions extends Model {
   declare userID: string;
@@ -35,13 +35,13 @@ export default class Suggestions extends Model {
     },
     {
       sequelize,
-    }
+    },
   );
 
   Suggestions.sync().then(
     () => {},
     (err) => {
-      console.error("Unable to sync Suggestions! Error: ", err);
-    }
+      console.error('Unable to sync Suggestions! Error: ', err);
+    },
   );
 })();

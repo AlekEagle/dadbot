@@ -1,5 +1,5 @@
-import Options from "./DB/Options";
-import { Message } from "oceanic.js";
+import Options from './DB/Options';
+import { Message } from 'oceanic.js';
 
 export enum Flags {
   IM_RESPONSES = 1 << 0,
@@ -14,9 +14,9 @@ export enum Flags {
 function kvsFromEnum(enumObj: any): { [key: string]: number | string } {
   const keys = Object.keys(enumObj).filter(
       (k) =>
-        typeof enumObj[k] === "number" ||
+        typeof enumObj[k] === 'number' ||
         enumObj[k] === k ||
-        enumObj[enumObj[k]]?.toString() !== k
+        enumObj[enumObj[k]]?.toString() !== k,
     ),
     kvs: { [key: string]: number | string } = {};
   for (const key of keys) {
@@ -50,20 +50,20 @@ export interface SettingsConfigObject {
   id?: string | null;
 }
 
-export type SettingsConfigParam = Omit<SettingsConfigObject, "id" | "default">;
+export type SettingsConfigParam = Omit<SettingsConfigObject, 'id' | 'default'>;
 
 export interface SettingsHierarchyObject {
   user: SettingsConfigObject;
   channel: SettingsConfigObject;
   guild?: SettingsConfigObject;
-  preferred: "user" | "channel" | "guild";
+  preferred: 'user' | 'channel' | 'guild';
 }
 
 export interface ComputedSettingsObject {
   value: SettingsConfigObject;
   inheritedFrom: {
-    flags: "user" | "channel" | "guild" | "default";
-    RNG: "user" | "channel" | "guild" | "default";
+    flags: 'user' | 'channel' | 'guild' | 'default';
+    RNG: 'user' | 'channel' | 'guild' | 'default';
   };
 }
 
@@ -80,7 +80,7 @@ const defaultSettings: SettingsConfigParam = {
 };
 
 export async function getUserSettings(
-  id: string
+  id: string,
 ): Promise<SettingsConfigObject> {
   const user = await Options.findOne({
     where: {
@@ -92,7 +92,7 @@ export async function getUserSettings(
 }
 
 export async function getChannelSettings(
-  id: string
+  id: string,
 ): Promise<SettingsConfigObject> {
   const channel = await Options.findOne({
     where: {
@@ -104,7 +104,7 @@ export async function getChannelSettings(
 }
 
 export async function getGuildSettings(
-  id: string
+  id: string,
 ): Promise<SettingsConfigObject> {
   const guild = await Options.findOne({
     where: {
@@ -116,7 +116,7 @@ export async function getGuildSettings(
 }
 
 export async function getComputedSettings(
-  msg: Message
+  msg: Message,
 ): Promise<ComputedSettingsObject> {
   const user = await getUserSettings(msg.author.id);
   const channel = await getChannelSettings(msg.channelID);
@@ -124,19 +124,19 @@ export async function getComputedSettings(
     msg.guildID !== undefined ? await getGuildSettings(msg.guildID) : null;
   const RNG = user.RNG ?? channel.RNG ?? guild?.RNG ?? defaultSettings.RNG;
   const inheritedRNGFrom = user.RNG
-    ? "user"
+    ? 'user'
     : channel.RNG
-    ? "channel"
+    ? 'channel'
     : guild?.RNG
-    ? "guild"
-    : "default";
+    ? 'guild'
+    : 'default';
   const inheritedFlagsFrom = !user.default
-    ? "user"
+    ? 'user'
     : !channel.default
-    ? "channel"
+    ? 'channel'
     : !guild?.default
-    ? "guild"
-    : "default";
+    ? 'guild'
+    : 'default';
   const flags = !user.default
     ? user.flags
     : !channel.default
@@ -161,7 +161,7 @@ export async function getComputedSettings(
 export async function setUserSettings(
   id: string,
   flags?: Flags,
-  RNG?: number | null
+  RNG?: number | null,
 ): Promise<SettingsConfigObject> {
   const user = await Options.findOne({
     where: {
@@ -209,7 +209,7 @@ export async function setUserSettings(
           where: {
             id,
           },
-        }
+        },
       );
       return {
         flags: flags ?? user.flags,
@@ -224,7 +224,7 @@ export async function setUserSettings(
 export async function setChannelSettings(
   id: string,
   flags?: Flags,
-  RNG?: number | null
+  RNG?: number | null,
 ): Promise<SettingsConfigObject> {
   const channel = await Options.findOne({
     where: {
@@ -272,7 +272,7 @@ export async function setChannelSettings(
           where: {
             id,
           },
-        }
+        },
       );
       return {
         flags: flags ?? channel.flags,
@@ -287,7 +287,7 @@ export async function setChannelSettings(
 export async function setGuildSettings(
   id: string,
   flags?: Flags,
-  RNG?: number | null
+  RNG?: number | null,
 ): Promise<SettingsConfigObject> {
   const guild = await Options.findOne({
     where: {
@@ -335,7 +335,7 @@ export async function setGuildSettings(
           where: {
             id,
           },
-        }
+        },
       );
       return {
         flags: flags ?? guild.flags,
@@ -374,8 +374,8 @@ export function gcd(a: number, b: number) {
 
 export function decimalToFraction(decimal: number): number[] {
   let strVal = decimal.toString();
-  if (!strVal.includes(".")) return [decimal, 1];
-  let strDecimal = strVal.replace(/\d+[.]/, "");
+  if (!strVal.includes('.')) return [decimal, 1];
+  let strDecimal = strVal.replace(/\d+[.]/, '');
   let pow = Math.pow(10, strDecimal.length);
   return bestFrac(Number(strDecimal), pow);
 }

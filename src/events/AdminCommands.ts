@@ -1,10 +1,10 @@
-import { Message } from "oceanic.js";
-import { isOwner } from "../utils/Owners";
-import evaluateSafe from "../utils/SafeEval";
-import { inspect } from "util";
+import { Message } from 'oceanic.js';
+import { isOwner } from '../utils/Owners';
+import evaluateSafe from '../utils/SafeEval';
+import { inspect } from 'util';
 
-import { client, logger, cluster, shards, handler } from "../index";
-import EventEmitter from "events";
+import { client, logger, cluster, shards, handler } from '../index';
+import EventEmitter from 'events';
 
 const CODE_MATCH = /^```ts([\w\W]+)```$/;
 
@@ -14,7 +14,7 @@ export default async function AdminCommandHandler(message: Message) {
 
   const match = message.content.match(CODE_MATCH);
   let code =
-    match?.[1] ?? (message.content.startsWith("--") ? null : message.content);
+    match?.[1] ?? (message.content.startsWith('--') ? null : message.content);
   if (code == null) return;
   const emitter = evaluateSafe(code, {
     require,
@@ -30,18 +30,18 @@ export default async function AdminCommandHandler(message: Message) {
   });
 
   if (emitter instanceof EventEmitter) {
-    emitter.once("complete", async (out, err) => {
+    emitter.once('complete', async (out, err) => {
       if (err) {
         console.error(err, out);
         client.rest.channels.createMessage(message.channelID, {
-          content: typeof err !== "string" ? inspect(err) : err,
+          content: typeof err !== 'string' ? inspect(err) : err,
         });
       } else
         client.rest.channels.createMessage(message.channelID, {
-          content: typeof out !== "string" ? inspect(out) : out,
+          content: typeof out !== 'string' ? inspect(out) : out,
         });
     });
-    emitter.once("timeoutError", (error) => {
+    emitter.once('timeoutError', (error) => {
       client.rest.channels.createMessage(message.channelID, {
         content: inspect(error),
       });

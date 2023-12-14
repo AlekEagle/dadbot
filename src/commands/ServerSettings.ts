@@ -1,84 +1,84 @@
-import { Constants } from "oceanic.js";
+import { Constants } from 'oceanic.js';
 import {
   SlashCommand,
   Subcommand,
   OptionBuilder,
-} from "oceanic.js-interactions";
+} from 'oceanic.js-interactions';
 import {
   getGuildSettings,
   setGuildSettings,
   Flags,
   enumToArray,
-} from "../utils/Settings";
+} from '../utils/Settings';
 
 const serverSettings = new SlashCommand(
-  "serversettings",
-  "Manage Dad Bot settings server-wide!",
+  'serversettings',
+  'Manage Dad Bot settings server-wide!',
   {
     defaultMemberPermissions: Constants.Permissions.MANAGE_GUILD.toString(),
     dmPermissions: false,
-  }
+  },
 );
 
 const viewServerSettings = new Subcommand(
-  "view",
-  "View the current settings for the server!",
+  'view',
+  'View the current settings for the server!',
   {},
   async (interaction) => {
     const message = await interaction.acknowledge(true);
     const settings = await getGuildSettings(interaction.guildID);
     const embed = {
-      title: "Server Settings",
+      title: 'Server Settings',
       description:
-        "Here are the current settings for the server, if you need a more detailed explanation of what each setting does, use `/help settings`.",
+        'Here are the current settings for the server, if you need a more detailed explanation of what each setting does, use `/help settings`.',
       fields: [
         ...enumToArray(Flags).map((flag) => ({
           name: flag
-            .replace(/_/g, " ")
+            .replace(/_/g, ' ')
             .toLowerCase()
-            .split(" ")
+            .split(' ')
             .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(" "),
+            .join(' '),
           value:
             settings.flags & Flags[flag as keyof typeof Flags]
-              ? "Enabled"
-              : "Disabled",
+              ? 'Enabled'
+              : 'Disabled',
           inline: true,
         })),
         {
-          name: "Auto Response RNG",
+          name: 'Auto Response RNG',
           value:
             settings.RNG === null
-              ? "100%"
+              ? '100%'
               : `${Math.floor(settings.RNG * 100)}%`,
         },
       ],
     };
 
     message.edit({ embeds: [embed] });
-  }
+  },
 );
 
 serverSettings.addSubcommand(viewServerSettings);
 
 const serverAutoResponseSettings = new Subcommand(
-  "autoresponses",
-  "Manage The automatic responses from Dad Bot across the server!",
+  'autoresponses',
+  'Manage The automatic responses from Dad Bot across the server!',
   {
-    response: OptionBuilder.String("The response to enable or disable.", true, {
+    response: OptionBuilder.String('The response to enable or disable.', true, {
       choices: enumToArray(Flags).map((flag) => ({
         name: flag
-          .replace(/_/g, " ")
+          .replace(/_/g, ' ')
           .toLowerCase()
-          .split(" ")
+          .split(' ')
           .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-          .join(" "),
+          .join(' '),
         value: flag,
       })),
     }),
     enabled: OptionBuilder.Boolean(
-      "Whether to enable or disable the response.",
-      true
+      'Whether to enable or disable the response.',
+      true,
     ),
   },
   async (interaction, args) => {
@@ -96,30 +96,30 @@ const serverAutoResponseSettings = new Subcommand(
 
     message.edit({
       content: `The \`${args.response
-        .replace(/_/g, " ")
+        .replace(/_/g, ' ')
         .toLowerCase()
-        .split(" ")
+        .split(' ')
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ")}\` auto responses have been successfully **${
-        args.enabled ? "enabled" : "disabled"
+        .join(' ')}\` auto responses have been successfully **${
+        args.enabled ? 'enabled' : 'disabled'
       }**!`,
     });
-  }
+  },
 );
 
 serverSettings.addSubcommand(serverAutoResponseSettings);
 
 const serverRNGSettings = new Subcommand(
-  "rng",
-  "Manage RNG settings for Dad Bot across the server!",
+  'rng',
+  'Manage RNG settings for Dad Bot across the server!',
   {
     percentage: OptionBuilder.Integer(
-      "The percentage chance of Dad Bot responding to a message.",
+      'The percentage chance of Dad Bot responding to a message.',
       true,
       {
         minValue: 1,
         maxValue: 100,
-      }
+      },
     ),
   },
   async (interaction, args) => {
@@ -127,29 +127,29 @@ const serverRNGSettings = new Subcommand(
     await setGuildSettings(
       interaction.guildID,
       undefined,
-      args.percentage / 100
+      args.percentage / 100,
     );
 
     message.edit({
       content: `Done! All Dad Bot auto responses will only happen ${args.percentage}% of the time!`,
     });
-  }
+  },
 );
 
 serverSettings.addSubcommand(serverRNGSettings);
 
 const resetServerSettings = new Subcommand(
-  "reset",
-  "Reset the settings for the server to the default!",
+  'reset',
+  'Reset the settings for the server to the default!',
   {},
   async (interaction) => {
     const message = await interaction.acknowledge(true);
     await setGuildSettings(interaction.guildID);
 
     await message.edit({
-      content: "Done! The server settings have been reset to the default!",
+      content: 'Done! The server settings have been reset to the default!',
     });
-  }
+  },
 );
 
 serverSettings.addSubcommand(resetServerSettings);
