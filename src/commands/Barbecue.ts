@@ -13,7 +13,7 @@ const barbecue = new SlashCommand(
         {
           title: "Here's your hotdog",
           image: {
-            url: 'https://alekeagle.me/8YgKdGJORB.png',
+            url: 'https://cdn.alekeagle.me/8YgKdGJORB.png',
           },
         },
       ],
