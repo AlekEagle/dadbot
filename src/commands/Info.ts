@@ -43,6 +43,7 @@ return JSON.stringify(
     let time = new ReadableTime(process.uptime() * 1000);
     let cpu = await CPU();
     interaction.createMessage({
+      content: 'Support server:\ndiscord.gg/alek-s-cult-456542159210807307',
       embeds: [
         {
           title: 'Dad Bot Info',
