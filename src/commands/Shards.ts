@@ -63,15 +63,21 @@ const Shards = new SlashCommand(
               case 'Guild Count':
               case 'User Count':
                 finalData.push(
-                  v[1]
+                  shardsArr
+                    .map(
+                      (a) =>
+                        a[v[0] === 'Guild Count' ? 'guildCount' : 'userCount'],
+                    )
                     .reduce((a: number, b: number) => a + b, 0)
                     .toLocaleString(),
                 );
                 break;
               case 'Status':
-                let overallShardStatus = v[1].map((a: string) =>
-                  a === 'READY' ? '🟢' : a === 'DISCONNECTED' ? '🔴' : '🟡',
-                );
+                let overallShardStatus = shardsArr
+                  .map((a) => a.status)
+                  .map((a: string) =>
+                    a === 'READY' ? '🟢' : a === 'DISCONNECTED' ? '🔴' : '🟡',
+                  );
                 let statusCount = overallShardStatus.reduce(
                   (acc: { [key: string]: number }, status: string) => {
                     acc[status] = (acc[status] || 0) + 1;
@@ -89,12 +95,12 @@ const Shards = new SlashCommand(
                 finalData.push(
                   `AVG: ${
                     Math.round(
-                      (v[1]
-                        .map((a: string) => Number(a.replace(/ ms/gi, '')))
+                      (shardsArr
+                        .map((a) => a.ping)
                         .filter((a: number) => !isNaN(a))
                         .reduce((a: number, b: number) => a + b, 0) /
-                        v[1]
-                          .map((a: string) => Number(a.replace(/ ms/gi, '')))
+                        shardsArr
+                          .map((a) => a.ping)
                           .filter((a: number) => !isNaN(a)).length) *
                         100,
                     ) / 100
@@ -119,16 +125,23 @@ const Shards = new SlashCommand(
         outMessages[++row] = r;
       else outMessages[row] += `\n${r}`;
     });
-    outMessages.forEach((a, i) => {
-      if (i === 0)
-        interaction.createFollowup({
-          content: `\`\`\`md\n${a}\n\`\`\``,
-        });
-      else
-        client.rest.channels.createMessage(interaction.channelID, {
-          content: `\`\`\`md\n${a}\n\`\`\``,
-        });
-    });
+    try {
+      outMessages.forEach((a, i) => {
+        if (i === 0)
+          interaction.createFollowup({
+            content: `\`\`\`md\n${a}\n\`\`\``,
+          });
+        else
+          client.rest.channels.createMessage(interaction.channelID, {
+            content: `\`\`\`md\n${a}\n\`\`\``,
+          });
+      });
+    } catch (e) {
+      console.error(e);
+      interaction.createFollowup({
+        content: 'An error occurred while sending the shard data tables.',
+      });
+    }
   },
 );
 
