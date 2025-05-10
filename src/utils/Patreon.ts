@@ -2,107 +2,143 @@ const PATREON_API_URL = 'https://www.patreon.com/api/oauth2/v2';
 
 export type PatreonUser = {
   amount: number;
-  status: 'active' | 'former' | 'declined';
+  status: 'active' | 'former' | 'declined' | 'free';
+  discord_id?: string;
   full_name: string;
   fetched_at: Date;
+  joined_at?: Date;
 };
 
 // Cache the Patreon API response for 30 minutes.
-let cached: {
-  [key: string]: PatreonUser;
-} = {};
+let cached: PatreonUser[] = [];
 
-export async function getLatestSupporter(): Promise<any> {
-  const response = await fetch(
-      `${PATREON_API_URL}/campaigns/${process.env.PATREON_CAMPAIGN_ID}/members?include=currently_entitled_tiers&fields%5Bmember%5D=full_name,patron_status,currently_entitled_amount_cents,will_pay_amount_cents,lifetime_support_cents,pledge_relationship_start&fields%5Buser%5D=full_name,social_connections`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${process.env.PATREON_ACCESS_TOKEN}`,
-        },
+let cacheTimeout: NodeJS.Timeout | null = null;
+
+export async function getAllMembers(): Promise<void> {
+  async function getMembersFromPage(
+    page: string = `${PATREON_API_URL}/campaigns/${process.env.PATREON_CAMPAIGN_ID}/members?include=currently_entitled_tiers,user&fields%5Bmember%5D=full_name,patron_status,currently_entitled_amount_cents,will_pay_amount_cents,lifetime_support_cents,pledge_relationship_start&fields%5Buser%5D=social_connections,full_name&sort=-pledge_relationship_start&page%5Bsize%5D=500`,
+  ) {
+    const fetchedAt = new Date(Date.now());
+    const response = await fetch(page, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${process.env.PATREON_ACCESS_TOKEN}`,
       },
-    ),
-    json: any = await response.json(),
-    members = json.data;
+    });
 
-  // Sort the members by descending date started, excluding declined and former members, and return the first one.
-  const member = members
-    .filter(
-      (m: any) =>
-        m.attributes.patron_status !== 'declined' &&
-        m.attributes.patron_status !== 'former_patron',
-    )
-    .sort((a: any, b: any) => {
-      const aDate = new Date(a.attributes.pledge_relationship_start),
-        bDate = new Date(b.attributes.pledge_relationship_start);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch members from Patreon API: ${response.statusText}`,
+      );
+    }
 
-      return bDate.getTime() - aDate.getTime();
-    })[0];
+    const json: any = await response.json(),
+      members = json.data,
+      users = json.included;
 
-  if (member == null) {
-    throw new Error('No active members found.');
+    // Merge and cache the members and users.
+    members.forEach((member: any) => {
+      const user = users.find(
+        (i: any) => i.id === member.relationships.user.data.id,
+      );
+      if (user == null) {
+        return;
+      }
+      const patreonStatus =
+        member.attributes.patron_status === 'active_patron'
+          ? 'active'
+          : member.attributes.patron_status === 'former_patron'
+          ? 'former'
+          : member.attributes.patron_status === 'declined_patron'
+          ? 'declined'
+          : member.attributes.patron_status === null
+          ? 'free'
+          : 'unknown';
+      if (patreonStatus === 'unknown') {
+        throw new Error('Unknown Patreon status.');
+      }
+      cached.push({
+        amount: member.attributes.currently_entitled_amount_cents,
+        status: patreonStatus,
+        discord_id: user.attributes.social_connections.discord
+          ? user.attributes.social_connections.discord.user_id
+          : null,
+        full_name: user.attributes.full_name,
+        fetched_at: fetchedAt,
+        joined_at: new Date(member.attributes.pledge_relationship_start),
+      });
+    });
+
+    // Check if there are more pages to fetch.
+    if (json.meta.pagination?.cursors?.next) {
+      await getMembersFromPage(
+        `${PATREON_API_URL}/campaigns/${process.env.PATREON_CAMPAIGN_ID}/members?include=currently_entitled_tiers,user&fields%5Bmember%5D=full_name,patron_status,currently_entitled_amount_cents,will_pay_amount_cents,lifetime_support_cents,pledge_relationship_start&fields%5Buser%5D=social_connections,full_name&sort=-pledge_relationship_start&page%5Bsize%5D=500&cursor=${json.meta.pagination.cursors.next}`,
+      );
+    }
   }
+  // Clear the cache before fetching.
+  cached = [];
+  // Fetch the members from the first page.
+  await getMembersFromPage();
+}
+
+export function getLatestSupporter(): PatreonUser | null {
+  // Check if the cache is empty.
+  if (cached.length === 0) {
+    return null;
+  }
+  // Get the newest supporter from the cached members.
+  const members = Object.values(cached).filter(
+    (member) => member.status === 'active',
+  );
+  members.sort((a, b) => {
+    return new Date(b.joined_at!).getTime() - new Date(a.joined_at!).getTime();
+  });
+  const member = members[0];
 
   return member;
 }
 
-export async function getSupporterByDiscordID(
-  id: string,
-): Promise<PatreonUser | null> {
-  if (cached[id] != null) {
-    if (cached[id].fetched_at.getTime() + 30 * 60 * 1000 > Date.now()) {
-      return cached[id];
-    } else {
-      delete cached[id];
-    }
-  }
-
-  const fetchedAt = new Date(Date.now()),
-    response = await fetch(
-      `${PATREON_API_URL}/campaigns/${process.env.PATREON_CAMPAIGN_ID}/members?include=user&fields%5Buser%5D=social_connections,full_name&fields%5Bmember%5D=patron_status,currently_entitled_amount_cents`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${process.env.PATREON_ACCESS_TOKEN}`,
-        },
-      },
-    ),
-    json: any = await response.json(),
-    members = json.data;
-
-  const user = json.included.find(
-    (i: any) =>
-      i.type === 'user' &&
-      i.attributes.social_connections?.discord?.user_id === id,
-  );
-
-  if (user == null) {
+export function getSupporterByDiscordID(discordID: string): PatreonUser | null {
+  // Check if the cache is empty.
+  if (cached.length === 0) {
     return null;
   }
-
-  const member = members.find(
-    (m: any) => m.relationships.user.data.id === user.id,
-  );
-
-  const patreonStatus =
-    member.attributes.patron_status === 'active_patron'
-      ? 'active'
-      : member.attributes.patron_status === 'former_patron'
-      ? 'former'
-      : member.attributes.patron_status === 'declined_patron'
-      ? 'declined'
-      : 'unknown';
-
-  if (patreonStatus === 'unknown') {
-    throw new Error('Unknown Patreon status.');
+  // Get the supporter from the cached members.
+  const member = cached.find((member) => member.discord_id === discordID);
+  if (member == null) {
+    return null;
   }
+  return member;
+}
 
-  cached[id] = {
-    amount: member.attributes.currently_entitled_amount_cents,
-    status: patreonStatus,
-    full_name: user.attributes.full_name,
-    fetched_at: fetchedAt,
-  };
+export async function startCacheRefresh(): Promise<void> {
+  // Check if the cache is empty.
+  if (cached.length === 0) {
+    await getAllMembers();
+  }
+  // Set a timeout to refresh the cache every 30 minutes.
+  if (cacheTimeout) {
+    clearTimeout(cacheTimeout);
+  }
+  cacheTimeout = setTimeout(async () => {
+    // Clear the cache before fetching.
+    cached = [];
+    // Fetch fresh members from the Patreon API.
+    await getAllMembers();
+    // Set the timeout again.
+    cacheTimeout = setTimeout(startCacheRefresh, 30 * 60 * 1000);
+  }, 30 * 60 * 1000);
+}
 
-  return cached[id];
+export function stopCacheRefresh(): void {
+  // Clear the timeout if it exists.
+  if (cacheTimeout) {
+    clearTimeout(cacheTimeout);
+    cacheTimeout = null;
+  }
+}
+
+export function getCachedMembers(): PatreonUser[] {
+  return cached;
 }

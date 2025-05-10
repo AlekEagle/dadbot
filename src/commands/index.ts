@@ -16,6 +16,7 @@ import Mio from './Mio';
 import Patreon from './Patreon';
 import ServerSettings from './ServerSettings';
 import SetActivity from './SetActivity';
+import Shards from './Shards';
 import UserSettings from './UserSettings';
 
 const commands = [
@@ -36,8 +37,9 @@ const commands = [
   Mio,
   Patreon,
   ServerSettings,
-  UserSettings,
   SetActivity,
+  Shards,
+  UserSettings,
 ];
 
 export default commands;

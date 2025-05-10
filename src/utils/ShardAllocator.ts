@@ -1,5 +1,4 @@
 import { Constants } from 'oceanic.js';
-import { isDebug } from '..';
 
 export let cachedShardAllocation: ShardAllocation | null = null;
 
@@ -11,6 +10,7 @@ export interface ShardAllocationRange {
 
 export interface ShardAllocation {
   total: number;
+  recommended: number;
   totalSessions: number;
   remainingSessions: number;
   resetsIn: number;
@@ -36,6 +36,7 @@ export async function getShardAllocation(
     },
     body: ShardAllocation = {
       total: -1,
+      recommended: -1,
       totalSessions: -1,
       remainingSessions: -1,
       resetsIn: -1,
@@ -56,7 +57,11 @@ export async function getShardAllocation(
     if (response.status === 429) throw new Error('Ratelimited');
     if (response.status !== 200) throw new Error('Unexpected response');
 
-    body.total = json.shards;
+    body.total =
+      process.env.SHARD_OVERRIDE !== undefined
+        ? Number(process.env.SHARD_OVERRIDE)
+        : json.shards;
+    body.recommended = json.shards;
     body.totalSessions = json.session_start_limit.total;
     body.remainingSessions = json.session_start_limit.remaining;
     body.resetsIn = json.session_start_limit.reset_after;
@@ -64,42 +69,27 @@ export async function getShardAllocation(
     // Calculate this cluster's range
     // The start is calculated by using the number shards received from the gateway and the number of clusters
     // The end is calculated by using the start plus the number of shards per cluster
-    // If debug is enabled, simply give 1 shard per cluster
-    if (isDebug) {
-      body.thisCluster.start = clusterID;
-      body.thisCluster.end = clusterID;
-      body.thisCluster.count = 1;
-      for (let i = 0; i < clusters; i++) {
-        const range: ShardAllocationRange = {
-          start: i,
-          end: i + 1,
-          count: 1,
-        };
-        body.allClusters.push(range);
+    body.thisCluster.start = Math.floor(body.total / clusters) * clusterID;
+    body.thisCluster.end =
+      body.thisCluster.start + Math.floor(body.total / clusters) - 1;
+    // If there is a remainder and this cluster is the last cluster, add them to the last cluster
+    if (body.total % clusters > 0 && clusterID === clusters - 1)
+      body.thisCluster.end += body.total % clusters;
+    // calculate the total number of shards in this cluster
+    body.thisCluster.count = body.thisCluster.end - body.thisCluster.start;
+    // Calculate the range for each cluster
+    for (let i = 0; i < clusters; i++) {
+      const range: ShardAllocationRange = {
+        start: Math.floor(body.total / clusters) * i,
+        end: Math.floor(body.total / clusters) * (i + 1) - 1,
+        count: -1,
+      };
+      // If there is a remainder, add them to the last cluster
+      if (body.total % clusters > 0 && i === clusters - 1) {
+        range.end += body.total % clusters;
       }
-    } else {
-      body.thisCluster.start = Math.floor(body.total / clusters) * clusterID;
-      body.thisCluster.end =
-        body.thisCluster.start + Math.floor(body.total / clusters) - 1;
-      // If there is a remainder and this cluster is the last cluster, add them to the last cluster
-      if (body.total % clusters > 0 && clusterID === clusters - 1)
-        body.thisCluster.end += body.total % clusters;
-      // calculate the total number of shards in this cluster
-      body.thisCluster.count = body.thisCluster.end - body.thisCluster.start;
-      // Calculate the range for each cluster
-      for (let i = 0; i < clusters; i++) {
-        const range: ShardAllocationRange = {
-          start: Math.floor(body.total / clusters) * i,
-          end: Math.floor(body.total / clusters) * (i + 1) - 1,
-          count: -1,
-        };
-        // If there is a remainder, add them to the last cluster
-        if (body.total % clusters > 0 && i === clusters - 1) {
-          range.end += body.total % clusters;
-        }
-        range.count = range.end - range.start;
-        body.allClusters.push(range);
-      }
+      range.count = range.end - range.start;
+      body.allClusters.push(range);
     }
     cachedShardAllocation = body;
     return body;

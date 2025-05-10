@@ -23,7 +23,11 @@ import AdminCommandHandler from './events/AdminCommands';
 
 envConfig();
 
-export const evaluation = [process.env.DISCORD_ID_BOT_EVAL];
+export let evaluation = [
+  process.env.DISCORD_ID_BOT_EVAL,
+  '756269985252507670',
+  '1370693789244723291',
+];
 
 export const isDebug = process.env.DEBUG === 'true';
 export const token = !isDebug ? process.env.TOKEN : process.env.OTHER_TOKEN;
@@ -49,6 +53,17 @@ function clearSendShardInfoInterval() {
 
 export let client: Client;
 
+export function thankPatreonSupporter() {
+  // Fetch the latest patron supporter to thank
+  const patron = Patreon.getLatestSupporter();
+  client.editStatus('online', [
+    {
+      name: `Thank you ${patron.full_name} for supporting on Patreon!`,
+      type: Constants.ActivityTypes.GAME,
+    },
+  ]);
+}
+
 if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   throw new Error('Missing required environment variables');
 }
@@ -57,7 +72,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   // Make sure the chair is intact.
   await verifyChairIntegrity();
   // If we are in debug mode, don't bother with the sentry integration.
-  if (!process.env.DEBUG) await import('./utils/Sentry');
+  // if (!process.env.DEBUG) await import('./utils/Sentry');
 
   // Initialize the cluster client.
   cluster = new DadbotClusterClient(
@@ -128,11 +143,19 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   );
   console.log(
     chalk.green(
-      ` Discord recommends ${shards.total} shard${
-        shards.total === 1 ? '' : 's'
+      ` Discord recommends ${shards.recommended} shard${
+        shards.recommended === 1 ? '' : 's'
       } overall.`,
     ),
   );
+  if (shards.total !== shards.recommended)
+    console.log(
+      chalk.yellow(
+        ` We will not be using the recommended number of shards, instead using ${
+          shards.total
+        } shard${shards.total === 1 ? '' : 's'} overall.`,
+      ),
+    );
   console.log(
     chalk.green(
       ` This cluster will handle the shards between ${shards.thisCluster.start} and ${shards.thisCluster.end}, or ${shards.thisCluster.count} shards in total.`,
@@ -306,18 +329,13 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
 
     console.log(' All commands registered and published!');
 
-    async function updateStatus() {
-      // Fetch the latest patron supporter to thank
-      const patron = await Patreon.getLatestSupporter();
-      client.editStatus('online', [
-        {
-          name: `Thank you ${patron.attributes.full_name} for supporting on Patreon!`,
-          type: Constants.ActivityTypes.GAME,
-        },
-      ]);
-    }
+    // Begin Patreon periodic fetch
+    console.log(' Fetching Patreon supporters...');
+    await Patreon.startCacheRefresh();
+    console.log(' All Patreon supporters fetched!');
 
-    updateStatus();
+    // Thank the latest Patreon supporter
+    thankPatreonSupporter();
   });
 
   // Set up the error event module
@@ -429,7 +447,7 @@ function deathCroak(thing: string | number) {
   console.error(
     chalk.red(
       'A'.repeat(Math.floor(Math.random() * 1_000_000) + 1) +
-        '\n i stubbed my toe :(',
+        '\ni stubbed my toe :(',
     ),
   );
   if (typeof thing === 'string') {

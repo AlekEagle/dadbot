@@ -1,5 +1,3 @@
-import Path from 'node:path';
-import SourceMapSupport from 'source-map-support';
 import VM from 'node:vm';
 import {
   CompilerOptions,
@@ -76,32 +74,18 @@ export default function evaluateSafe(code: string, args: any) {
       },
     }),
   );
-
-  const sourcePathToSource = Object.create(null);
-  SourceMapSupport.install({
-    environment: 'node',
-    retrieveFile: (sourcePath) => sourcePathToSource[sourcePath],
-  });
-  const tsPath = Path.resolve('input.ts');
   let transpiledStr = transpileModule(evalStr, {
     compilerOptions,
-    fileName: tsPath,
     moduleName: 'input',
   });
-  const jsPath = Path.resolve('input.js');
-  sourcePathToSource[jsPath] = transpiledStr.outputText;
-  sourcePathToSource[Path.resolve('input.js.map')] =
-    transpiledStr.sourceMapText;
   const funArgs: { [key: string]: any } = {};
   asyncFunctionArgs.forEach((a) => (funArgs[a[0]] = a[1]));
   VM.createContext(funArgs);
   let evalFn: any;
   try {
-    evalFn = VM.runInContext(transpiledStr.outputText, funArgs, {
-      filename: jsPath,
-    });
+    evalFn = VM.runInContext(transpiledStr.outputText, funArgs);
   } catch (e) {
-    return e;
+    throw e;
   }
   Promise.resolve()
     .then(() => {
