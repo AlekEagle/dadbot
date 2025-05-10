@@ -1,6 +1,6 @@
 import { SlashCommand } from 'oceanic.js-interactions';
 import Table from '../utils/Table';
-import { cluster } from '..';
+import { client, cluster } from '..';
 
 const Shards = new SlashCommand(
   'shards',
@@ -119,10 +119,15 @@ const Shards = new SlashCommand(
         outMessages[++row] = r;
       else outMessages[row] += `\n${r}`;
     });
-    outMessages.forEach((a) => {
-      interaction.createFollowup({
-        content: `\`\`\`md\n${a}\n\`\`\``,
-      });
+    outMessages.forEach((a, i) => {
+      if (i === 0)
+        interaction.createFollowup({
+          content: `\`\`\`md\n${a}\n\`\`\``,
+        });
+      else
+        client.rest.channels.createMessage(interaction.channelID, {
+          content: `\`\`\`md\n${a}\n\`\`\``,
+        });
     });
   },
 );
