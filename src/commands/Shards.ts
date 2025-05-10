@@ -50,8 +50,8 @@ const Shards = new SlashCommand(
           shardsArr.map(
             (a) => `${a.id === interaction.guild.shard.id ? '> ' : ''}${a.id}`,
           ),
-        'Guild Count': shardsArr.map((a) => a.guildCount),
-        'User Count': shardsArr.map((a) => a.userCount),
+        'Guild Count': shardsArr.map((a) => a.guildCount.toLocaleString()),
+        'User Count': shardsArr.map((a) => a.userCount.toLocaleString()),
         'Status': shardsArr.map((a) => a.status),
         'Ping': shardsArr.map((a) => `${a.ping} ms`),
       },
@@ -63,7 +63,9 @@ const Shards = new SlashCommand(
               case 'Guild Count':
               case 'User Count':
                 finalData.push(
-                  v[1].reduce((a: number, b: number) => a + b, 0).toString(),
+                  v[1]
+                    .reduce((a: number, b: number) => a + b, 0)
+                    .toLocaleString(),
                 );
                 break;
               case 'Status':
