@@ -35,24 +35,33 @@ const embarrass = new SlashCommand(
         await client.rest.channels.get(interaction.channelID),
       );
       const user = args.user ?? interaction.member;
-      dadhook.execute({
-        content:
-          Lists.embarrassingThings[
-            Math.floor(Math.random() * Lists.embarrassingThings.length)
-          ],
-        username:
-          user instanceof Member && user.nick?.length >= 2
-            ? user.nick
-            : user.username,
-        avatarURL: user.avatarURL(),
-      });
+      try {
+        dadhook.execute({
+          content:
+            Lists.embarrassingThings[
+              Math.floor(Math.random() * Lists.embarrassingThings.length)
+            ],
+          username:
+            user instanceof Member && user.nick?.length >= 2
+              ? user.nick
+              : user.username,
+          avatarURL: user.avatarURL(),
+        });
 
-      await interaction.editOriginal({
-        content:
-          user == interaction.member
-            ? "Okay, there, I am embarrassed you, but I still don't know why you'd want to embarrass yourself."
-            : 'Okay, there, I am embarrassed a friend for you.',
-      });
+        await interaction.editOriginal({
+          content:
+            user == interaction.member
+              ? "Okay, there, I am embarrassed you, but I still don't know why you'd want to embarrass yourself."
+              : 'Okay, there, I am embarrassed a friend for you.',
+        });
+      } catch (e) {
+        logger.error(e);
+        await interaction.editOriginal({
+          content: `I can't embarrass you${
+            user == interaction.member ? '' : 'r friend'
+          }, sorry.`,
+        });
+      }
     } catch (e) {
       logger.error(e);
       interaction.createFollowup({ content: (e as Error).message });
