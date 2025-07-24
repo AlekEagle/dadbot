@@ -71,7 +71,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   // Make sure the chair is intact.
   await verifyChairIntegrity();
   // If we are in debug mode, don't bother with the sentry integration.
-  // if (!process.env.DEBUG) await import('./utils/Sentry');
+  if (!process.env.DEBUG) await import('./utils/Sentry');
 
   // Initialize the cluster client.
   cluster = new DadbotClusterClient(
