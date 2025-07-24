@@ -23,7 +23,9 @@
   },
   "scripts": {
     "start": "npx tsc; node dist/index.js",
-    "build": "tsc"
+    "build": "tsc",
+    "build-upload": "tsc && yarn sentry:sourcemaps",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org alek-evans --project dad-bot ./dist && sentry-cli sourcemaps upload --org alek-evans --project dad-bot ./dist"
   },
   "devDependencies": {
     "@types/collections": "^5.1.5",

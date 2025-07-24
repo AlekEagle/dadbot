@@ -10,3 +10,5 @@ dist
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+# Sentry Config File
+.sentryclirc
