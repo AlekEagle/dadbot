@@ -25,7 +25,6 @@ envConfig();
 
 export let evaluation = [
   process.env.DISCORD_ID_BOT_EVAL,
-  '756269985252507670',
   '1370693789244723291',
 ];
 
