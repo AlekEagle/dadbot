@@ -123,6 +123,7 @@ async function constructMessage(
           };
         }
         return {
+          content: '',
           embeds: [
             {
               color: 0x00ff00,
