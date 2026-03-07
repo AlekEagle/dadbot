@@ -30,7 +30,7 @@
   "devDependencies": {
     "@types/collections": "^5.1.5",
     "@types/ms": "^0.7.34",
-    "@types/node": "^20.10.4",
+    "@types/node": "^25.3.5",
     "@types/source-map-support": "^0.5.10",
     "@types/validator": "^13.11.7",
     "@types/ws": "^8.5.10"

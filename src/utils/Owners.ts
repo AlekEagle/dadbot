@@ -48,15 +48,12 @@ export async function removeOwner(
 ): Promise<void> {
   let manageeStatus = await getOwner(managee),
     oldOwnerStatus = await getOwner(oldOwner);
+  if (!oldOwnerStatus) throw new Error('Old owner not found.');
   if (!manageeStatus || (oldOwnerStatus.admin && !manageeStatus.admin))
     throw new Error('Missing permissions.');
 
   try {
-    Owners.destroy({
-      where: {
-        id: oldOwner,
-      },
-    });
+    oldOwnerStatus?.destroy();
   } catch (error) {
     throw error;
   }

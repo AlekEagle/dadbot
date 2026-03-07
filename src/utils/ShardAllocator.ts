@@ -17,6 +17,7 @@ export interface ShardAllocation {
   maxConcurrent: number;
   thisCluster: ShardAllocationRange;
   allClusters: ShardAllocationRange[];
+  timestamp: Date;
 }
 
 export interface ShardAllocatorOptions {
@@ -47,12 +48,14 @@ export async function getShardAllocation(
         count: -1,
       },
       allClusters: [],
+      timestamp: new Date(),
     };
 
   if (cachedShardAllocation && !force) return cachedShardAllocation;
   try {
     const response = await fetch(url, { headers }),
       json = (await response.json()) as any;
+    body.timestamp = new Date();
 
     if (response.status === 429) throw new Error('Ratelimited');
     if (response.status !== 200) throw new Error('Unexpected response');

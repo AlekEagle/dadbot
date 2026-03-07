@@ -29,7 +29,7 @@ export let evaluation = [
 ];
 
 export const isDebug = process.env.DEBUG === 'true';
-export const token = !isDebug ? process.env.TOKEN : process.env.OTHER_TOKEN;
+export const token = !isDebug ? process.env.TOKEN! : process.env.OTHER_TOKEN!;
 
 export const logger = new Logger(isDebug ? Level.DEBUG : Level.INFO);
 export let cluster: DadbotClusterClient<
@@ -55,6 +55,7 @@ export let client: Client;
 export function thankPatreonSupporter() {
   // Fetch the latest patron supporter to thank
   const patron = Patreon.getLatestSupporter();
+  if (!patron) return;
   client.editStatus('online', [
     {
       name: `Thank you ${patron.full_name} for supporting on Patreon!`,
@@ -76,7 +77,7 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   // Initialize the cluster client.
   cluster = new DadbotClusterClient(
     { name: 'ws', options: { url: 'ws://localhost:8080/manager' } },
-    process.env.CLUSTER_MANAGER_TOKEN,
+    process.env.CLUSTER_MANAGER_TOKEN!,
     JSON.parse(await readFile('./data/schema.json', 'utf-8')),
     {
       cluster: {

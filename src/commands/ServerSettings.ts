@@ -25,6 +25,13 @@ const viewServerSettings = new Subcommand(
   'View the current settings for the server!',
   {},
   async (interaction) => {
+    if (!interaction.guildID) {
+      interaction.createMessage({
+        content: 'This command can only be used in a server.',
+      });
+      return;
+    }
+
     const message = await interaction.acknowledge(true);
     const settings = await getGuildSettings(interaction.guildID);
     const embed = {
@@ -82,6 +89,13 @@ const serverAutoResponseSettings = new Subcommand(
     ),
   },
   async (interaction, args) => {
+    if (!interaction.guildID) {
+      interaction.createMessage({
+        content: 'This command can only be used in a server.',
+      });
+      return;
+    }
+
     const message = await interaction.acknowledge(true);
     const settings = await getGuildSettings(interaction.guildID);
     let flags = settings.flags;
@@ -123,6 +137,13 @@ const serverRNGSettings = new Subcommand(
     ),
   },
   async (interaction, args) => {
+    if (!interaction.guildID) {
+      interaction.createMessage({
+        content: 'This command can only be used in a server.',
+      });
+      return;
+    }
+
     const message = await interaction.acknowledge(true);
     await setGuildSettings(
       interaction.guildID,
@@ -143,6 +164,13 @@ const resetServerSettings = new Subcommand(
   'Reset the settings for the server to the default!',
   {},
   async (interaction) => {
+    if (!interaction.guildID) {
+      interaction.createMessage({
+        content: 'This command can only be used in a server.',
+      });
+      return;
+    }
+
     const message = await interaction.acknowledge(true);
     await setGuildSettings(interaction.guildID);
 

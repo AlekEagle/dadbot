@@ -9,7 +9,7 @@ import EventEmitter from 'events';
 
 const CODE_MATCH = /^```ts([\w\W]+)```$/;
 
-const cumulonimbus = new Cumulonimbus(process.env.CUMULONIMBUS_TOKEN);
+const cumulonimbus = new Cumulonimbus(process.env.CUMULONIMBUS_TOKEN!);
 
 export default async function AdminCommandHandler(message: Message) {
   if (message.author.bot) return;

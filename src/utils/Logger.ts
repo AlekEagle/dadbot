@@ -56,6 +56,8 @@ export default class Logger {
         case 'debug':
           this.__logLevel = Level.DEBUG;
           break;
+        default:
+          throw new Error(`Invalid log level: ${logLevel}`);
       }
     } else this.__logLevel = logLevel as Level;
   }

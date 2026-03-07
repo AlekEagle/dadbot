@@ -27,7 +27,6 @@ const setActivity = new SlashCommand(
         },
       ],
     }),
-    text: OptionBuilder.String('What Dad is playing', true),
     type: OptionBuilder.Integer('Type of activity', true, {
       choices: [
         {
@@ -52,6 +51,7 @@ const setActivity = new SlashCommand(
         },
       ],
     }),
+    text: OptionBuilder.String('What Dad is playing', true),
     url: OptionBuilder.String('The url Dad is streaming to', false),
   },
   async (interaction, { status, text, type, url }) => {

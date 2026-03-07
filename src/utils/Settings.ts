@@ -121,29 +121,29 @@ export async function getComputedSettings(
   const user = await getUserSettings(msg.author.id);
   const channel = await getChannelSettings(msg.channelID);
   const guild =
-    msg.guildID !== undefined ? await getGuildSettings(msg.guildID) : null;
+    msg.guildID !== null ? await getGuildSettings(msg.guildID) : null;
   const RNG = user.RNG ?? channel.RNG ?? guild?.RNG ?? defaultSettings.RNG;
   const inheritedRNGFrom = user.RNG
     ? 'user'
     : channel.RNG
-    ? 'channel'
-    : guild?.RNG
-    ? 'guild'
-    : 'default';
+      ? 'channel'
+      : guild?.RNG
+        ? 'guild'
+        : 'default';
   const inheritedFlagsFrom = !user.default
     ? 'user'
     : !channel.default
-    ? 'channel'
-    : !guild?.default
-    ? 'guild'
-    : 'default';
+      ? 'channel'
+      : !guild?.default
+        ? 'guild'
+        : 'default';
   const flags = !user.default
     ? user.flags
     : !channel.default
-    ? channel.flags
-    : !!guild && !guild?.default
-    ? guild.flags
-    : defaultSettings.flags;
+      ? channel.flags
+      : !!guild && !guild?.default
+        ? guild.flags
+        : defaultSettings.flags;
   const value = {
     flags,
     RNG,

@@ -32,7 +32,7 @@ export function initializeCommand(name: string) {
 export function incrementCommand(name: string) {
   if (!commandStats.has(name))
     throw new Error('Command has not been initialized');
-  else commandStats.set(name, commandStats.get(name) + 1);
+  else commandStats.set(name, commandStats.get(name)! + 1);
   ++simpleStats.commandCount;
   return {
     command: commandStats.get(name),

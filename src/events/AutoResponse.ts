@@ -61,7 +61,7 @@ export default async function AutoResponseEvent(msg: Message) {
   ) {
     if (!doRandom(settings.value)) return;
     incrementResponseCount();
-    switch (msg.content.match(WINNING_MATCH)[0]) {
+    switch (msg.content.match(WINNING_MATCH)![0]) {
       case 'play':
         msg.client.rest.channels
           .createMessage(msg.channelID, { content: 'I hope ya win son!' })
@@ -89,11 +89,11 @@ export default async function AutoResponseEvent(msg: Message) {
     // Increment the response count for statistics
     incrementResponseCount();
     // Send the response
-    let imMatchData = msg.content.match(IM_MATCH),
+    let imMatchData = msg.content.match(IM_MATCH)!,
       formattingMatchData = msg.content.match(FORMAT_MATCH),
-      nick = msg.guildID ? msg.guild.clientMember.nick : null,
+      nick = msg.guildID ? msg.guild!.clientMember.nick : null,
       hiContent =
-        !formattingMatchData || formattingMatchData.index > imMatchData.index
+        !formattingMatchData || formattingMatchData.index! > imMatchData.index!
           ? `${imMatchData[2]}`
           : `${formattingMatchData[0]}${imMatchData[2]}`,
       imContent = nick ? nick : Math.random() * 1000 > 999 ? 'Dda' : 'Dad';
@@ -136,7 +136,7 @@ export default async function AutoResponseEvent(msg: Message) {
     msg.client.rest.channels
       .createMessage(msg.channelID, {
         content: `Listen here ${
-          msg.member && msg.member.nick ? msg.member.nick : msg.member.username
+          msg.member && msg.member.nick ? msg.member.nick : msg.member!.username
         }, I will not tolerate you saying the words that consist of the letters 's h u t  u p' being said in this server, so take your own advice and close thine mouth in the name of the christian minecraft server owner.`,
       })
       .catch(() => {});

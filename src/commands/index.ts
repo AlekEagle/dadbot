@@ -2,6 +2,7 @@ import Advice from './Advice';
 import Barbecue from './Barbecue';
 import ChannelSettings from './ChannelSettings';
 import ChatGPT from './ChatGPT';
+import CheckShardsLeft from './CheckShardsLeft';
 import CreatorInfo from './CreatorInfo';
 import Dab from './Dab';
 import DadJoke from './DadJoke';
@@ -24,6 +25,7 @@ const commands = [
   Barbecue,
   ChannelSettings,
   ChatGPT,
+  CheckShardsLeft,
   CreatorInfo,
   Dab,
   DadJoke,

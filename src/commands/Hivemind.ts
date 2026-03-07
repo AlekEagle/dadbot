@@ -23,7 +23,7 @@ const hivemindSendMessage = new Subcommand(
       method: 'POST',
       headers: {
         'Content-Type': 'text/plain',
-        'Authorization': process.env.MESS_WITH_ALEK_TOKEN,
+        'Authorization': process.env.MESS_WITH_ALEK_TOKEN!,
       },
       body: message,
     });
@@ -71,7 +71,7 @@ const hivemindComputers = new Subcommand(
     const res = await fetch('https://dumb-alek.alekeagle.com/clients', {
       method: 'GET',
       headers: {
-        Authorization: process.env.MESS_WITH_ALEK_TOKEN,
+        Authorization: process.env.MESS_WITH_ALEK_TOKEN!,
       },
     });
     const json = (await res.json()) as { username: string; computer: string }[];

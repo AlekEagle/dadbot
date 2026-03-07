@@ -1,0 +1,35 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Dad Fart (Production Mode)",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/dist/index.js",
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "env": {
+        "DEBUG": "false",
+        "CLUSTER_ID": "0"
+      }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Dad Fart (Debug Mode)",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/dist/index.js",
+      "outFiles": ["${workspaceFolder}/dist/**/*.js"],
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "env": {
+        "DEBUG": "true",
+        "CLUSTER_ID": "0",
+        "SHARD_OVERRIDE": "1"
+      }
+    }
+  ]
+}

@@ -42,9 +42,11 @@ const embarrass = new SlashCommand(
               Math.floor(Math.random() * Lists.embarrassingThings.length)
             ],
           username:
-            user instanceof Member && user.nick?.length >= 2
-              ? user.nick
-              : user.username,
+            user instanceof Member
+              ? user.nick && user.nick.length >= 2
+                ? user.nick
+                : user.user.globalName || user.user.username
+              : user.globalName || user.username,
           avatarURL: user.avatarURL(),
         });
 
