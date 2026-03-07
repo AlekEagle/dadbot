@@ -79,7 +79,7 @@ export async function getShardAllocation(
     if (body.total % clusters > 0 && clusterID === clusters - 1)
       body.thisCluster.end += body.total % clusters;
     // calculate the total number of shards in this cluster
-    body.thisCluster.count = body.thisCluster.end - body.thisCluster.start;
+    body.thisCluster.count = body.thisCluster.end - body.thisCluster.start + 1;
     // Calculate the range for each cluster
     for (let i = 0; i < clusters; i++) {
       const range: ShardAllocationRange = {
@@ -91,7 +91,7 @@ export async function getShardAllocation(
       if (body.total % clusters > 0 && i === clusters - 1) {
         range.end += body.total % clusters;
       }
-      range.count = range.end - range.start;
+      range.count = range.end - range.start + 1;
       body.allClusters.push(range);
     }
     cachedShardAllocation = body;
