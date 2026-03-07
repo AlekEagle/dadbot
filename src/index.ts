@@ -19,14 +19,9 @@ import { CommandHandler } from 'oceanic.js-interactions';
 import * as Patreon from './utils/Patreon';
 import Commands from './commands';
 import AutoResponseEvent from './events/AutoResponse';
-import AdminCommandHandler from './events/AdminCommands';
+import EvalCommand from './events/EvalCommand';
 
 envConfig();
-
-export let evaluation = [
-  process.env.DISCORD_ID_BOT_EVAL,
-  '1370693789244723291',
-];
 
 export const isDebug = process.env.DEBUG === 'true';
 export const token = !isDebug ? process.env.TOKEN! : process.env.OTHER_TOKEN!;
@@ -350,13 +345,9 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
     handler.registerCommand(command);
   }
 
-  client.on('messageCreate', async (msg) => {
-    if (evaluation.includes(msg.channelID)) {
-      return AdminCommandHandler(msg);
-    } else {
-      return AutoResponseEvent(msg);
-    }
-  });
+  client.on('messageCreate', AutoResponseEvent);
+
+  client.on('messageCreate', EvalCommand);
 
   // ========================================================
   // TODO: Migrate Dad Bot to the new command handler (this includes the command modules and the event modules)
