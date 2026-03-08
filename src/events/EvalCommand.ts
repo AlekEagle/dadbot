@@ -4,7 +4,7 @@ import Cumulonimbus from 'cumulonimbus-wrapper';
 import { EventEmitter } from 'node:events';
 import { Buffer, File } from 'node:buffer';
 import { isOwner } from '../utils/Owners';
-import { client, logger, cluster, shards, handler } from '..';
+import { client, logger, cluster, shards, handler, isDebug } from '..';
 import evaluateSafe from '../utils/SafeEval';
 
 const cumulonimbus = new Cumulonimbus(process.env.ALEKEAGLE_ME_TOKEN!);
@@ -232,7 +232,7 @@ async function constructMessage(
 export default async function EvalCommand(message: Message) {
   const args = message.content.split(/(\s(?<!\n))/g);
 
-  if (args[0] !== 'd!eval') {
+  if (args[0] !== (isDebug ? 'test!eval' : 'd!eval')) {
     return;
   }
   args.shift();
@@ -314,7 +314,7 @@ export default async function EvalCommand(message: Message) {
         typeof error === 'string' ? error : inspect(error);
 
       await client.rest.channels.createMessage(message.channelID, {
-        content: `${message.author.mention}, there was an error inside of a ${callback}, it has been forcefully cleared.`,
+        content: `${message.author.mention}, there was an error inside of a \`${callback}\`, it has been forcefully cleared.`,
         embeds: [
           {
             title: 'Error',
@@ -322,6 +322,9 @@ export default async function EvalCommand(message: Message) {
             description: `\`\`\`ts\n${inspectedError}\n\`\`\``,
           },
         ],
+        allowedMentions: {
+          users: [message.author.id],
+        },
       });
     });
   } else {

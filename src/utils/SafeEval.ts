@@ -9,7 +9,7 @@ import EventEmitter from 'node:events';
 
 const compilerOptions: CompilerOptions = {
     module: ModuleKind.CommonJS,
-    target: ScriptTarget.ES2020,
+    target: ScriptTarget.ES2022,
     esModuleInterop: true,
     sourceMap: true,
     inlineSources: true,
@@ -17,7 +17,9 @@ const compilerOptions: CompilerOptions = {
     allowJs: true,
     alwaysStrict: true,
     resolveJsonModule: true,
+    isolatedModules: true,
     lib: ['ES2022'],
+    inlineSourceMap: true,
   },
   IMPORT_REGEX = /^import .+?;$/i;
 
@@ -50,14 +52,17 @@ export default function evaluateSafe(code: string, args: any) {
     clearer: any,
     ...args: any
   ) {
-    const timeout = setter((...args: any) => {
-      try {
-        return fn(...args);
-      } catch (error) {
-        clearer(timeout);
-        emitter.emit('timeoutError', error, setter.name);
-      }
-    }, ...args);
+    const timeout = setter(
+      (...args: any) => {
+        try {
+          return fn(...args);
+        } catch (error) {
+          clearer(timeout);
+          emitter.emit('timeoutError', error, setter.name);
+        }
+      },
+      ...args,
+    );
     return timeout;
   }
 
