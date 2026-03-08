@@ -2,6 +2,7 @@ import { inspect } from 'node:util';
 import { Message, CreateMessageOptions } from 'oceanic.js';
 import Cumulonimbus from 'cumulonimbus-wrapper';
 import { EventEmitter } from 'node:events';
+import { Buffer, File } from 'node:buffer';
 import { isOwner } from '../utils/Owners';
 import { client, logger, cluster, shards, handler } from '..';
 import evaluateSafe from '../utils/SafeEval';
@@ -10,7 +11,11 @@ const cumulonimbus = new Cumulonimbus(process.env.ALEKEAGLE_ME_TOKEN!);
 
 async function uploadOutput(output: string): Promise<string> {
   try {
-    let res = await cumulonimbus.upload(output, 'text/plailn');
+    // Construct a file from the output string
+    const file = new File([Buffer.from(output)], 'output.txt', {
+      type: 'text/plain',
+    });
+    let res = await cumulonimbus.upload(file, 'text/plailn');
     return res.result.url;
   } catch (error) {
     console.error('Error uploading output:', error);
