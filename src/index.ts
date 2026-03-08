@@ -248,7 +248,9 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   // This event listener will be removed when the ready event is emitted.
   function logShardStatus(shard: number) {
     console.log(
-      chalk.green(` Shard ${shard} of ${shards.thisCluster.count} is ready.`),
+      chalk.green(
+        ` Shard ${shard} of ${shards.thisCluster.start}-${shards.thisCluster.end} is ready.`,
+      ),
     );
   }
 
