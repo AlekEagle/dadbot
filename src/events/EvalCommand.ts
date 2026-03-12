@@ -15,7 +15,7 @@ async function uploadOutput(output: string): Promise<string> {
     const file = new File([Buffer.from(output)], 'output.txt', {
       type: 'text/plain',
     });
-    let res = await cumulonimbus.upload(file, 'text/plailn');
+    let res = await cumulonimbus.upload(file, 'text/plain');
     return res.result.url;
   } catch (error) {
     console.error('Error uploading output:', error);
