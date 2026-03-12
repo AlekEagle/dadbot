@@ -55,8 +55,8 @@ export type SettingsConfigParam = Omit<SettingsConfigObject, 'id' | 'default'>;
 export interface SettingsHierarchyObject {
   user: SettingsConfigObject;
   channel: SettingsConfigObject;
-  guild?: SettingsConfigObject;
-  preferred: 'user' | 'channel' | 'guild';
+  guild: SettingsConfigObject | null;
+  preferred: 'user' | 'channel' | 'guild' | 'default';
 }
 
 export interface ComputedSettingsObject {
@@ -67,7 +67,7 @@ export interface ComputedSettingsObject {
   };
 }
 
-const defaultSettings: SettingsConfigParam = {
+export const defaultSettings: SettingsConfigParam = {
   flags:
     Flags.IM_RESPONSES |
     Flags.KISS_RESPONSES |
@@ -117,11 +117,14 @@ export async function getGuildSettings(
 
 export async function getComputedSettings(
   msg: Message,
+  guildId?: string,
 ): Promise<ComputedSettingsObject> {
   const user = await getUserSettings(msg.author.id);
   const channel = await getChannelSettings(msg.channelID);
   const guild =
-    msg.guildID !== null ? await getGuildSettings(msg.guildID) : null;
+    msg.guildID !== null || guildId !== undefined
+      ? await getGuildSettings(guildId ?? msg.guildID!)
+      : null;
   const RNG = user.RNG ?? channel.RNG ?? guild?.RNG ?? defaultSettings.RNG;
   const inheritedRNGFrom = user.RNG
     ? 'user'
@@ -155,6 +158,31 @@ export async function getComputedSettings(
       flags: inheritedFlagsFrom,
       RNG: inheritedRNGFrom,
     },
+  };
+}
+
+export async function getHierarchySettings(
+  msg: Message,
+  guildId?: string,
+): Promise<SettingsHierarchyObject> {
+  const user = await getUserSettings(msg.author.id);
+  const channel = await getChannelSettings(msg.channelID);
+  const guild =
+    msg.guildID !== null || guildId !== undefined
+      ? await getGuildSettings(guildId ?? msg.guildID!)
+      : null;
+  const preferred = !user.default
+    ? 'user'
+    : !channel.default
+      ? 'channel'
+      : !!guild && !guild?.default
+        ? 'guild'
+        : 'default';
+  return {
+    user,
+    channel,
+    guild,
+    preferred,
   };
 }
 

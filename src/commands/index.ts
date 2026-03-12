@@ -6,6 +6,7 @@ import CheckShardsLeft from './CheckShardsLeft';
 import CreatorInfo from './CreatorInfo';
 import Dab from './Dab';
 import DadJoke from './DadJoke';
+import Debug from './Debug';
 import Embarrass from './Embarrass';
 import Felix from './Felix';
 import Github from './Github';
@@ -29,6 +30,7 @@ const commands = [
   CreatorInfo,
   Dab,
   DadJoke,
+  Debug,
   Embarrass,
   Felix,
   Github,
