@@ -62,7 +62,7 @@ const debugGuild = new Subcommand(
           fields: [
             {
               name: 'Flags Raw',
-              value: `0x${settings.flags.toString(2)}`,
+              value: `0x${settings.flags.toString(2).padStart(defaultSettings.flags.toString(2).length, '0')}`,
               inline: true,
             },
             {
@@ -99,7 +99,7 @@ const debugChannel = new Subcommand(
   'Show the current settings for the channel!',
   {},
   async (interaction) => {
-    const message = await interaction.acknowledge(true);
+    const message = await interaction.acknowledge();
 
     if (!(await isOwner(interaction.user.id))) {
       message.edit({
@@ -118,7 +118,7 @@ const debugChannel = new Subcommand(
           fields: [
             {
               name: 'Flags Raw',
-              value: `0x${settings.flags.toString(2)}`,
+              value: `0x${settings.flags.toString(2).padStart(defaultSettings.flags.toString(2).length, '0')}`,
               inline: true,
             },
             {
@@ -155,7 +155,7 @@ const debugUser = new Subcommand(
   'Show the current settings for the user!',
   {},
   async (interaction) => {
-    const message = await interaction.acknowledge(true);
+    const message = await interaction.acknowledge();
 
     if (!(await isOwner(interaction.user.id))) {
       message.edit({
@@ -174,7 +174,7 @@ const debugUser = new Subcommand(
           fields: [
             {
               name: 'Flags Raw',
-              value: `0x${settings.flags.toString(2)}`,
+              value: `0x${settings.flags.toString(2).padStart(defaultSettings.flags.toString(2).length, '0')}`,
               inline: true,
             },
             {
@@ -226,7 +226,7 @@ const debugComputed = new Subcommand(
       return;
     }
 
-    const message = await interaction.acknowledge(true);
+    const message = await interaction.acknowledge();
 
     if (!(await isOwner(interaction.user.id))) {
       message.edit({
@@ -266,7 +266,7 @@ const debugComputed = new Subcommand(
           fields: [
             {
               name: 'Flags Raw',
-              value: `0x${hierarchySettings.user.flags.toString(2)}`,
+              value: `0x${hierarchySettings.user.flags.toString(2).padStart(defaultSettings.flags.toString(2).length, '0')}`,
               inline: true,
             },
             {
@@ -291,6 +291,11 @@ const debugComputed = new Subcommand(
                 : 'Default',
               inline: true,
             },
+            {
+              name: 'Is Default',
+              value: hierarchySettings.user.default ? 'Yes' : 'No',
+              inline: true,
+            },
           ],
         },
         {
@@ -299,7 +304,7 @@ const debugComputed = new Subcommand(
           fields: [
             {
               name: 'Flags Raw',
-              value: `0x${hierarchySettings.channel.flags.toString(2)}`,
+              value: `0x${hierarchySettings.channel.flags.toString(2).padStart(defaultSettings.flags.toString(2).length, '0')}`,
               inline: true,
             },
             {
@@ -324,6 +329,11 @@ const debugComputed = new Subcommand(
                 : 'Default',
               inline: true,
             },
+            {
+              name: 'Is Default',
+              value: hierarchySettings.channel.default ? 'Yes' : 'No',
+              inline: true,
+            },
           ],
         },
         ...(hierarchySettings.guild
@@ -334,7 +344,7 @@ const debugComputed = new Subcommand(
                 fields: [
                   {
                     name: 'Flags Raw',
-                    value: `0x${hierarchySettings.guild.flags.toString(2)}`,
+                    value: `0x${hierarchySettings.guild.flags.toString(2).padStart(defaultSettings.flags.toString(2).length, '0')}`,
                     inline: true,
                   },
                   {
@@ -359,6 +369,11 @@ const debugComputed = new Subcommand(
                       : 'Default',
                     inline: true,
                   },
+                  {
+                    name: 'Is Default',
+                    value: hierarchySettings.guild.default ? 'Yes' : 'No',
+                    inline: true,
+                  },
                 ],
               },
             ]
@@ -369,7 +384,7 @@ const debugComputed = new Subcommand(
           fields: [
             {
               name: `Flags Raw (Inherited from ${computedSettings.inheritedFrom.flags})`,
-              value: `0x${computedSettings.value.flags.toString(2)}`,
+              value: `0x${computedSettings.value.flags.toString(2).padStart(defaultSettings.flags.toString(2).length, '0')}`,
               inline: true,
             },
             {

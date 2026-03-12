@@ -130,14 +130,14 @@ export async function getComputedSettings(
     ? 'user'
     : channel.RNG
       ? 'channel'
-      : guild?.RNG
+      : !!guild && !guild.RNG
         ? 'guild'
         : 'default';
   const inheritedFlagsFrom = !user.default
     ? 'user'
     : !channel.default
       ? 'channel'
-      : !guild?.default
+      : !!guild && !guild?.default
         ? 'guild'
         : 'default';
   const flags = !user.default
