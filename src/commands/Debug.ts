@@ -259,10 +259,17 @@ const debugComputed = new Subcommand(
       );
 
     message.edit({
+      content: `Computed settings for [this message](${messageToCheck}):`,
       embeds: [
         {
           title: 'User Settings',
           description: 'Here are the computed settings for the message!',
+          color:
+            hierarchySettings.preferred === 'user'
+              ? 0x00ff00
+              : hierarchySettings.preferred === 'default'
+                ? 0xffff00
+                : undefined,
           fields: [
             {
               name: 'Flags Raw',
@@ -301,6 +308,12 @@ const debugComputed = new Subcommand(
         {
           title: 'Channel Settings',
           description: 'Here are the channel settings for the message!',
+          color:
+            hierarchySettings.preferred === 'channel'
+              ? 0x00ff00
+              : hierarchySettings.preferred === 'default'
+                ? 0xffff00
+                : undefined,
           fields: [
             {
               name: 'Flags Raw',
@@ -341,6 +354,12 @@ const debugComputed = new Subcommand(
               {
                 title: 'Guild Settings',
                 description: 'Here are the guild settings for the message!',
+                color:
+                  hierarchySettings.preferred === 'guild'
+                    ? 0x00ff00
+                    : hierarchySettings.preferred === 'default'
+                      ? 0xffff00
+                      : undefined,
                 fields: [
                   {
                     name: 'Flags Raw',
