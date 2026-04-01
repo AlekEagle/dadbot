@@ -1,4 +1,5 @@
 import Advice from './Advice';
+import AI from './AI';
 import Barbecue from './Barbecue';
 import ChannelSettings from './ChannelSettings';
 import ChatGPT from './ChatGPT';
@@ -23,6 +24,7 @@ import UserSettings from './UserSettings';
 
 const commands = [
   Advice,
+  AI,
   Barbecue,
   ChannelSettings,
   ChatGPT,
