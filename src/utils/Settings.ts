@@ -62,7 +62,6 @@ export interface SettingsHierarchyObject {
 export interface ComputedSettingsObject {
   value: SettingsConfigObject;
   inheritedFrom: {
-    flags: 'user' | 'channel' | 'guild' | 'default';
     RNG: 'user' | 'channel' | 'guild' | 'default';
   };
 }
@@ -133,20 +132,13 @@ export async function getComputedSettings(
       : !!guild && !guild.RNG
         ? 'guild'
         : 'default';
-  const inheritedFlagsFrom = !user.default
-    ? 'user'
-    : !channel.default
-      ? 'channel'
-      : !!guild && !guild?.default
-        ? 'guild'
-        : 'default';
-  const flags = !user.default
-    ? user.flags
-    : !channel.default
-      ? channel.flags
-      : !!guild && !guild?.default
-        ? guild.flags
-        : defaultSettings.flags;
+  const flags = ((user.default ? channel.flags : user.flags) &
+    (channel.default
+      ? (guild?.flags ?? defaultSettings.flags)
+      : channel.flags) &
+    (guild?.default
+      ? defaultSettings.flags
+      : (guild?.flags ?? defaultSettings.flags))) as Flags;
   const value = {
     flags,
     RNG,
@@ -155,7 +147,6 @@ export async function getComputedSettings(
   return {
     value,
     inheritedFrom: {
-      flags: inheritedFlagsFrom,
       RNG: inheritedRNGFrom,
     },
   };

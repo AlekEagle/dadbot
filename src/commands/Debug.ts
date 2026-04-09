@@ -402,19 +402,20 @@ const debugComputed = new Subcommand(
           description: 'Here are the final computed settings for the message!',
           fields: [
             {
-              name: `Flags Raw (Inherited from ${computedSettings.inheritedFrom.flags})`,
+              name: `Flags Raw`,
               value: `0x${computedSettings.value.flags.toString(2).padStart(defaultSettings.flags.toString(2).length, '0')}`,
               inline: true,
             },
             {
-              name: `Enabled Flags (Inherited from ${computedSettings.inheritedFrom.flags})`,
+              name: `Enabled Flags`,
+
               value:
                 numberToFlags(computedSettings.value.flags).join(', ') ||
                 'None',
               inline: true,
             },
             {
-              name: `Disabled Flags (Inherited from ${computedSettings.inheritedFrom.flags})`,
+              name: `Disabled Flags`,
               value:
                 numberToFlags(
                   computedSettings.value.flags ^ defaultSettings.flags,
