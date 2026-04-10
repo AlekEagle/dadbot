@@ -11,7 +11,7 @@
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/dist/index.js",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-      "preLaunchTask": "tsc: build - tsconfig.json",
+      "preLaunchTask": "npm: build",
       "env": {
         "DEBUG": "false",
         "CLUSTER_ID": "0"
@@ -24,7 +24,7 @@
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/dist/index.js",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
-      "preLaunchTask": "tsc: build - tsconfig.json",
+      "preLaunchTask": "npm: build",
       "env": {
         "DEBUG": "true",
         "CLUSTER_ID": "0",
