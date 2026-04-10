@@ -22,9 +22,9 @@
     "typescript": "^5.3.3"
   },
   "scripts": {
-    "start": "npx tsc; node dist/index.js",
+    "start": "tsc; node dist/index.js",
     "build": "tsc",
-    "build-upload": "tsc && yarn sentry:sourcemaps",
+    "build-upload": "tsc && sentry:sourcemaps",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org alek-evans --project dad-bot ./dist && sentry-cli sourcemaps upload --org alek-evans --project dad-bot ./dist"
   },
   "devDependencies": {
@@ -35,6 +35,5 @@
     "@types/validator": "^13.11.7",
     "@types/ws": "^8.5.10"
   },
-  "license": "AGPL",
-  "packageManager": "yarn@3.2.4"
+  "license": "AGPL"
 }
