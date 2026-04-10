@@ -7,12 +7,12 @@
     "target": "ES2022",
     "rootDir": "./src/",
     "resolveJsonModule": true,
-    "typeRoots": ["node_modules/@types"],
     "alwaysStrict": true,
     "esModuleInterop": true,
     "isolatedModules": true,
     "lib": ["ES2022"],
-    "inlineSources": true
+    "inlineSources": true,
+    "skipLibCheck": true
   },
   "include": ["./src/**/*"]
 }
