@@ -24,7 +24,7 @@
   "scripts": {
     "start": "tsc; node dist/index.js",
     "build": "tsc",
-    "build-upload": "tsc && sentry:sourcemaps",
+    "build-upload": "tsc && npm run sentry:sourcemaps",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org alek-evans --project dad-bot ./dist && sentry-cli sourcemaps upload --org alek-evans --project dad-bot ./dist"
   },
   "devDependencies": {
