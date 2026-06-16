@@ -18,10 +18,9 @@ export default class GlobalBlacklist extends Model {
     },
   );
 
-  GlobalBlacklist.sync().then(
-    () => {},
-    (err) => {
-      console.error('Unable to sync GlobalBlacklist! Error: ', err);
-    },
-  );
+  try {
+    await GlobalBlacklist.sync();
+  } catch (e) {
+    console.error('Unable to sync GlobalBlacklist! Error:', e);
+  }
 })();

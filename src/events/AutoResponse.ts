@@ -4,7 +4,8 @@ import {
   SettingsConfigObject,
   getComputedSettings,
 } from '../utils/Settings';
-import { TextableChannel, Message } from 'oceanic.js';
+import { Message } from 'oceanic.js';
+import { readFile } from 'node:fs/promises';
 import { incrementMsgCount, incrementResponseCount } from '../utils/Statistics';
 import Lists from '../utils/Lists';
 
@@ -14,7 +15,8 @@ const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
   WINNING_MATCH = /\b(?:play|played|playing)\b/i,
   SHUT_UP_MATCH = /\b(stfu|shut\s(?:the\s)?(?:fuck\s)?up)\b/i,
   GOODBYE_MATCH = /\b(?:good)? ?bye\b/i,
-  THANKS_MATCH = /\b(?:thank you|thanks) dad\b/i;
+  THANKS_MATCH = /\b(?:thank you|thanks) dad\b/i,
+  FORTNITE_JAZZ_MATCH = /\bfortnite jazz\b/i;
 
 // Function to calculate whether a message has enough uppercase characters to be considered "shouting"
 function volumeDown(message: string): boolean {
@@ -64,17 +66,38 @@ export default async function AutoResponseEvent(msg: Message) {
     switch (msg.content.match(WINNING_MATCH)![0]) {
       case 'play':
         msg.client.rest.channels
-          .createMessage(msg.channelID, { content: 'I hope ya win son!' })
+          .createMessage(msg.channelID, {
+            messageReference: {
+              messageID: msg.id,
+              channelID: msg.channelID,
+              guildID: msg.guildID ?? undefined,
+            },
+            content: 'I hope ya win son!',
+          })
           .catch(() => {});
         break;
       case 'playing':
         msg.client.rest.channels
-          .createMessage(msg.channelID, { content: 'Are ya winning son?' })
+          .createMessage(msg.channelID, {
+            messageReference: {
+              messageID: msg.id,
+              channelID: msg.channelID,
+              guildID: msg.guildID ?? undefined,
+            },
+            content: 'Are ya winning son?',
+          })
           .catch(() => {});
         break;
       case 'played':
         msg.client.rest.channels
-          .createMessage(msg.channelID, { content: 'Did ya win son?' })
+          .createMessage(msg.channelID, {
+            messageReference: {
+              messageID: msg.id,
+              channelID: msg.channelID,
+              guildID: msg.guildID ?? undefined,
+            },
+            content: 'Did ya win son?',
+          })
           .catch(() => {});
     }
     return;
@@ -100,6 +123,11 @@ export default async function AutoResponseEvent(msg: Message) {
 
     msg.client.rest.channels
       .createMessage(msg.channelID, {
+        messageReference: {
+          messageID: msg.id,
+          channelID: msg.channelID,
+          guildID: msg.guildID ?? undefined,
+        },
         allowedMentions: {
           everyone: msg.mentions.everyone, // Only mention everyone if the triggering message mentions everyone
           roles: msg.mentions.roles.slice(0, 2), // Mention a maximum of 2 roles the triggering message successfully mentioned
@@ -120,6 +148,11 @@ export default async function AutoResponseEvent(msg: Message) {
     incrementResponseCount();
     msg.client.rest.channels
       .createMessage(msg.channelID, {
+        messageReference: {
+          messageID: msg.id,
+          channelID: msg.channelID,
+          guildID: msg.guildID ?? undefined,
+        },
         content: `You better mean Kissing Your Self!`,
       })
       .catch(() => {});
@@ -135,6 +168,11 @@ export default async function AutoResponseEvent(msg: Message) {
     incrementResponseCount();
     msg.client.rest.channels
       .createMessage(msg.channelID, {
+        messageReference: {
+          messageID: msg.id,
+          channelID: msg.channelID,
+          guildID: msg.guildID ?? undefined,
+        },
         content: `Listen here ${
           msg.member && msg.member.nick ? msg.member.nick : msg.member!.username
         }, I will not tolerate you saying the words that consist of the letters 's h u t  u p' being said in this server, so take your own advice and close thine mouth in the name of the christian minecraft server owner.`,
@@ -152,6 +190,11 @@ export default async function AutoResponseEvent(msg: Message) {
     incrementResponseCount();
     msg.client.rest.channels
       .createMessage(msg.channelID, {
+        messageReference: {
+          messageID: msg.id,
+          channelID: msg.channelID,
+          guildID: msg.guildID ?? undefined,
+        },
         content:
           Lists.goodbye[Math.floor(Math.random() * Lists.goodbye.length)],
       })
@@ -168,6 +211,11 @@ export default async function AutoResponseEvent(msg: Message) {
     incrementResponseCount();
     msg.client.rest.channels
       .createMessage(msg.channelID, {
+        messageReference: {
+          messageID: msg.id,
+          channelID: msg.channelID,
+          guildID: msg.guildID ?? undefined,
+        },
         content: Lists.thanks[Math.floor(Math.random() * Lists.thanks.length)],
       })
       .catch(() => {});
@@ -175,6 +223,31 @@ export default async function AutoResponseEvent(msg: Message) {
   }
 
   // End of Thanks matcher
+  // Fortnite jazz matcher
+  if (
+    msg.content.match(FORTNITE_JAZZ_MATCH) &&
+    settings.value.flags & Flags.SHOUTING_RESPONSES
+  ) {
+    if (!doRandom(settings.value)) return;
+    incrementResponseCount();
+    msg.client.rest.channels
+      .createMessage(msg.channelID, {
+        messageReference: {
+          messageID: msg.id,
+          channelID: msg.channelID,
+          guildID: msg.guildID ?? undefined,
+        },
+        files: [
+          {
+            contents: await readFile('./fortnite_jazz.mp3'),
+            name: 'fortnite_jazz.mp3',
+          },
+        ],
+      })
+      .catch(() => {});
+    return;
+  }
+  // End of Fortnite jazz matcher
   // Caps matcher
   if (
     volumeDown(msg.content) &&
@@ -183,7 +256,14 @@ export default async function AutoResponseEvent(msg: Message) {
     if (!doRandom(settings.value)) return;
     incrementResponseCount();
     msg.client.rest.channels
-      .createMessage(msg.channelID, { content: 'Keep your voice down!' })
+      .createMessage(msg.channelID, {
+        messageReference: {
+          messageID: msg.id,
+          channelID: msg.channelID,
+          guildID: msg.guildID ?? undefined,
+        },
+        content: 'Keep your voice down!',
+      })
       .catch(() => {});
     return;
   }

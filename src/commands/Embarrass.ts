@@ -5,6 +5,7 @@ import {
   ThreadChannel,
 } from 'oceanic.js';
 import { SlashCommand, OptionBuilder } from 'oceanic.js-interactions';
+import { getOptOuts, Features } from '../utils/FeatureOptOut';
 import Dadhook from '../utils/Dadhook';
 import Lists from '../utils/Lists';
 import { client, logger } from '..';
@@ -35,6 +36,19 @@ const embarrass = new SlashCommand(
         await client.rest.channels.get(interaction.channelID),
       );
       const user = args.user ?? interaction.member;
+
+      const currentOptOuts = await getOptOuts(user.id);
+      if (
+        (currentOptOuts & Features.EMBARRASS) !== 0 &&
+        user.id !== interaction.user.id // Allow people to embarrass themselves even if they've opted out of being embarrassed by the /embarrass command.
+      ) {
+        await interaction.editOriginal({
+          content:
+            "This user has asked to not be embarrassed by the /embarrass command, so I won't embarrass them.",
+        });
+        return;
+      }
+
       try {
         dadhook.execute({
           content:
