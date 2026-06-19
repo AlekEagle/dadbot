@@ -43,6 +43,7 @@ return JSON.stringify(
     let time = new ReadableTime(process.uptime() * 1000);
     let cpu = await CPU();
     interaction.createMessage({
+      content: 'Support Server:\n<https://alekeagle.com/d>',
       embeds: [
         {
           title: 'Dad Bot Info',

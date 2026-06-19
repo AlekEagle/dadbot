@@ -46,6 +46,10 @@ const setActivity = new SlashCommand(
           value: 3,
         },
         {
+          name: 'Custom',
+          value: 4,
+        },
+        {
           name: 'Competing in',
           value: 5,
         },
