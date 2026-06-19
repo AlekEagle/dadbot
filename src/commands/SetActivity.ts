@@ -71,7 +71,11 @@ const setActivity = new SlashCommand(
       'all',
       `client.editStatus('${status}',[${JSON.stringify({
         type,
-        name: text,
+        name:
+          type !== 4
+            ? text
+            : "i wish discord wasn't stupid and didn't force custom statuses to still have name AND state fields",
+        state: type === 4 ? text : undefined,
         url,
       })}])`,
     );
