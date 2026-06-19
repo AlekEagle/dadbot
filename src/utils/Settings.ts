@@ -9,20 +9,7 @@ export enum Flags {
   GOODBYE_RESPONSES = 1 << 4,
   THANKS_RESPONSES = 1 << 5,
   SHOUTING_RESPONSES = 1 << 6,
-}
-
-function kvsFromEnum(enumObj: any): { [key: string]: number | string } {
-  const keys = Object.keys(enumObj).filter(
-      (k) =>
-        typeof enumObj[k] === 'number' ||
-        enumObj[k] === k ||
-        enumObj[enumObj[k]]?.toString() !== k,
-    ),
-    kvs: { [key: string]: number | string } = {};
-  for (const key of keys) {
-    kvs[key] = enumObj[key];
-  }
-  return kvs;
+  FORTNITE_JAZZ_RESPONSES = 1 << 7,
 }
 
 export function flagsToNumber(flags: Array<keyof typeof Flags>): Flags {
@@ -55,19 +42,18 @@ export type SettingsConfigParam = Omit<SettingsConfigObject, 'id' | 'default'>;
 export interface SettingsHierarchyObject {
   user: SettingsConfigObject;
   channel: SettingsConfigObject;
-  guild?: SettingsConfigObject;
-  preferred: 'user' | 'channel' | 'guild';
+  guild: SettingsConfigObject | null;
+  preferred: 'user' | 'channel' | 'guild' | 'default';
 }
 
 export interface ComputedSettingsObject {
   value: SettingsConfigObject;
   inheritedFrom: {
-    flags: 'user' | 'channel' | 'guild' | 'default';
     RNG: 'user' | 'channel' | 'guild' | 'default';
   };
 }
 
-const defaultSettings: SettingsConfigParam = {
+export const defaultSettings: SettingsConfigParam = {
   flags:
     Flags.IM_RESPONSES |
     Flags.KISS_RESPONSES |
@@ -117,33 +103,29 @@ export async function getGuildSettings(
 
 export async function getComputedSettings(
   msg: Message,
+  guildId?: string,
 ): Promise<ComputedSettingsObject> {
   const user = await getUserSettings(msg.author.id);
   const channel = await getChannelSettings(msg.channelID);
   const guild =
-    msg.guildID !== undefined ? await getGuildSettings(msg.guildID) : null;
+    msg.guildID !== null || guildId !== undefined
+      ? await getGuildSettings(guildId ?? msg.guildID!)
+      : null;
   const RNG = user.RNG ?? channel.RNG ?? guild?.RNG ?? defaultSettings.RNG;
   const inheritedRNGFrom = user.RNG
     ? 'user'
     : channel.RNG
-    ? 'channel'
-    : guild?.RNG
-    ? 'guild'
-    : 'default';
-  const inheritedFlagsFrom = !user.default
-    ? 'user'
-    : !channel.default
-    ? 'channel'
-    : !guild?.default
-    ? 'guild'
-    : 'default';
-  const flags = !user.default
-    ? user.flags
-    : !channel.default
-    ? channel.flags
-    : !!guild && !guild?.default
-    ? guild.flags
-    : defaultSettings.flags;
+      ? 'channel'
+      : !!guild && !guild.RNG
+        ? 'guild'
+        : 'default';
+  const flags = ((user.default ? channel.flags : user.flags) &
+    (channel.default
+      ? (guild?.flags ?? defaultSettings.flags)
+      : channel.flags) &
+    (guild?.default
+      ? defaultSettings.flags
+      : (guild?.flags ?? defaultSettings.flags))) as Flags;
   const value = {
     flags,
     RNG,
@@ -152,9 +134,33 @@ export async function getComputedSettings(
   return {
     value,
     inheritedFrom: {
-      flags: inheritedFlagsFrom,
       RNG: inheritedRNGFrom,
     },
+  };
+}
+
+export async function getHierarchySettings(
+  msg: Message,
+  guildId?: string,
+): Promise<SettingsHierarchyObject> {
+  const user = await getUserSettings(msg.author.id);
+  const channel = await getChannelSettings(msg.channelID);
+  const guild =
+    msg.guildID !== null || guildId !== undefined
+      ? await getGuildSettings(guildId ?? msg.guildID!)
+      : null;
+  const preferred = !user.default
+    ? 'user'
+    : !channel.default
+      ? 'channel'
+      : !!guild && !guild?.default
+        ? 'guild'
+        : 'default';
+  return {
+    user,
+    channel,
+    guild,
+    preferred,
   };
 }
 

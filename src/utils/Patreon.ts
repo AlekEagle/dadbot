@@ -127,7 +127,9 @@ export async function startCacheRefresh(): Promise<void> {
     // Fetch fresh members from the Patreon API.
     await getAllMembers();
     // Set the timeout again.
-    cacheTimeout = setTimeout(startCacheRefresh, 30 * 60 * 1000);
+    startCacheRefresh().catch((error) => {
+      console.error('Failed to refresh Patreon cache:', error);
+    });
   }, 30 * 60 * 1000);
 }
 

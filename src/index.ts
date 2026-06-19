@@ -19,18 +19,13 @@ import { CommandHandler } from 'oceanic.js-interactions';
 import * as Patreon from './utils/Patreon';
 import Commands from './commands';
 import AutoResponseEvent from './events/AutoResponse';
-import AdminCommandHandler from './events/AdminCommands';
+import EvalCommand from './events/EvalCommand';
+import BrownMeEvent from './events/BrownMeEvent';
 
 envConfig();
 
-export let evaluation = [
-  process.env.DISCORD_ID_BOT_EVAL,
-  '756269985252507670',
-  '1370693789244723291',
-];
-
 export const isDebug = process.env.DEBUG === 'true';
-export const token = !isDebug ? process.env.TOKEN : process.env.OTHER_TOKEN;
+export const token = !isDebug ? process.env.TOKEN! : process.env.OTHER_TOKEN!;
 
 export const logger = new Logger(isDebug ? Level.DEBUG : Level.INFO);
 export let cluster: DadbotClusterClient<
@@ -56,6 +51,7 @@ export let client: Client;
 export function thankPatreonSupporter() {
   // Fetch the latest patron supporter to thank
   const patron = Patreon.getLatestSupporter();
+  if (!patron) return;
   client.editStatus('online', [
     {
       name: `Thank you ${patron.full_name} for supporting on Patreon!`,
@@ -72,12 +68,12 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   // Make sure the chair is intact.
   await verifyChairIntegrity();
   // If we are in debug mode, don't bother with the sentry integration.
-  // if (!process.env.DEBUG) await import('./utils/Sentry');
+  if (!process.env.DEBUG) await import('./utils/Sentry');
 
   // Initialize the cluster client.
   cluster = new DadbotClusterClient(
     { name: 'ws', options: { url: 'ws://localhost:8080/manager' } },
-    process.env.CLUSTER_MANAGER_TOKEN,
+    process.env.CLUSTER_MANAGER_TOKEN!,
     JSON.parse(await readFile('./data/schema.json', 'utf-8')),
     {
       cluster: {
@@ -253,7 +249,9 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   // This event listener will be removed when the ready event is emitted.
   function logShardStatus(shard: number) {
     console.log(
-      chalk.green(` Shard ${shard} of ${shards.thisCluster.count} is ready.`),
+      chalk.green(
+        ` Shard ${shard} of ${shards.thisCluster.start}-${shards.thisCluster.end} is ready.`,
+      ),
     );
   }
 
@@ -350,13 +348,11 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
     handler.registerCommand(command);
   }
 
-  client.on('messageCreate', async (msg) => {
-    if (evaluation.includes(msg.channelID)) {
-      return AdminCommandHandler(msg);
-    } else {
-      return AutoResponseEvent(msg);
-    }
-  });
+  client.on('messageCreate', AutoResponseEvent);
+
+  client.on('messageCreate', EvalCommand);
+
+  client.on('messageCreate', BrownMeEvent);
 
   // ========================================================
   // TODO: Migrate Dad Bot to the new command handler (this includes the command modules and the event modules)

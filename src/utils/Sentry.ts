@@ -1,8 +1,8 @@
 import * as Sentry from '@sentry/node';
 
 Sentry.init({
-  dsn: 'https://81fb39c6a5904886ba26a90e2a6ea8aa@o238460.ingest.sentry.io/1407724',
-  tracesSampleRate: 1.0,
+  dsn: 'https://58a414172fb8f68c35d3e19eed1f41d8@o238460.ingest.us.sentry.io/4509722245595136',
+  sendDefaultPii: true,
 });
 
 console.log('Sentry Initialized!');

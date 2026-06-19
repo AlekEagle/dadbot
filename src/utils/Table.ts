@@ -148,7 +148,7 @@ export default class Table {
             Table.Symbols.HSeparator.repeat(colSize) + Table.Symbols.CSeparator;
         }
 
-        let colTotal = calculatedTotals[ind];
+        let colTotal = calculatedTotals![ind];
         let tT = this.ellipsisText(colTotal);
 
         if (ind === 0) {

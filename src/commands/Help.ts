@@ -65,7 +65,7 @@ const helpSettings = new Subcommand(
             {
               name: "What are Dad Bot's settings?",
               value:
-                "Dad Bot's settings allow you to customize which automatic responses Dad Bot has enabled, and how often Dad Bot will respond to them! They can be configured server-wide, per-channel, and individually for each user!\n\nSettings are hierarchical, meaning that different settings zones override each other. The order of precedence is:\n**1. User Settings (if set for a specific user, overrides all other settings)**\n**2. Channel Settings (if set for a specific channel, overrides server settings)**\n**3. Server Settings (if set for a specific server, overrides default settings)**\n**4. Default Settings (if no other settings are set, these are the default settings)**",
+                "Dad Bot's settings allow you to customize which automatic responses Dad Bot has enabled, and how often Dad Bot will respond to them! They can be configured server-wide, per-channel, and individually for each user!\n\nRNG is hierarchical, going from most preferred to least preferred: User > Channel > Guild > Default.\n\nAuto responses are also hierarchical to an extent, but if they are disabled at any level, they will be disabled for that level and all levels below it, so if you disable a response for yourself, you won't get that response even if it's enabled for the channel and server, but if you disable a response for the server, it will be disabled for everyone in the server, even if they have it enabled for themselves!",
             },
             {
               name: "How do I use Dad Bot's settings?",

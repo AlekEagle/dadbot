@@ -48,7 +48,8 @@ const Shards = new SlashCommand(
       {
         'Shard ID': () =>
           shardsArr.map(
-            (a) => `${a.id === interaction.guild.shard.id ? '> ' : ''}${a.id}`,
+            (a) =>
+              `${a.id === (interaction.guild ? interaction.guild.shard.id : 0) ? '> ' : ''}${a.id}`,
           ),
         'Guild Count': shardsArr.map((a) => a.guildCount.toLocaleString()),
         'User Count': shardsArr.map((a) => a.userCount.toLocaleString()),

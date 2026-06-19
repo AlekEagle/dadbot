@@ -136,13 +136,13 @@ return JSON.stringify(
             },
             {
               name: 'Current Cluster',
-              value: process.env.CLUSTER_ID,
+              value: process.env.CLUSTER_ID!,
               inline: true,
             },
             {
               name: 'Current Shard',
               value:
-                interaction.guildID !== undefined
+                interaction.guild?.id !== undefined
                   ? interaction.guild.shard.id.toString()
                   : '0',
               inline: true,

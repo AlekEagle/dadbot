@@ -5,6 +5,7 @@ import {
   ThreadChannel,
 } from 'oceanic.js';
 import { SlashCommand, OptionBuilder } from 'oceanic.js-interactions';
+import { getOptOuts, Features } from '../utils/FeatureOptOut';
 import Dadhook from '../utils/Dadhook';
 import Lists from '../utils/Lists';
 import { client, logger } from '..';
@@ -35,24 +36,48 @@ const embarrass = new SlashCommand(
         await client.rest.channels.get(interaction.channelID),
       );
       const user = args.user ?? interaction.member;
-      dadhook.execute({
-        content:
-          Lists.embarrassingThings[
-            Math.floor(Math.random() * Lists.embarrassingThings.length)
-          ],
-        username:
-          user instanceof Member && user.nick?.length >= 2
-            ? user.nick
-            : user.username,
-        avatarURL: user.avatarURL(),
-      });
 
-      await interaction.editOriginal({
-        content:
-          user == interaction.member
-            ? "Okay, there, I am embarrassed you, but I still don't know why you'd want to embarrass yourself."
-            : 'Okay, there, I am embarrassed a friend for you.',
-      });
+      const currentOptOuts = await getOptOuts(user.id);
+      if (
+        (currentOptOuts & Features.EMBARRASS) !== 0 &&
+        user.id !== interaction.user.id // Allow people to embarrass themselves even if they've opted out of being embarrassed by the /embarrass command.
+      ) {
+        await interaction.editOriginal({
+          content:
+            "This user has asked to not be embarrassed by the /embarrass command, so I won't embarrass them.",
+        });
+        return;
+      }
+
+      try {
+        dadhook.execute({
+          content:
+            Lists.embarrassingThings[
+              Math.floor(Math.random() * Lists.embarrassingThings.length)
+            ],
+          username:
+            user instanceof Member
+              ? user.nick && user.nick.length >= 2
+                ? user.nick
+                : user.user.globalName || user.user.username
+              : user.globalName || user.username,
+          avatarURL: user.avatarURL(),
+        });
+
+        await interaction.editOriginal({
+          content:
+            user == interaction.member
+              ? "Okay, there, I am embarrassed you, but I still don't know why you'd want to embarrass yourself."
+              : 'Okay, there, I am embarrassed a friend for you.',
+        });
+      } catch (e) {
+        logger.error(e);
+        await interaction.editOriginal({
+          content: `I can't embarrass you${
+            user == interaction.member ? '' : 'r friend'
+          }, sorry.`,
+        });
+      }
     } catch (e) {
       logger.error(e);
       interaction.createFollowup({ content: (e as Error).message });

@@ -32,7 +32,7 @@ export default class Dadhook extends Webhook {
     >,
   ) {
     // Screw checking for permissions, we're just going to try/catch missing permission errors
-    let webhook: Webhook;
+    let webhook: Webhook | undefined;
 
     try {
       let webhooks = await channel.guild.getWebhooks();
