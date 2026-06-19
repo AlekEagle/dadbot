@@ -1,10 +1,12 @@
 import { inspect } from 'node:util';
+import { joinVoiceChannel } from "@discordjs/voice";
 import { Message, CreateMessageOptions } from 'oceanic.js';
 import Cumulonimbus from 'cumulonimbus-wrapper';
 import { EventEmitter } from 'node:events';
 import { Buffer, File } from 'node:buffer';
 import { isOwner } from '../utils/Owners';
 import { client, logger, cluster, shards, handler, isDebug } from '..';
+import BrownMe from '../utils/DB/BrownMe';
 import evaluateSafe from '../utils/SafeEval';
 
 const cumulonimbus = new Cumulonimbus(process.env.ALEKEAGLE_ME_TOKEN!);
@@ -229,6 +231,78 @@ async function constructMessage(
   };
 }
 
+async function joinUp(where: string, muted=false, deafened=false) {
+  const channel =
+    client.getChannel?.(where) ?? (await client.rest.channels.get(where));
+
+  const guildID = channel.guildID ?? client.channelGuildMap?.get(where);
+  if (!guildID)
+    throw new Error("no guildID");
+
+  const guild = client.guilds.get(guildID);
+  const shard =
+    guild?.shard ??
+    client.shards.get?.(client.guildShardMap?.get?.(guildID)) ??
+    client.shards.find?.((s) => s.guilds?.has?.(guildID));
+
+  if (!shard)
+    throw new Error("no shard");
+
+  const send =
+      shard.send?.bind(shard) ??
+      shard.ws?.send?.bind(shard.ws) ??
+      shard.gateway?.send?.bind(shard.gateway);
+
+  if (!send) {
+    const info = JSON.stringify({
+      keys: Object.keys(shard),
+      proto: Object.getOwnPropertyNames(Object.getPrototypeOf(shard)),
+    });
+    throw new Error("no send function on shard: " + info);
+  }
+
+  joinVoiceChannel({
+    channelId: channelID,
+    guildId: guildID,
+    selfDeaf: deafened,
+    selfMute: muted,
+    adapterCreator: () => ({
+      sendPayload(data) {
+        send(data.op, data.d);
+        return true;
+      },
+      destroy() {},
+    }),
+  });
+}
+
+async function countBrowned() {
+  const rows = (await BrownMe.findAll()).map((brown) => ({
+    g: String(brown.id),
+    r: String(brown.roleID),
+  }));
+
+  let bob = [];
+  for (let bill of rows) {
+    try {
+      let chris = {};
+      chris.guild = await client.rest.guilds.get(bill.g, true);
+      chris.count = (await client.rest.guilds.getRoleMemberCounts(bill.g))[bill.r];
+      bob.push(chris);
+
+      await new Promise((res) => setTimeout(res, 500));
+    } catch(e) {
+      bob.push({guild: {name:'idk fuck you', memberCount: 0}, count: 0});
+      logger.error(e);
+      continue;
+    }
+  }
+
+  const total = bob.reduce((acc, joe) => acc + joe.count, 0);
+  const lines = bob.map(joe => `${joe.guild.name}: ${joe.count}/${joe.guild.memberCount}`);
+  return [`total=${total}`, ...lines].join("\n").slice(0, 1992);
+}
+
 export default async function EvalCommand(message: Message) {
   const args = message.content.split(/(\s(?<!\n))/g);
 
@@ -286,6 +360,8 @@ export default async function EvalCommand(message: Message) {
     cluster,
     shards,
     handler,
+    countBrowned,
+    joinUp,
     msg: message,
   });
   if (emitter instanceof EventEmitter) {
