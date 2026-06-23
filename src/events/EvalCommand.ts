@@ -280,9 +280,12 @@ async function countBrowned() {
     try {
       let chris: { guild: any; count: number } = {} as any;
       chris.guild = await client.rest.guilds.get(bill.g, true);
-      chris.count = (await client.rest.guilds.getRoleMemberCounts(bill.g))[
-        bill.r
-      ];
+      const roleCounts = await client.rest.guilds.getRoleMemberCounts(bill.g);
+      chris.count = roleCounts[bill.r] ?? 0;
+
+      if (roleCounts[bill.r] === undefined)
+        chris.guild.name = chris.guild.name + ` (DELETED BROWN ME ROLE)`;
+
       bob.push(chris);
 
       await new Promise((res) => setTimeout(res, 500));
@@ -297,7 +300,7 @@ async function countBrowned() {
   const lines = bob.map(
     (joe) => `${joe.guild.name}: ${joe.count}/${joe.guild.memberCount}`,
   );
-  return [`total=${total}`, ...lines].join('\n').slice(0, 1992);
+  return [`total=${total}`, ...lines].join('\n');
 }
 
 export default async function EvalCommand(message: Message) {
