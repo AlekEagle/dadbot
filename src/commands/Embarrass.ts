@@ -63,7 +63,7 @@ const embarrass = new SlashCommand(
                 : user.user.globalName || user.user.username
               : user.globalName || user.username,
           avatarURL: user.avatarURL(),
-          threadID: channel instanceof ThreadChannel ? channel.id : null,
+          threadID: channel instanceof ThreadChannel ? channel.id : undefined,
         });
 
         await interaction.editOriginal({
