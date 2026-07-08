@@ -11,3 +11,4 @@ dist
 .pnp.*
 # Sentry Config File
 .sentryclirc
+package-lock.json
