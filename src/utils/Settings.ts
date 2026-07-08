@@ -10,6 +10,7 @@ export enum Flags {
   THANKS_RESPONSES = 1 << 5,
   SHOUTING_RESPONSES = 1 << 6,
   FORTNITE_JAZZ_RESPONSES = 1 << 7,
+  GROK_RESPONSES = 1 << 8,
 }
 
 export function flagsToNumber(flags: Array<keyof typeof Flags>): Flags {
@@ -61,7 +62,9 @@ export const defaultSettings: SettingsConfigParam = {
     Flags.WINNING_RESPONSES |
     Flags.GOODBYE_RESPONSES |
     Flags.THANKS_RESPONSES |
-    Flags.SHOUTING_RESPONSES,
+    Flags.SHOUTING_RESPONSES |
+    Flags.FORTNITE_JAZZ_RESPONSES |
+    Flags.GROK_RESPONSES,
   RNG: null,
 };
 

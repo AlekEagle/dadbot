@@ -12,6 +12,8 @@ const lists: {
   goodbye: string[];
   thanks: string[];
   ai: string[];
+  grok: string[];
+  gork: string[];
 } = JSON.parse(FS.readFileSync('./data/lists.json', 'utf-8'));
 
 export default lists;
