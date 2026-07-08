@@ -4,7 +4,7 @@ import {
   SettingsConfigObject,
   getComputedSettings,
 } from '../utils/Settings';
-import { Message } from 'oceanic.js';
+import { Message, ThreadChannel } from 'oceanic.js';
 import { readFile } from 'node:fs/promises';
 import { incrementMsgCount, incrementResponseCount } from '../utils/Statistics';
 import Dadhook from '../utils/Dadhook';
@@ -313,9 +313,8 @@ export default async function AutoResponseEvent(msg: Message) {
           content: `Let me ask ${isGork ? 'Gork' : 'Grok'}.`,
         })
         .catch(() => {});
-      const dadhook = await Dadhook.giveMeDadhook(
-        await msg.client.rest.channels.get(msg.channelID),
-      );
+      const channel = await msg.client.rest.channels.get(msg.channelID);
+      const dadhook = await Dadhook.giveMeDadhook(channel as any);
       await new Promise((resolve) => setTimeout(resolve, 6000)); // Wait 6 seconds before sending the response
       dadhook.execute({
         content: isGork
@@ -325,6 +324,7 @@ export default async function AutoResponseEvent(msg: Message) {
         avatarURL: isGork
           ? 'https://cdn.alekeagle.me/ZV-wlPIk-b.png'
           : 'https://cdn.alekeagle.me/FBnktLNQXU.jpg',
+        threadID: channel instanceof ThreadChannel ? channel.id : undefined,
       });
     } catch (e) {
       console.log('lol');
