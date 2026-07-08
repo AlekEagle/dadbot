@@ -32,9 +32,8 @@ const embarrass = new SlashCommand(
         return;
       }
 
-      const dadhook = await Dadhook.giveMeDadhook(
-        await client.rest.channels.get(interaction.channelID),
-      );
+      const channel = await client.rest.channels.get(interaction.channelID);
+      const dadhook = await Dadhook.giveMeDadhook(channel as any);
       const user = args.user ?? interaction.member;
 
       const currentOptOuts = await getOptOuts(user.id);
@@ -50,11 +49,13 @@ const embarrass = new SlashCommand(
       }
 
       try {
-        dadhook.execute({
-          content:
-            Lists.embarrassingThings[
-              Math.floor(Math.random() * Lists.embarrassingThings.length)
-            ],
+        const thing =
+          Lists.embarrassingThings[
+            Math.floor(Math.random() * Lists.embarrassingThings.length)
+          ];
+        await dadhook.execute({
+          // this only works on the legit real dad boob because heck you
+          content: `${thing}\n\n-# Don't like being embarassed? </optout embarrass set:1516299518696493057>`,
           username:
             user instanceof Member
               ? user.nick && user.nick.length >= 2
@@ -62,6 +63,7 @@ const embarrass = new SlashCommand(
                 : user.user.globalName || user.user.username
               : user.globalName || user.username,
           avatarURL: user.avatarURL(),
+          threadID: channel instanceof ThreadChannel ? channel.id : null,
         });
 
         await interaction.editOriginal({

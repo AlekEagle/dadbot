@@ -6,6 +6,7 @@ import {
   AnnouncementThreadChannel,
   ThreadChannel,
 } from 'oceanic.js';
+import { client } from '../index';
 
 const webhookName = 'Dad Bot Webhook™';
 
@@ -26,27 +27,30 @@ export default class Dadhook extends Webhook {
   }
 
   public static async giveMeDadhook(
-    channel: Exclude<
-      AnyTextableChannel,
-      PrivateChannel | AnnouncementThreadChannel | ThreadChannel
-    >,
+    channel: Exclude<AnyTextableChannel, PrivateChannel>,
   ) {
     // Screw checking for permissions, we're just going to try/catch missing permission errors
     let webhook: Webhook | undefined;
 
     try {
       let webhooks = await channel.guild.getWebhooks();
-      webhook = webhooks.find((w) => w.name === webhookName);
+      webhook = webhooks.find(
+        (w) => w.name === webhookName && w.applicationID == client.user.id,
+      );
     } catch (_) {
       throw new Error(
         'The bot does not have the "Manage Webhooks" permission for this guild.',
       );
     }
 
+    const target: Exclude<AnyTextableChannel, PrivateChannel | ThreadChannel> =
+      channel instanceof ThreadChannel
+        ? await client.rest.channels.get(channel.parentID)
+        : channel;
     if (webhook) {
       try {
-        if (webhook.channelID !== channel.id)
-          await webhook.edit({ channelID: channel.id });
+        if (webhook.channelID !== target.id)
+          await webhook.edit({ channelID: target.id });
         return Dadhook.promoteToDadhook(webhook);
       } catch (_) {
         throw new Error(
@@ -56,7 +60,7 @@ export default class Dadhook extends Webhook {
     } else {
       try {
         return Dadhook.promoteToDadhook(
-          await channel.createWebhook({
+          await target.createWebhook({
             name: webhookName,
             avatar: await Dadhook.getAvatar(channel.client),
           }),
