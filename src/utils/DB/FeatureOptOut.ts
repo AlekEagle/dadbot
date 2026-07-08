@@ -1,19 +1,17 @@
 import { sequelize, init as initDB } from '.';
 import { Model, DataTypes } from 'sequelize';
 
-export default class Options extends Model {
+export default class FeatureOptOut extends Model {
   declare id: string;
-  declare flags: number;
-  declare RNG: number;
+  declare feature: number;
 }
 
 (async function () {
   await initDB();
-  Options.init(
+  FeatureOptOut.init(
     {
       id: { type: DataTypes.STRING, primaryKey: true },
-      flags: DataTypes.SMALLINT,
-      RNG: DataTypes.FLOAT,
+      feature: { type: DataTypes.SMALLINT },
     },
     {
       sequelize,
@@ -21,8 +19,8 @@ export default class Options extends Model {
   );
 
   try {
-    await Options.sync();
+    await FeatureOptOut.sync();
   } catch (e) {
-    console.error('Unable to sync Options! Error:', e);
+    console.error('Unable to sync FeatureOptOut! Error:', e);
   }
 })();

@@ -20,6 +20,7 @@ import * as Patreon from './utils/Patreon';
 import Commands from './commands';
 import AutoResponseEvent from './events/AutoResponse';
 import EvalCommand from './events/EvalCommand';
+import BrownMeEvent from './events/BrownMeEvent';
 
 envConfig();
 
@@ -350,6 +351,8 @@ if (!process.env.CLUSTERS || !process.env.CLUSTER_ID) {
   client.on('messageCreate', AutoResponseEvent);
 
   client.on('messageCreate', EvalCommand);
+
+  client.on('messageCreate', BrownMeEvent);
 
   // ========================================================
   // TODO: Migrate Dad Bot to the new command handler (this includes the command modules and the event modules)

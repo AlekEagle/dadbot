@@ -9,20 +9,7 @@ export enum Flags {
   GOODBYE_RESPONSES = 1 << 4,
   THANKS_RESPONSES = 1 << 5,
   SHOUTING_RESPONSES = 1 << 6,
-}
-
-function kvsFromEnum(enumObj: any): { [key: string]: number | string } {
-  const keys = Object.keys(enumObj).filter(
-      (k) =>
-        typeof enumObj[k] === 'number' ||
-        enumObj[k] === k ||
-        enumObj[enumObj[k]]?.toString() !== k,
-    ),
-    kvs: { [key: string]: number | string } = {};
-  for (const key of keys) {
-    kvs[key] = enumObj[key];
-  }
-  return kvs;
+  FORTNITE_JAZZ_RESPONSES = 1 << 7,
 }
 
 export function flagsToNumber(flags: Array<keyof typeof Flags>): Flags {

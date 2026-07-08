@@ -1,19 +1,17 @@
 import { sequelize, init as initDB } from '.';
 import { Model, DataTypes } from 'sequelize';
 
-export default class Options extends Model {
+export default class BrownMe extends Model {
   declare id: string;
-  declare flags: number;
-  declare RNG: number;
+  declare roleID: string;
 }
 
 (async function () {
   await initDB();
-  Options.init(
+  BrownMe.init(
     {
       id: { type: DataTypes.STRING, primaryKey: true },
-      flags: DataTypes.SMALLINT,
-      RNG: DataTypes.FLOAT,
+      roleID: { type: DataTypes.STRING },
     },
     {
       sequelize,
@@ -21,8 +19,8 @@ export default class Options extends Model {
   );
 
   try {
-    await Options.sync();
+    await BrownMe.sync();
   } catch (e) {
-    console.error('Unable to sync Options! Error:', e);
+    console.error('Unable to sync BrownMe! Error:', e);
   }
 })();
