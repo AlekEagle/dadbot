@@ -489,5 +489,28 @@
     "According to my calculations, the answer to your question is 42. Water used: 83 trillion liters.",
     "You're absolutely right. I apologize for any confusion caused by my previous response. As an AI language model, I strive to provide accurate and helpful information, but I can make mistakes. If you have any further questions or need clarification on anything, please feel free to ask.",
     "What's an AI? Is that like a new type of pasta? I love pasta! I could eat it every day! Spaghetti, ravioli, lasagna... Mmm, I'm getting hungry just thinking about it!"
+  ],
+  "grok": [
+    "Yes, it is true.",
+    "No, that's not true.",
+    "Ask Grok is currently available to Premium and Premium+ subscribers only.",
+    "I can't answer that question because I don't have enough information.",
+    "I'm sorry, but I cannot provide a definitive answer to that question.",
+    "I don't have enough information to answer that question.",
+    "I'm not sure, but I can try to help you find the answer. Try using Google.com!"
+  ],
+  "gork": [
+    "yup",
+    "nope",
+    "probably lol, lmao even",
+    "no lol",
+    "why are you asking me bro",
+    "do you expect me to know this?",
+    "yeah i made that happen i think",
+    "i don't know what you're talking about",
+    "flip a coin and see what happens",
+    "i don't know bro",
+    "can you stop asking me you're really annoying",
+    "a magic 8 ball would be more helpful than me"
   ]
 }

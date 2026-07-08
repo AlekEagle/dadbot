@@ -7,19 +7,22 @@ import {
 import { Message } from 'oceanic.js';
 import { readFile } from 'node:fs/promises';
 import { incrementMsgCount, incrementResponseCount } from '../utils/Statistics';
+import Dadhook from '../utils/Dadhook';
 import Lists from '../utils/Lists';
 
 // i made this before realizing i'm trying to boil the ocean (i'm always trying to boil the ocean)
 // k+i+l+[\W_]*(?:y+o+u+'*r*'*e*|u+r+e*)[\W_]*s+e+l+f+|k+(?:i+l+)?[\W_]+(?:y+(?:o+u+'*r*'*e*)?|u+r+e*)[\W_]*s+(?:e+l+f+)?|k+(?:i+l+)?[\W_]*(?:y+(?:o+u+'*r*'*e*)?|u+r+e*)[\W_]+s+(?:e+l+f+)?|\bk+(?:i+l+)?[\W_]*(?:y+(?:o+u+'*r*'*e*)?|u+r+e*)[\W_]*s+(?:e+l+f+)?\b
 
 const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
-  KYS_MATCH = /k+i+l+[\W_]*(?:y+o+'*u+'*r*'*e*'*|u+r+e*)[\W_]*s+e+l+f+|\bkys\b/i, // more avoidance proof for the lol
+  KYS_MATCH =
+    /k+i+l+[\W_]*(?:y+o+'*u+'*r*'*e*'*|u+r+e*)[\W_]*s+e+l+f+|\bkys\b/i, // more avoidance proof for the lol
   FORMAT_MATCH = /(\*\*?\*?|``?`?|__?|~~|\|\|)+/i,
   WINNING_MATCH = /\b(?:play|played|playing)\b/i,
   SHUT_UP_MATCH = /\b(stfu|shut\s(?:the\s)?(?:fuck\s)?up)\b/i,
   GOODBYE_MATCH = /\b(?:good)?\s*bye\b/i,
   THANKS_MATCH = /\b(?:thank\s*you|thanks)\s+dad\b/i,
-  FORTNITE_JAZZ_MATCH = /\bfortnite\s*jazz\b/i;
+  FORTNITE_JAZZ_MATCH = /\bfortnite\s*jazz\b/i,
+  GROK_MATCH = /\b(?:grok|gork)\s*is\s*this\s*true\b/i;
 
 // Function to calculate whether a message has enough uppercase characters to be considered "shouting"
 function volumeDown(message: string): boolean {
@@ -122,7 +125,26 @@ export default async function AutoResponseEvent(msg: Message) {
         !formattingMatchData || formattingMatchData.index! > imMatchData.index!
           ? `${imMatchData[2]}`
           : `${formattingMatchData[0]}${imMatchData[2]}`,
-      imContent = nick ? nick : Math.random() * 1000 > 999 ? 'Dda' : 'Dad';
+      imContent = nick ? nick : Math.random() * 1000 > 990 ? 'Dda' : 'Dad';
+
+    if (hiContent.trim().toLowerCase() === imContent.trim().toLowerCase()) {
+      msg.client.rest.channels
+        .createMessage(msg.channelID, {
+          messageReference: {
+            messageID: msg.id,
+            channelID: msg.channelID,
+            guildID: msg.guildID ?? undefined,
+          },
+          allowedMentions: {
+            everyone: msg.mentions.everyone, // Only mention everyone if the triggering message mentions everyone
+            roles: msg.mentions.roles.slice(0, 2), // Mention a maximum of 2 roles the triggering message successfully mentioned
+            users: msg.mentions.users.slice(0, 2).map((user) => user.id), // Limit to 2 user mentions
+          },
+          content: `You're not ${imContent}, I'm ${imContent}!`,
+        })
+        .catch(() => {});
+      return;
+    }
 
     msg.client.rest.channels
       .createMessage(msg.channelID, {
@@ -229,7 +251,7 @@ export default async function AutoResponseEvent(msg: Message) {
   // Fortnite jazz matcher
   if (
     msg.content.match(FORTNITE_JAZZ_MATCH) &&
-    settings.value.flags & Flags.SHOUTING_RESPONSES
+    settings.value.flags & Flags.FORTNITE_JAZZ_RESPONSES
   ) {
     if (!doRandom(settings.value)) return;
     incrementResponseCount();
@@ -271,4 +293,41 @@ export default async function AutoResponseEvent(msg: Message) {
     return;
   }
   // End of Caps matcher
+  // Grok matcher
+  if (
+    msg.content.match(GROK_MATCH) &&
+    settings.value.flags & Flags.GROK_RESPONSES
+  ) {
+    if (!doRandom(settings.value)) return;
+    incrementResponseCount();
+    const isGork =
+      Math.random() < 0.01 || msg.content.toLowerCase().includes('gork');
+    try {
+      msg.client.rest.channels
+        .createMessage(msg.channelID, {
+          messageReference: {
+            messageID: msg.id,
+            channelID: msg.channelID,
+            guildID: msg.guildID ?? undefined,
+          },
+          content: `Let me ask ${isGork ? 'Gork' : 'Grok'}.`,
+        })
+        .catch(() => {});
+      const dadhook = await Dadhook.giveMeDadhook(
+        await msg.client.rest.channels.get(msg.channelID),
+      );
+      await new Promise((resolve) => setTimeout(resolve, 6000)); // Wait 6 seconds before sending the response
+      dadhook.execute({
+        content: isGork
+          ? Lists.gork[Math.floor(Math.random() * Lists.gork.length)]
+          : Lists.grok[Math.floor(Math.random() * Lists.grok.length)],
+        username: isGork ? 'Gork' : 'Grok',
+        avatarURL: isGork
+          ? 'https://cdn.alekeagle.me/ZV-wlPIk-b.png'
+          : 'https://cdn.alekeagle.me/FBnktLNQXU.jpg',
+      });
+    } catch (e) {
+      console.log('lol');
+    }
+  }
 }
