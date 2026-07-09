@@ -15,14 +15,14 @@ import Lists from '../utils/Lists';
 
 const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
   KYS_MATCH =
-    /k+i+l+[\W_]*(?:y+o+'*u+'*r*'*e*'*|u+r+e*)[\W_]*s+e+l+f+|\bkys\b/i, // more avoidance proof for the lol
+    /k+i+l+[\W_]*(?:y+o+'*u+'*r*'*e*'*|u+r+e*)[\W_]*s+e+l+f+|\bk+y+s+\b/i, // more avoidance proof for the lol
   FORMAT_MATCH = /(\*\*?\*?|``?`?|__?|~~|\|\|)+/i,
   WINNING_MATCH = /\b(?:play|played|playing)\b/i,
   SHUT_UP_MATCH = /\b(stfu|shut\s(?:the\s)?(?:fuck\s)?up)\b/i,
   GOODBYE_MATCH = /\b(?:good)?\s*bye\b/i,
   THANKS_MATCH = /\b(?:thank\s*you|thanks)\s+dad\b/i,
   FORTNITE_JAZZ_MATCH = /\bfortnite\s*jazz\b/i,
-  GROK_MATCH = /\b(?:grok|gork)\s*is\s*th?is\s*(?:true?|false)\b/i;
+  GROK_MATCH = /\bg(?:roc?|or)k\s*is\s*th?is\s*(?:true?|false|poo+p?)\b/i;
 
 // Function to calculate whether a message has enough uppercase characters to be considered "shouting"
 function volumeDown(message: string): boolean {
