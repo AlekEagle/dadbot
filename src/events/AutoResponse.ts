@@ -22,7 +22,7 @@ const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
   GOODBYE_MATCH = /\b(?:good)?\s*bye\b/i,
   THANKS_MATCH = /\b(?:thank\s*you|thanks)\s+dad\b/i,
   FORTNITE_JAZZ_MATCH = /\bfortnite\s*jazz\b/i,
-  GROK_MATCH = /\bg(?:roc?|or)k\s*is\s*th?is\s*(?:true?|false|poo+p?)\b/i;
+  GROK_MATCH = /\bg(?:roc?|or|oc)k\s*is\s*th?is\s*(?:true?|false|poo+p?)\b/i;
 
 // Function to calculate whether a message has enough uppercase characters to be considered "shouting"
 function volumeDown(message: string): boolean {
