@@ -505,7 +505,12 @@
     "I can't answer that question because I don't have enough information.",
     "I'm sorry, but I cannot provide a definitive answer to that question.",
     "I don't have enough information to answer that question.",
-    "I'm not sure, but I can try to help you find the answer. Try using Google.com!"
+    "I'm not sure, but I can try to help you find the answer. Try using Google.com!",
+    "Hi, I'm Grok, it looks like you're asking me a question! In order to research whether this is true or not, you should try using Google.com or AskJeeves.com.",
+    "It looks like this is not true.",
+    "According to my research, this is true.",
+    "Based on the information I have, this is not true.",
+    "Try asking my brother Gork, he might have a better answer for you."
   ],
   "gork": [
     "yup",

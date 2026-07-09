@@ -68,7 +68,7 @@ export default async function AutoResponseEvent(msg: Message) {
     settings.value.flags & Flags.WINNING_RESPONSES
   ) {
     if (!doRandom(settings.value)) return;
-    incrementResponseCount();
+    incrementResponseCount(Flags.WINNING_RESPONSES);
     switch (msg.content.match(WINNING_MATCH)![0]) {
       case 'play':
         msg.client.rest.channels
@@ -116,7 +116,7 @@ export default async function AutoResponseEvent(msg: Message) {
   ) {
     if (!doRandom(settings.value)) return;
     // Increment the response count for statistics
-    incrementResponseCount();
+    incrementResponseCount(Flags.IM_RESPONSES);
     // Send the response
     let imMatchData = msg.content.match(IM_MATCH)!,
       formattingMatchData = msg.content.match(FORMAT_MATCH),
@@ -170,7 +170,7 @@ export default async function AutoResponseEvent(msg: Message) {
     settings.value.flags & Flags.KISS_RESPONSES
   ) {
     if (!doRandom(settings.value)) return;
-    incrementResponseCount();
+    incrementResponseCount(Flags.KISS_RESPONSES);
     msg.client.rest.channels
       .createMessage(msg.channelID, {
         messageReference: {
@@ -190,7 +190,7 @@ export default async function AutoResponseEvent(msg: Message) {
     settings.value.flags & Flags.SHUT_UP_RESPONSES
   ) {
     if (!doRandom(settings.value)) return;
-    incrementResponseCount();
+    incrementResponseCount(Flags.SHUT_UP_RESPONSES);
     msg.client.rest.channels
       .createMessage(msg.channelID, {
         messageReference: {
@@ -212,7 +212,7 @@ export default async function AutoResponseEvent(msg: Message) {
     settings.value.flags & Flags.GOODBYE_RESPONSES
   ) {
     if (!doRandom(settings.value)) return;
-    incrementResponseCount();
+    incrementResponseCount(Flags.GOODBYE_RESPONSES);
     msg.client.rest.channels
       .createMessage(msg.channelID, {
         messageReference: {
@@ -233,7 +233,7 @@ export default async function AutoResponseEvent(msg: Message) {
     settings.value.flags & Flags.THANKS_RESPONSES
   ) {
     if (!doRandom(settings.value)) return;
-    incrementResponseCount();
+    incrementResponseCount(Flags.THANKS_RESPONSES);
     msg.client.rest.channels
       .createMessage(msg.channelID, {
         messageReference: {
@@ -254,7 +254,7 @@ export default async function AutoResponseEvent(msg: Message) {
     settings.value.flags & Flags.FORTNITE_JAZZ_RESPONSES
   ) {
     if (!doRandom(settings.value)) return;
-    incrementResponseCount();
+    incrementResponseCount(Flags.FORTNITE_JAZZ_RESPONSES);
     msg.client.rest.channels
       .createMessage(msg.channelID, {
         messageReference: {
@@ -279,7 +279,7 @@ export default async function AutoResponseEvent(msg: Message) {
     settings.value.flags & Flags.SHOUTING_RESPONSES
   ) {
     if (!doRandom(settings.value)) return;
-    incrementResponseCount();
+    incrementResponseCount(Flags.SHOUTING_RESPONSES);
     msg.client.rest.channels
       .createMessage(msg.channelID, {
         messageReference: {
@@ -299,10 +299,12 @@ export default async function AutoResponseEvent(msg: Message) {
     settings.value.flags & Flags.GROK_RESPONSES
   ) {
     if (!doRandom(settings.value)) return;
-    incrementResponseCount();
     const isGork =
       Math.random() < 0.01 || msg.content.toLowerCase().includes('gork');
     try {
+      // Try to get the channel and dadhook before sending the initial message, so that if it fails, we don't send a message that we can't follow up on
+      const channel = await msg.client.rest.channels.get(msg.channelID);
+      const dadhook = await Dadhook.giveMeDadhook(channel as any);
       msg.client.rest.channels
         .createMessage(msg.channelID, {
           messageReference: {
@@ -313,8 +315,7 @@ export default async function AutoResponseEvent(msg: Message) {
           content: `Let me ask ${isGork ? 'Gork' : 'Grok'}.`,
         })
         .catch(() => {});
-      const channel = await msg.client.rest.channels.get(msg.channelID);
-      const dadhook = await Dadhook.giveMeDadhook(channel as any);
+      incrementResponseCount(Flags.GROK_RESPONSES);
       await new Promise((resolve) => setTimeout(resolve, 6000)); // Wait 6 seconds before sending the response
       dadhook.execute({
         content: isGork

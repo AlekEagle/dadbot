@@ -1,5 +1,4 @@
 import { SlashCommand } from 'oceanic.js-interactions';
-import { TextableChannel } from 'oceanic.js';
 import { client, cluster } from '..';
 import CPU from '../utils/CPU';
 import Memory from '../utils/Memory';
@@ -106,7 +105,7 @@ return JSON.stringify(
               inline: true,
             },
             {
-              name: 'Commands Used',
+              name: 'Commands Used (Broken lol)',
               value: clusterData
                 .map((v) => v.commandCount)
                 .reduce((a, b) => a + b, 0)

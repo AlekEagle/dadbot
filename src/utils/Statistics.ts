@@ -1,3 +1,5 @@
+import { Flags, numberToFlags, defaultSettings } from './Settings';
+
 const simpleStats: {
     msgCount: number;
     responseCount: number;
@@ -9,13 +11,20 @@ const simpleStats: {
     commandCount: 0,
     barbecuesServed: 0,
   },
-  commandStats: Map<string, number> = new Map<string, number>();
+  commandStats: Record<string, number> = {},
+  responseStats: Record<Flags, number> = {} as Record<Flags, number>;
+
+// Initialize responseStats with all flags set to 0
+for (const flag of numberToFlags(defaultSettings.flags)) {
+  responseStats[Flags[flag]] = 0;
+}
 
 export function incrementMsgCount() {
   return ++simpleStats.msgCount;
 }
 
-export function incrementResponseCount() {
+export function incrementResponseCount(flag: Flags) {
+  ++responseStats[flag];
   return ++simpleStats.responseCount;
 }
 
@@ -24,34 +33,37 @@ export function incrementBarbecuesServed() {
 }
 
 export function initializeCommand(name: string) {
-  if (commandStats.has(name)) return;
-  else commandStats.set(name, 0);
-  return commandStats.get(name);
+  if (commandStats[name] !== undefined) return;
+  else commandStats[name] = 0;
+  return commandStats[name];
 }
 
 export function incrementCommand(name: string) {
-  if (!commandStats.has(name))
+  if (commandStats[name] === undefined)
     throw new Error('Command has not been initialized');
-  else commandStats.set(name, commandStats.get(name)! + 1);
+  else commandStats[name]++;
   ++simpleStats.commandCount;
   return {
-    command: commandStats.get(name),
+    command: commandStats[name],
     allCommands: simpleStats.commandCount,
   };
 }
 
+// Serializable data for cluster communication
 export function getData() {
   return {
     msgCount: simpleStats.msgCount,
     responseCount: simpleStats.responseCount,
     commandCount: simpleStats.commandCount,
     barbecuesServed: simpleStats.barbecuesServed,
+    commandStats,
+    responseStats,
   };
 }
 
 export function getCommands() {
   let commands: { [key: string]: number } = {};
-  Array.from(commandStats.entries()).forEach((v) => {
+  Object.entries(commandStats).forEach((v) => {
     commands[v[0]] = v[1];
   });
   return commands;

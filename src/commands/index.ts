@@ -23,6 +23,7 @@ import Patreon from './Patreon';
 import ServerSettings from './ServerSettings';
 import SetActivity from './SetActivity';
 import Shards from './Shards';
+import Stats from './Stats';
 import UserSettings from './UserSettings';
 
 const commands = [
@@ -51,6 +52,7 @@ const commands = [
   ServerSettings,
   SetActivity,
   Shards,
+  Stats,
   UserSettings,
 ];
 

@@ -154,6 +154,16 @@ const helpAutoresponses = new Subcommand(
                 "Dad doesn't like it when you shout at him! If you are talking in all capital letters, and you aren't just using an acronym, he'll tell you to keep your voice down!",
             },
             {
+              name: 'Fortnite Jazz Responses',
+              value:
+                'An inside joke between the head developer and his friends, Dad will send a file named `fortnite_jazz.mp3` if you say the words `fortnite jazz` in a message!',
+            },
+            {
+              name: 'Grok Responses',
+              value:
+                "Dad can get a hold of Grok (or even Gork) if you need to make sure something is true or not! If you ask Grok a question, he'll do his best to answer it for you!\n\n`grok/gork is this true/false`: a random Grok/Gork response",
+            },
+            {
               name: 'I still have questions!',
               value:
                 'If you still have questions, join the [Dad Bot support server](https://alekeagle.com/d)!',
