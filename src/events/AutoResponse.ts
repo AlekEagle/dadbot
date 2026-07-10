@@ -305,16 +305,14 @@ export default async function AutoResponseEvent(msg: Message) {
       // Try to get the channel and dadhook before sending the initial message, so that if it fails, we don't send a message that we can't follow up on
       const channel = await msg.client.rest.channels.get(msg.channelID);
       const dadhook = await Dadhook.giveMeDadhook(channel as any);
-      msg.client.rest.channels
-        .createMessage(msg.channelID, {
-          messageReference: {
-            messageID: msg.id,
-            channelID: msg.channelID,
-            guildID: msg.guildID ?? undefined,
-          },
-          content: `Let me ask ${isGork ? 'Gork' : 'Grok'}.`,
-        })
-        .catch(() => {});
+      await msg.client.rest.channels.createMessage(msg.channelID, {
+        messageReference: {
+          messageID: msg.id,
+          channelID: msg.channelID,
+          guildID: msg.guildID ?? undefined,
+        },
+        content: `Let me ask ${isGork ? 'Gork' : 'Grok'}.`,
+      });
       incrementResponseCount(Flags.GROK_RESPONSES);
       await new Promise((resolve) => setTimeout(resolve, 6000)); // Wait 6 seconds before sending the response
       dadhook.execute({
