@@ -43,7 +43,7 @@ return JSON.stringify(
               value: clusterData
                 .map((v) => v.msgCount)
                 .reduce((a, b) => a + b, 0)
-                .toString(),
+                .toLocaleString(),
               inline: true,
             },
             {
@@ -59,7 +59,7 @@ return JSON.stringify(
               value: clusterData
                 .map((v) => v.commandCount)
                 .reduce((a, b) => a + b, 0)
-                .toString(),
+                .toLocaleString(),
               inline: true,
             },
             {
@@ -67,7 +67,7 @@ return JSON.stringify(
               value: clusterData
                 .map((v) => v.barbecuesServed)
                 .reduce((a, b) => a + b, 0)
-                .toString(),
+                .toLocaleString(),
               inline: true,
             },
           ],
@@ -93,7 +93,7 @@ return JSON.stringify(
             const boob: [Flags, number] = v;
             return {
               name: Flags[boob[0]],
-              value: boob[1].toString(),
+              value: boob[1].toLocaleString(),
               inline: true,
             };
           }),

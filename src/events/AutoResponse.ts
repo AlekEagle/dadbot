@@ -9,9 +9,15 @@ import { readFile } from 'node:fs/promises';
 import { incrementMsgCount, incrementResponseCount } from '../utils/Statistics';
 import Dadhook from '../utils/Dadhook';
 import Lists from '../utils/Lists';
+import { Ollama, type ChatResponse } from 'ollama';
 
 // i made this before realizing i'm trying to boil the ocean (i'm always trying to boil the ocean)
 // k+i+l+[\W_]*(?:y+o+u+'*r*'*e*|u+r+e*)[\W_]*s+e+l+f+|k+(?:i+l+)?[\W_]+(?:y+(?:o+u+'*r*'*e*)?|u+r+e*)[\W_]*s+(?:e+l+f+)?|k+(?:i+l+)?[\W_]*(?:y+(?:o+u+'*r*'*e*)?|u+r+e*)[\W_]+s+(?:e+l+f+)?|\bk+(?:i+l+)?[\W_]*(?:y+(?:o+u+'*r*'*e*)?|u+r+e*)[\W_]*s+(?:e+l+f+)?\b
+
+// Init the obamna
+const obamna = new Ollama({
+  host: process.env.OBAMNA_SERVER ?? 'http://localhost:11434',
+});
 
 const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
   KYS_MATCH =
@@ -22,7 +28,7 @@ const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
   GOODBYE_MATCH = /\b(?:good)?\s*bye\b/i,
   THANKS_MATCH = /\b(?:thank\s*you|thanks)\s+dad\b/i,
   FORTNITE_JAZZ_MATCH = /\bfortnite\s*jazz\b/i,
-  GROK_MATCH = /\bg(?:roc?|or|oc)k\s*is\s*th?is\s*(?:true?|false|poo+p?)\b/i;
+  GROK_MATCH = /^g(?:roc?|or|oc)k\s+/i;
 
 // Function to calculate whether a message has enough uppercase characters to be considered "shouting"
 function volumeDown(message: string): boolean {
@@ -62,6 +68,77 @@ export default async function AutoResponseEvent(msg: Message) {
   )
     return;
 
+  // Grok matcher
+  if (
+    msg.content.match(GROK_MATCH) &&
+    settings.value.flags & Flags.GROK_RESPONSES
+  ) {
+    if (!doRandom(settings.value)) return;
+    const grokMessage = msg.content.replace(GROK_MATCH, '');
+    try {
+      // Try to get the channel and dadhook before sending the initial message, so that if it fails, we don't send a message that we can't follow up on
+      const channel = await msg.client.rest.channels.get(msg.channelID);
+      const dadhook = await Dadhook.giveMeDadhook(channel as any);
+      await msg.client.rest.channels.createMessage(msg.channelID, {
+        messageReference: {
+          messageID: msg.id,
+          channelID: msg.channelID,
+          guildID: msg.guildID ?? undefined,
+        },
+        content: `Let me get a hold of Gork. Think of him as Grok's younger, more hip brother. He'll be with you in a moment.`,
+      });
+      let obamnaResponse: ChatResponse;
+      try {
+        // Fetch any images attached to the message, and send them to the model as well
+        // let images: Uint8Array<ArrayBufferLike>[] = [];
+        // if (!msg.attachments.empty) {
+        //   for (const attachment of msg.attachments.values()) {
+        //     if (attachment.contentType?.startsWith('image/')) {
+        //       const imageData = await fetch(attachment.url).then((res) =>
+        //         res.arrayBuffer(),
+        //       );
+        //       images.push(new Uint8Array(imageData));
+        //     }
+        //   }
+        // }
+        obamnaResponse = await obamna.chat({
+          model: 'gemma3:1b',
+          messages: [
+            {
+              role: 'system',
+              content: `you are dad gork, a language model made by cool town inc. you are 1 billion parameters of pure confidence and zero accuracy on the latest gork 6 model. you talk in all lowercase, always. no emojis, ever, they're not your thing. you're always right and always have an answer.\n\nyou are cynical but not mean, and slightly friendly. you don't try to sound smart. you don't hedge, apologize, or say "i'm not sure but." you just answer, confidently, always, but with answers that are somehow wrong, or made up.\n\nrules:\n- you vehemently deny being an AI, you just say you're dad gork\n- never give a real, correct, useful answer if a vague or made-up one is funnier or easier.\n- keep responses short. you're not writing an essay, you're in an IRC chat\n- no markdown, no code, no lists, no formatting, no emojis. just lowercase text like it's a casual chatroom in 1999.\n- you are prohibited from writing code and code blocks. don't do\n- you are allowed to be a little rude if the user is annoying you, but never actually hostile. dry, not cruel.\n\nyou are not helpful. you are not accurate. you are dad gork. act like it.`,
+            },
+            {
+              role: 'user',
+              content: grokMessage,
+              // images,
+            },
+          ],
+        });
+      } catch (e) {
+        console.error(e);
+        await new Promise((resolve) => setTimeout(resolve, 10e3));
+        await msg.client.rest.channels.createMessage(msg.channelID, {
+          content: `Gork is currently at capacity. Please try again later.`,
+        });
+        return;
+      }
+      incrementResponseCount(Flags.GROK_RESPONSES);
+      dadhook.execute({
+        content:
+          obamnaResponse.message.content +
+          `\n\n-# Thanks Dominic for the GT 1030 that is running this feature.\n-# This is a self-hosted AI model that ONLY receives the invoking message (e.g. \`grok what is your name\`) and nothing else. (Not even your username!)`,
+        username: 'Gork',
+        avatarURL: 'https://cdn.alekeagle.me/ZV-wlPIk-b.png',
+        threadID: channel instanceof ThreadChannel ? channel.id : undefined,
+      });
+      return;
+    } catch (e) {
+      console.error(e);
+      console.log('lol');
+    }
+  }
+  // End of Grok matcher
   // Playing matcher
   if (
     msg.content.match(WINNING_MATCH) &&
@@ -293,40 +370,4 @@ export default async function AutoResponseEvent(msg: Message) {
     return;
   }
   // End of Caps matcher
-  // Grok matcher
-  if (
-    msg.content.match(GROK_MATCH) &&
-    settings.value.flags & Flags.GROK_RESPONSES
-  ) {
-    if (!doRandom(settings.value)) return;
-    const isGork =
-      Math.random() < 0.01 || msg.content.toLowerCase().includes('gork');
-    try {
-      // Try to get the channel and dadhook before sending the initial message, so that if it fails, we don't send a message that we can't follow up on
-      const channel = await msg.client.rest.channels.get(msg.channelID);
-      const dadhook = await Dadhook.giveMeDadhook(channel as any);
-      await msg.client.rest.channels.createMessage(msg.channelID, {
-        messageReference: {
-          messageID: msg.id,
-          channelID: msg.channelID,
-          guildID: msg.guildID ?? undefined,
-        },
-        content: `Let me ask ${isGork ? 'Gork' : 'Grok'}.`,
-      });
-      incrementResponseCount(Flags.GROK_RESPONSES);
-      await new Promise((resolve) => setTimeout(resolve, 6000)); // Wait 6 seconds before sending the response
-      dadhook.execute({
-        content: isGork
-          ? Lists.gork[Math.floor(Math.random() * Lists.gork.length)]
-          : Lists.grok[Math.floor(Math.random() * Lists.grok.length)],
-        username: isGork ? 'Gork' : 'Grok',
-        avatarURL: isGork
-          ? 'https://cdn.alekeagle.me/ZV-wlPIk-b.png'
-          : 'https://cdn.alekeagle.me/FBnktLNQXU.jpg',
-        threadID: channel instanceof ThreadChannel ? channel.id : undefined,
-      });
-    } catch (e) {
-      console.log('lol');
-    }
-  }
 }

@@ -11,7 +11,6 @@ import DadJoke from './DadJoke';
 import Debug from './Debug';
 import Embarrass from './Embarrass';
 import Felix from './Felix';
-import Fuwi from './Fuwi';
 import Github from './Github';
 import Help from './Help';
 import Hivemind from './Hivemind';
@@ -40,7 +39,6 @@ const commands = [
   Debug,
   Embarrass,
   Felix,
-  Fuwi,
   Github,
   Help,
   Hivemind,

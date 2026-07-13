@@ -161,7 +161,7 @@ const helpAutoresponses = new Subcommand(
             {
               name: 'Grok Responses',
               value:
-                "Dad can get a hold of Grok (or even Gork) if you need to make sure something is true or not! If you ask Grok a question, he'll do his best to answer it for you!\n\n`grok/gork is this true/false`: a random Grok/Gork response",
+                "Dad can get a hold of Gork (Think of him as Grok's younger, more hip brother) if you need to ask him something! If you ask Gork a question, he'll do his best to answer it for you!\n\n`grok/gork/gock/grock <question>`: a poorly AI generated answer to your question, but it might not be correct, so don't take it too seriously!\n\n**Dad Bot does NOT share any messages with third parties, this is a self-hosted AI model ONLY receives the invoking message (e.g. `grok what is your name`) and nothing else. (Not even your username!)**",
             },
             {
               name: 'I still have questions!',
