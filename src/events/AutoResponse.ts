@@ -9,14 +9,15 @@ import { readFile } from 'node:fs/promises';
 import { incrementMsgCount, incrementResponseCount } from '../utils/Statistics';
 import Dadhook from '../utils/Dadhook';
 import Lists from '../utils/Lists';
-import { Ollama, type ChatResponse } from 'ollama';
+import OpenAI from 'openai';
 
 // i made this before realizing i'm trying to boil the ocean (i'm always trying to boil the ocean)
 // k+i+l+[\W_]*(?:y+o+u+'*r*'*e*|u+r+e*)[\W_]*s+e+l+f+|k+(?:i+l+)?[\W_]+(?:y+(?:o+u+'*r*'*e*)?|u+r+e*)[\W_]*s+(?:e+l+f+)?|k+(?:i+l+)?[\W_]*(?:y+(?:o+u+'*r*'*e*)?|u+r+e*)[\W_]+s+(?:e+l+f+)?|\bk+(?:i+l+)?[\W_]*(?:y+(?:o+u+'*r*'*e*)?|u+r+e*)[\W_]*s+(?:e+l+f+)?\b
 
 // Init the obamna
-const obamna = new Ollama({
-  host: process.env.OBAMNA_SERVER ?? 'http://localhost:11434',
+const obamna = new OpenAI({
+  baseURL: process.env.OBAMNA_SERVER ?? 'http://localhost:11434',
+  apiKey: process.env.OBAMNA_KEY ?? '',
 });
 
 const IM_MATCH = /\b((?:i|l)(?:(?:'|`|‛|‘|’|′|‵)?m| am)) ([\s\S]*)/i,
@@ -87,7 +88,7 @@ export default async function AutoResponseEvent(msg: Message) {
         },
         content: `Let me get a hold of Gork. Think of him as Grok's younger, more hip brother. He'll be with you in a moment.`,
       });
-      let obamnaResponse: ChatResponse;
+      let obamnaResponse: OpenAI.Chat.Completions.ChatCompletion;
       try {
         // Fetch any images attached to the message, and send them to the model as well
         // let images: Uint8Array<ArrayBufferLike>[] = [];
@@ -101,8 +102,9 @@ export default async function AutoResponseEvent(msg: Message) {
         //     }
         //   }
         // }
-        obamnaResponse = await obamna.chat({
-          model: 'qwen35-4b-iq2m',
+        obamnaResponse = await obamna.chat.completions.create({
+          model: 'bonsai',
+          reasoning_effort: 'none',
           messages: [
             {
               role: 'system',
@@ -126,7 +128,7 @@ export default async function AutoResponseEvent(msg: Message) {
       incrementResponseCount(Flags.GROK_RESPONSES);
       dadhook.execute({
         content:
-          obamnaResponse.message.content +
+          obamnaResponse.choices[0].message.content +
           `\n\n-# Thanks Dominic for the GT 1030 that is running this feature.\n-# This is a self-hosted AI model that ONLY receives the invoking message (e.g. \`grok what is your name\`) and nothing else. (Not even your username!)`,
         username: 'Gork',
         avatarURL: 'https://cdn.alekeagle.me/ZV-wlPIk-b.png',
